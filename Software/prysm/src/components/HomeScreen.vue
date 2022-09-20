@@ -1,7 +1,7 @@
 <template>
     <div class="background">
       <div class="save-button" @click="saveFile()">Save File</div>
-      <div class="new-button" @click="newFile()">New File</div>
+      <div class="new-button" @click="newFile(data,file,type)">New File</div>
     </div>
   </template>
   
@@ -9,16 +9,31 @@
   export default {
     data: function() {
       return {
-        data: 0,
+        data: "the cat in the hat knows a lot about that",
+        file: "waveform",
+        type: ".prsm",
       }
     },
     methods: {
         increase() {
             this.data++;
         },
+        //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
         saveFile() {
+          console.log(this.$root);
+          var pom = document.createElement('a');
+          pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(this.data));
+          pom.setAttribute('download', ""+this.file+this.type);
 
-        }
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+        },
 
       }
   }
