@@ -1,9 +1,14 @@
 <template>
+    <div class="navbar">
+      <div class="title">
+        Prysm
+      </div>
+    </div>
     <div class="background">
       <div class="save-button" @click="saveFile()">Save File</div>
       <div class="new-button" @click="newFile(data,file,type)">New File</div>
     </div>
-  </template>
+</template>
   
   <script>
   export default {
@@ -40,6 +45,21 @@
   </script>
   
   <style>
+  .navbar {
+    background-color: black;
+    width: 100%;
+    height: 25px;
+    padding: 4px;
+
+  }
+
+  .title{
+    color: #666665ff;
+    float: left;
+    text-align: center;
+    font-family: Impact;
+  }
+
   .background {
     color: red;
     background-color: #666665ff;
