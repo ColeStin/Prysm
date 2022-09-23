@@ -1,9 +1,15 @@
 <template>
     <div class="navbar">
       <div class="title">
-        Prysm
+        Prysm 
       </div>
-    </div>
+      <div class = "about">
+         <img src="aboutLogo.jpg" alt="About"/>
+      </div>
+    </div> 
+
+    <div class= "mainbody"> </div>
+
     <div class="background">
       <div class="save-button" @click="saveFile()">Save File</div>
       <div class="new-button" @click="newFile(data,file,type)">New File</div>
@@ -46,23 +52,36 @@
   
   <style>
   .navbar {
-    background-color: black;
+    background-color: #3e4444;
     width: 100%;
-    height: 25px;
-    padding: 4px;
-
+    height: 65px;
+    padding: 0px;
   }
 
   .title{
-    color: #666665ff;
-    float: left;
+    color: #e6e2d3;
+    float: center;
+    font-size: 50px;
     text-align: center;
     font-family: Impact;
   }
 
+  .about {
+    padding-left: 90%;
+    margin-top: -33px;
+  }
+
+  .mainbody {
+    background-color: #bdcebe;
+    width: 100%;
+    margin-top: 0px;
+    height: 400px;
+    padding: 4px;
+  }
+
   .background {
     color: red;
-    background-color: #666665ff;
+    background-color: #3e4444;
     width: 100%;
     height: 100%;
   }
