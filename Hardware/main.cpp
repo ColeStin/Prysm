@@ -1,3 +1,18 @@
+/**
+ * Name of Artifact: Main.cpp
+ * Summary: Main c++ file for use by hardware, has a main and helper functions to be called in main
+ * Programmer's Name(s): Dom D'Attilio, Cole Stinson
+ * Date Code was Created: 9/22/2022 - Dom D'Attilio
+ * Date code was revised: 
+ *      9/24 - Cole Stinson - Added keypress functionality
+ *      9/25 - Dom D'Attilio - Added documentation
+ * 
+ * 
+ * 
+ */
+
+
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,10 +43,3 @@ int main()
 
 
 
-
-void outputHandler(int pinIn)
-{
-    //will work on this tomorrow
-
-    std::cout << "Pin Number " << pinIn << " was activated\n";
-}
