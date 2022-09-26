@@ -1,3 +1,10 @@
+<!-- Name of Artifact: App.vue
+    Summary: 
+    Programmer's Name(s): Gage Burmaster
+    Date Code was Created: 9/15/2022 
+    Date code was revised: 
+
+-->
 <template>
 <HomeScreen></HomeScreen>
 </template>
