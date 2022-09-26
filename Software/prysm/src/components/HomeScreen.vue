@@ -1,3 +1,31 @@
+<!-- Name of Artifact: HomeScreen.vue
+    Summary: Vue files that is responsible for the display of our Home Screen
+    including the title, background, nav bar, buttons, etc.
+    Programmer's Name(s): Gage Burmaster, Alexander Wilhelm, Andrew Brown
+    Date Code was Created: 9/15/2022 
+    Date code was revised: 
+
+       9/15 & 9/19 - Gage Burmaster - Creation of basic HTML format as well as
+       styling and creation of JavaScript data functionality.
+
+       9/19 & 20 - Gage Burmaster - Start of elementary front end display
+       "Save File" and "New File" buttons created as well as "Save File" able to
+       successfully open user's computer files to navigate file needed for upload.
+
+       9/22 - Andrew Brown - Creation of nav bar with Prysm title at top of display.
+
+       9/22 - Alexander Wilhelm - Update to Prysm title to be more UI friendly. Change
+       to color scheme of front end, display increased in size, about button created on
+       top right corner. Revision to background component to allow room for future GUI.
+
+       9/25 - Andrew Brown - Fixed "info" icon which was not displaying right on run-time.
+      Added documentation to describe buttons, title, info icon.
+
+       9/25 - Alexander Wilhelm - Added entire prologue comments above with all dates
+       and contributors for Sprint 1, as well as all descriptions of revisions. 
+       Added additional documentation on HTML styling and JavaScript components.
+-->
+
 <template>
     <!-- Top navbar area to show name of app and soon to be info area button-->
     <div class="navbar">
@@ -17,14 +45,15 @@
       <div class="new-button" @click="newFile(data,file,type)">New File</div>
     </div>
 </template>
-  
+      <!-- Below is creation of function for testing file saving with new file type
+      we are implementing: ".prsm" -->
   <script>
   export default {
     data: function() {
       return {
         data: "the cat in the hat knows a lot about that",
         file: "waveform",
-        type: ".prsm",
+        type: ".prsm", //new file type for our wave tables
       }
     },
     methods: {
@@ -44,14 +73,17 @@
         pom.dispatchEvent(event);
     }
     else {
-        pom.click();
+        pom.click(); //when button is clicked
     }
         },
 
       }
   }
   </script>
-  
+  <!-- HTML/CSS components of displaying and editing dimensions and colors of
+       our nav bar at top of display, info icon, title, main body, background
+       and the buttons displayed. 
+  -->
   <style>
   .navbar {
     background-color: #3e4444;
@@ -98,6 +130,7 @@
     width: 100%;
     height: 100%;
   }
+  
   .save-button{
     float: left;
     margin: auto;
