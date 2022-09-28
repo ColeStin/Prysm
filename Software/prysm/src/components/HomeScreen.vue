@@ -24,6 +24,8 @@
        9/25 - Alexander Wilhelm - Added entire prologue comments above with all dates
        and contributors for Sprint 1, as well as all descriptions of revisions. 
        Added additional documentation on HTML styling and JavaScript components.
+
+       9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
 -->
 
 <template>
@@ -37,8 +39,10 @@
     </div>
 
     <!-- Main body which will contain wave table as well as buttons for user input-->
-    <div class= "mainbody"> </div>
-
+    <div class= "mainbody">
+      <div class="remove-point-button" @click="removePoint()">Remove Point</div> 
+      <div class="add-point-button" @click="addPoint()">Add Point</div> 
+    </div>
     <!-- Bottom section of file containing save and new file buttons-->
     <div class="background">
       <div class="save-button" @click="saveFile()">Save File</div>
@@ -120,7 +124,7 @@
     background-color: #bdcebe;
     width: 100%;
     margin-top: 0px;
-    height: 400px;
+    height: 470px;
     padding: 4px;
   }
 
@@ -145,6 +149,7 @@
     border-radius: 8px 8px ;
     cursor: pointer;
   }
+
   .new-button{
     float: right;
     margin: auto;
@@ -159,4 +164,37 @@
     border-radius: 8px 8px ;
     cursor: pointer;
   }
+
+  .add-point-button{
+    float: right;
+    margin-top: 26%;
+    margin-right: 43%;
+    width: 8%;
+    height: 8%;
+    text-align: center;
+    color: black;
+    font-family: Impact;
+    background-color: lightskyblue;
+    border: 2px solid navy;
+    padding: 4px;
+    border-radius: 8px 8px ;
+    cursor: pointer;
+  }
+
+  .remove-point-button{
+    float: right;
+    margin-top: 26%;
+    margin-right: 20%;
+    width: 8%;
+    height: 8%;
+    text-align: center;
+    color: black;
+    font-family: Impact;
+    background-color: crimson;
+    border: 2px solid maroon;
+    padding: 4px;
+    border-radius: 8px 8px ;
+    cursor: pointer;
+  }
+
   </style>
