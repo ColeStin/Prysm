@@ -33,6 +33,14 @@ File root;
 
 FileHandler files;
 
+//these take up storage space
+int inPinOne = A0; //pin A0
+int inPinTwo = A1; //pin A1
+int inPinThree = A2; //pin A2
+int inPinFour = A3; //pin A3
+int inPinFive = A4; //pin A4
+
+
 void setup() {
   Serial.begin(115200);
 
@@ -57,46 +65,52 @@ void setup() {
   files.addFile("/dir/3.prsm");
   files.addFile("/dir/4.prsm");
   files.addFile("/dir/2ffd.prsm");
-  files.addFile("/dir/2sdfsd.prsm");
-  files.addFile("/dir/2fdsfd.prsm");
-  files.addFile("/dir/2sdfsd.prsm");
-  files.addFile("/dir/sdfsdfsdfsdf2.prsm");
-  files.addFile("/dir/sdfsdf2.prsm");
-  files.addFile("/dir/sfddfsfsf2.prsm");
-  files.addFile("/dir/ddfsdsfsdfsdfs2.prsm");
-  files.addFile("/dir/sdfsd2.prsm");
-  files.addFile("/dir/dsfdfs2.prsm");
-  files.addFile("/dir/sfsfefs2.prsm");
-  files.addFile("/dir/2.prsm");
-  files.addFile("/dir/dfsdf2.prsm");
-  files.addFile("/dir/2.prsm");
-  files.addFile("/dir/asdfadfasdfasdfasdfadfadfadfadfas2.prsm");
-  files.addFile("/dir/asdfasdfasdfadfadfadfafdadfadfadf2.prsm");
-  files.addFile("/dir/sdfdsfdsfd2.prsm");
-  files.addFile("/dir/dsfsd2.prsm");
-  files.addFile("/dir/sdfds2.prsm");
-  files.addFile("/dir/asdfasdfasdfasdfasdfadfadfasdfasdfa2.prsm");
-  files.addFile("/dir/asdfasdfsadfasdfasdfasdfsadadfadfaadafds2.prsm");
-  files.addFile("/dirasdfasdfasdfasdfafadfasdfadadfadfadfa/2.prsm");
-  files.addFile("/dirasdfasdfasdfasdfadfadfasdfassdfsasdfadf/2.prsm");
-  files.addFile("/diasasdfdfadr/2.prsm");
-  files.addFile("/dir/2asdf.prsm");
-  files.addFile("/dirdfs/2asdf.prsm");
-  files.addFile("/dirdfffes/2.prsm");
-  files.addFile("/dir/asdfdfsd2.prsm");
-  files.addFile("/dirdfd/2.prsm");
-  files.addFile("/dir/sdf2.prsm");
-  files.addFile("/dir/sdddf2.prsm");
-  files.addFile("/dir/2ff.prsm");
-  files.addFile("/dir/2sdffsd.prsm");
-  files.addFile("/dirsggsdgd/2.prsm");
-  files.addFile("/dirsdgsgsdse/2.prsm");
-  files.addFile("/dirasdgasdgasdg/2.prsm");
-  files.addFile("/dirgasdga/2.prsm");
+  // files.addFile("/dir/2sdfsd.prsm");
+  // files.addFile("/dir/2fdsfd.prsm");
+  // files.addFile("/dir/2sdfsd.prsm");
+  // files.addFile("/dir/sdfsdfsdfsdf2.prsm");
+  // files.addFile("/dir/sdfsdf2.prsm");
+  // files.addFile("/dir/sfddfsfsf2.prsm");
+  // files.addFile("/dir/ddfsdsfsdfsdfs2.prsm");
+  // files.addFile("/dir/sdfsd2.prsm");
+  // files.addFile("/dir/dsfdfs2.prsm");
+  // files.addFile("/dir/sfsfefs2.prsm");
+  // files.addFile("/dir/2.prsm");
+  // files.addFile("/dir/dfsdf2.prsm");
+  // files.addFile("/dir/2.prsm");
+  // files.addFile("/dir/asdfadfasdfasdfasdfadfadfadfadfas2.prsm");
+  // files.addFile("/dir/asdfasdfasdfadfadfadfafdadfadfadf2.prsm");
+  // files.addFile("/dir/sdfdsfdsfd2.prsm");
+  // files.addFile("/dir/dsfsd2.prsm");
+  // files.addFile("/dir/sdfds2.prsm");
+  // files.addFile("/dir/asdfasdfasdfasdfasdfadfadfasdfasdfa2.prsm");
+  // files.addFile("/dir/asdfasdfsadfasdfasdfasdfsadadfadfaadafds2.prsm");
+  // files.addFile("/dirasdfasdfasdfasdfafadfasdfadadfadfadfa/2.prsm");
+  // files.addFile("/dirasdfasdfasdfasdfadfadfasdfassdfsasdfadf/2.prsm");
+  // files.addFile("/diasasdfdfadr/2.prsm");
+  // files.addFile("/dir/2asdf.prsm");
+  // files.addFile("/dirdfs/2asdf.prsm");
+  // files.addFile("/dirdfffes/2.prsm");
+  // files.addFile("/dir/asdfdfsd2.prsm");
+  // files.addFile("/dirdfd/2.prsm");
+  // files.addFile("/dir/sdf2.prsm");
+  // files.addFile("/dir/sdddf2.prsm");
+  // files.addFile("/dir/2ff.prsm");
+  // files.addFile("/dir/2sdffsd.prsm");
+  // files.addFile("/dirsggsdgd/2.prsm");
+  // files.addFile("/dirsdgsgsdse/2.prsm");
+  // files.addFile("/dirasdgasdgasdg/2.prsm");
+  // files.addFile("/dirgasdga/2.prsm");
   //Arduino Mega - 5% of Storage and 24% of Dynamic Memory
   //Arduino Uno  - 44% of Storage and 99% of Dynamic Memory
 
-  
+  //set input pins to read input
+  pinMode(inPinOne, INPUT); //pull up resistor is turned off
+  pinMode(inPinTwo, INPUT); //pull up resistor is turned off
+  digitalWrite(inPinTwo, HIGH); //turn on the pullup resistor and make it always read high
+  pinMode(inPinThree, INPUT); //Specify 
+  pinMode(inPinFour, INPUT);
+  pinMode(inPinFive, INPUT);
 
 }
 
@@ -130,6 +144,12 @@ void fileTrace(File dir){
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  if(digitalRead(inPinOne) == HIGH){ //the pin is pressed. Pull up resistor is turned off
+    //do something if the button is pressed
+    Serial.write("Button One has been pressed!");
+  }
+  if(digitalRead(inPinTwo) == LOW){ //the pin is pressed but the pull up resistor is turned on so the value will be inverse
+    Serial.write("Button two has been pressed!");
+  }
 }
 
