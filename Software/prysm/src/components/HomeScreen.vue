@@ -19,6 +19,16 @@
         </v-layer>
       </v-stage>
     </div>
+    <div class="point-adjustment">
+      <div class="add-point" >Add Point</div>
+      <div class="delete-point" >Delete Point</div>
+      <div class="slidecontainer">
+        <a>X:</a>
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        <a>Y:</a>
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>
+    </div>
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
@@ -323,7 +333,7 @@ export default {
   margin: auto;
   outline: 2px solid black;
   width: 90%;
-  height: 90%;
+  height: 75%;
 
 }
 
@@ -348,8 +358,16 @@ export default {
   background-color: #bdcebe;
   width: 100%;
   margin-top: 0px;
-  height: 400px;
+  height: 475px;
   padding: 4px;
+}
+
+.point-adjustment {
+  margin-left: 5%;
+  margin-top: 5px;
+  width: 90%;
+  height: 20%;
+
 }
 
 .background {
@@ -387,5 +405,79 @@ export default {
   padding: 4px;
   border-radius: 8px 8px;
   cursor: pointer;
+}
+
+.add-point {
+  float: left;
+  width: 8%;
+  height: 20%;
+  margin: auto;
+  margin-top: 10px;
+  color: black;
+  font-family: Impact;
+  background-color: #c42021;
+  border: 2px solid black;
+  padding: 4px;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.delete-point {
+  float: right;
+  width: 8%;
+  height: 20%;
+  margin: auto;
+  margin-top: 10px;
+  color: black;
+  font-family: Impact;
+  background-color: #c42021;
+  border: 2px solid black;
+  padding: 4px;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.slidecontainer {
+  margin: auto;
+  width: 25%; /* Width of the outside container */
+  
+}
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background: #ffffff; /* Grey background */
+  outline: none; /* Remove outline */
+  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+  border: 2px solid black;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #11e9f5; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  border: 2px solid black;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  background: #11e9f5; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  border: 2px solid black;
 }
 </style>
