@@ -11,9 +11,11 @@
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     <div class="wavetable" ref="wavetable">
-      <v-stage ref="stage" :config="configKonva" @dragstart="increase" @dragend="increase" @click="selectElement">
+      <v-stage ref="stage" :config="configKonva" @dragstart="(e) => {handleDragStart(e)}" @dragend="handleDragEnd"
+        @dragmove="(e) => {handleDrag(e)}" @click="selectElement">
         <v-layer ref="layer">
-          <v-circle v-for="item in symbols" :key="item.numId" :config="item.config"></v-circle>
+          <v-line v-for="item in lines" :key="item.lineId" :config="item.config"></v-line>
+          <v-circle v-for="item in points" :key="item.numId" :config="item.config"></v-circle>
         </v-layer>
       </v-stage>
     </div>
@@ -21,7 +23,7 @@
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
     <div class="save-button" @click="saveFile()">Save File</div>
-    <div class="new-button" @click="newFile(data,file,type)">New File</div>
+    <div class="new-button" @click="newFile()">New File</div>
   </div>
 </template>
   
@@ -32,9 +34,14 @@ export default {
   data: function () {
     return {
       pointNum: 0,
+      lineNum: 0,
       scope: null,
       path: null,
-      symbols: [], //https://konvajs.org/docs/vue/index.html
+      points: [], //https://konvajs.org/docs/vue/index.html
+      lines: [],
+      dragId: null,
+      selectedPoint: null,
+      isSelected: false,
       data: "the cat in the hat knows a lot about that",
       file: "waveform",
       type: ".prsm",
@@ -55,6 +62,13 @@ export default {
         strokeWidth: 4,
         id: "test",
       },
+      defaultLine: {
+        fill: 'black',
+        tension: 0,
+        points: [],
+        stroke: "black",
+        strokeWidth: 2,
+      },
       defaultCircle: {
         config: {
           x: 300,
@@ -64,6 +78,7 @@ export default {
           stroke: 'black',
           strokeWidth: 4,
           id: "test",
+          draggable: true,
         },
         relX: 0,
         relY: 0,
@@ -76,28 +91,159 @@ export default {
     increase() {
       this.data++;
     },
-    //event that fires when a click happens: we see if there is a line / point there. if there is, select it. 
-    //saving for later: https://codesandbox.io/s/github/konvajs/site/tree/master/vue-demos/basic_demo?from-embed=&file=/src/App.vue
-    selectElement(e) {
-      //console.log(this.$refs.wavetable.getBoundingClientRect());
-      console.log(e);
+    testFunc() {
+    //only here for debugging purposes
+    },
+    //resets the wavetable editor
+    newFile() {
+      this.lines = [];
+      this.points = [];
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      this.configKonva.height = rect.height;
+      this.configKonva.width = rect.width;
+      console.log(rect);
+      let x = JSON.parse(JSON.stringify(this.defaultCircle));
+      let y = JSON.parse(JSON.stringify(x));
+      x.config.x = 0;
+      x.config.y = rect.height / 2;
+      y.config.x = rect.width;
+      console.log(x.config.x);
+      y.config.y = rect.height / 2;
+      x.numId = 0;
+      y.numId = 1;
+      this.pointNum = 2;
+      this.points = this.points.concat([x, y]);
+      let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+      defaultLineConfig.points = [0, rect.height / 2, rect.width, rect.height / 2];
+      let line = {
+        config: defaultLineConfig,
+        lineId: this.lineNum,
+      }
+      this.lineNum++;
+      this.lines = [line];
+    },
+    //drawLines looks at all the points we have available, and connects the closest points on the x axis via line. Done by filtering points by x Position
+    drawLines() {
+      this.lines = [];
+      this.lineNum = 0;
+      //sort points by x values
+      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x });
+      for (let i = 0; i < sortedArr.length; i++) {
+        if (i < sortedArr.length - 1) {
+          let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, sortedArr[i + 1].config.x, sortedArr[i + 1].config.y];
+          let line = {
+            config: defaultLineConfig,
+            lineId: this.lineNum,
+          }
+          this.lineNum++;
+          this.lines = this.lines.concat([line]);
+
+        }
+      }
+    },
+    handleDragEnd() {
+      this.selectedPoint = null;
+    },
+    //this updates the lines while you drag a point around
+    handleDrag(e) {
       let event = e.evt;
       let rect = this.$refs.wavetable.getBoundingClientRect();
       let xPos = Math.round(event.x - rect.x);
       let yPos = Math.round(event.y - rect.y);
-      console.log(xPos);
-      console.log(yPos);
-      let point = JSON.parse(JSON.stringify(this.defaultCircle));
-      point.config.x= xPos;
-      point.config.y = yPos;
-      point.numId = this.pointNum;
-      this.pointNum++;
-      this.symbols=this.symbols.concat([point]);
-      console.log(this.symbols);
-     // let stage = this.$refs.stage.getStage();
-      //stage.draw();
+      var indexDrag = this.dragId;
+      var point = this.points.filter((x) => { return x.config.index == indexDrag })
+      point.forEach((x) => {
+        x.config.x = xPos;
+        x.config.y = yPos;
+      });
+      this.drawLines();
+    },
+    //this lets the component know which element we are dragging
+    handleDragStart(e) {
+      let self = this;
+      console.log(e);
+      this.dragId = e.target.attrs.index;
+      var point = this.points.filter((x) => { 
+        return x.config.index == this.dragId; })
+        console.log(this.points);
+      point.forEach((x) => {
+      self.selectedPoint = x;
+
+      })
+      if (self.isSelected) {
+        self.selectedPoint.config.fill = 'black';
+        self.selectedPoint.config.stroke = 'black';
+        self.selectedPoint.config.radius = 5;
+        self.selectedPoint.config.strokeWidth = 4;
+        self.isSelected = false;
+      }
+        
+      self.selectedPoint.config.fill = 'red';
+          self.selectedPoint.config.stroke = 'black';
+          self.selectedPoint.config.strokeWidth = 1;
+          self.selectedPoint.config.radius = 8;
+          self.isSelected = true;
+    },
+    //event that fires when a click happens: we see if there is a line / point there. if there is, select it. 
+    //if no point exists, create a new point there
+    //saving for later: https://codesandbox.io/s/github/konvajs/site/tree/master/vue-demos/basic_demo?from-embed=&file=/src/App.vue
+    //need to normalize all lines to between 0 and 2 PI x and 0 and 1 y. will do later.
+    selectElement(e) {
+      let event = e.evt;
+      let self = this;
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      let xPos = Math.round(event.x - rect.x);
+      let yPos = Math.round(event.y - rect.y);
+
+      let proximityCheck = this.points.filter((x) => { return (Math.sqrt((x.config.x - xPos) * (x.config.x - xPos) + (x.config.y - yPos) * (x.config.y - yPos)) < 10) })
+      //selected a point
+      if (proximityCheck.length > 0) {
+        if (!self.isSelected) {
+          self.isSelected = true;
+          proximityCheck.forEach(x => {
+            self.selectedPoint = x;
+          });
+          self.selectedPoint.config.fill = 'red';
+          self.selectedPoint.config.stroke = 'black';
+          self.selectedPoint.config.strokeWidth = 1;
+          self.selectedPoint.config.radius = 8;
+          self.isSelected = true;
+        }
+        else {
+          self.points = self.points.map((x) => {
+          x.config.fill = 'black';
+          x.config.strokeWidth=4;
+          x.config.radius =5;
+          return x ;
+        });
+        self.isSelected = false;
+        }
+      }
+      else {
+              if (self.isSelected) {
+        self.points = this.points.map((x) => {
+          x.config.fill = 'black';
+          x.config.strokeWidth=4;
+          x.config.radius =5;
+          return x ;
+        });
+        self.isSelected = false;
+      }
+        let point = JSON.parse(JSON.stringify(this.defaultCircle));
+        point.config.x = xPos;
+        point.config.y = yPos;
+        point.config.index = this.pointNum;
+        point.numId = this.pointNum;
+        this.pointNum++;
+        this.points = this.points.concat([point]);
+        //possible optimization: pass in point made, only rerender points to left and right
+        //also need to : add x and y by normalizing here to -1 and 1 and 0 - 2pi
+        this.drawLines();
+      }
     },
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
+    //saves the .prsm file
     saveFile() {
       console.log(this.$root);
       var pom = document.createElement("a");
@@ -117,22 +263,29 @@ export default {
     let rect = this.$refs.wavetable.getBoundingClientRect();
     this.configKonva.height = rect.height;
     this.configKonva.width = rect.width;
-    console.log(rect);
     let x = JSON.parse(JSON.stringify(this.defaultCircle));
 
     let y = JSON.parse(JSON.stringify(x));
-    x.config.x=0;
-    x.config.y=rect.height/2;
-    y.config.x=rect.width;
-    console.log(x.config.x);
-    y.config.y = rect.height/2;
+    x.config.x = 0;
+    x.config.y = rect.height / 2;
+    x.config.index = this.pointNum;
+    y.config.x = rect.width;
+    y.config.y = rect.height / 2;
+    y.config.index = 1;
     x.numId = 0;
     y.numId = 1;
     this.pointNum = 2;
-    this.symbols=this.symbols.concat([x,y]);
+    this.points = this.points.concat([x, y]);
+    let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+    defaultLineConfig.points = [0, rect.height / 2, rect.width, rect.height / 2];
+    let line = {
+      config: defaultLineConfig,
+      lineId: this.lineNum,
+    }
+    this.lineNum++;
+    this.lines = [line];
     let stage = this.$refs.stage.getStage();
 
-    console.log(this.symbols);
     stage.draw();
   },
 }
