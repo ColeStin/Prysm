@@ -1,3 +1,21 @@
+
+/**
+ * Name of Artifact: Prysm_Hardware.ino
+ * Summary: File that is the main file for the software of the Prysm Project, it will include the file handler, synth engine, IO control and everything needed for the synthesizer
+ * Programmer's Name(s): Dom D'Attilio, Cole Stinson
+ * Date Code was Created: 10/1/2022 - Dom D'Attilio
+ * Date code was revised: 
+ *     10/1 - Cole Stinson - File created
+ *     10/1 - Cole Stinson - setup and loop functions written
+ *     10/3 - Dom D'Attilio - documentation started
+ *     10/5 - Cole Stinson - File Handler created and is able to be passed string
+ *     10/8 - Cole Stinson - File Handler able to look through file system
+ *     10/9 - Dom D'Attilio - Test Variables for IO created and used in loop funciton
+ * 
+ * 
+ * 
+ * 
+ */
 #include <SPI.h>
 #include <SD.h>
 
