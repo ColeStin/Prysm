@@ -20,12 +20,14 @@
       </v-stage>
     </div>
     <div class="point-adjustment">
-      <div class="add-point" >Add Point</div>
-      <div class="delete-point" >Delete Point</div>
+      <div class="add-point" >Add Point</div> <!-- Creates a point in the center of the graph-->
+      <div class="delete-point" >Delete Point</div> <!-- Deletes a selected point-->
       <div class="slidecontainer">
-        <a>X:</a>
+        <a>X:</a> <!-- For adjusting the x value of a selected point-->
         <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-        <a>Y:</a>
+        <a>Y:</a> <!-- For adjusting the y value of a selected point-->
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        <a>Curve:</a> <!-- For adjusting the curvature of a selected line-->
         <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
       </div>
     </div>
@@ -333,7 +335,7 @@ export default {
   margin: auto;
   outline: 2px solid black;
   width: 90%;
-  height: 75%;
+  height: 70%;
 
 }
 
@@ -358,7 +360,7 @@ export default {
   background-color: #bdcebe;
   width: 100%;
   margin-top: 0px;
-  height: 475px;
+  height: 550px;
   padding: 4px;
 }
 
@@ -366,7 +368,7 @@ export default {
   margin-left: 5%;
   margin-top: 5px;
   width: 90%;
-  height: 20%;
+  height: 30%;
 
 }
 
@@ -410,7 +412,7 @@ export default {
 .add-point {
   float: left;
   width: 8%;
-  height: 20%;
+  height: 10%;
   margin: auto;
   margin-top: 10px;
   color: black;
@@ -425,7 +427,7 @@ export default {
 .delete-point {
   float: right;
   width: 8%;
-  height: 20%;
+  height: 10%;
   margin: auto;
   margin-top: 10px;
   color: black;
@@ -437,6 +439,8 @@ export default {
   cursor: pointer;
 }
 
+
+/* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {
   margin: auto;
   width: 25%; /* Width of the outside container */
