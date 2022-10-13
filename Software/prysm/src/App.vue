@@ -1,3 +1,11 @@
+<!-- Name of Artifact: App.vue
+    Summary: Sets up app with front, color, and merges components
+    to all work together in final display.
+    Programmer's Name(s): Gage Burmaster
+    Date Code was Created: 9/15/2022 
+    Date code was revised: 
+     9/25 - Alexander Wilhelm - Prologue documentation
+-->
 <template>
 <HomeScreen></HomeScreen>
 </template>

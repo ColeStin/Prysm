@@ -1,3 +1,10 @@
+<!-- Name of Artifact: HelloWorld.vue
+    Summary: Sample template for creating new files
+    Programmer's Name(s): Gage Burmaster
+    Date Code was Created: 9/15/2022 
+    Date code was revised: 
+    9/25 - Alexander Wilhelm - Prologue documentation
+-->
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
