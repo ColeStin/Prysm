@@ -14,7 +14,3 @@ npm run electron:serve
 
 To boot up the desktop app for Prysm
 
-
-
-
-

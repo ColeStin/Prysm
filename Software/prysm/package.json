@@ -14,7 +14,9 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.8.3",
-    "vue": "^3.2.13"
+    "konva": "^8.3.13",
+    "vue": "^3.2.13",
+    "vue-konva": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
