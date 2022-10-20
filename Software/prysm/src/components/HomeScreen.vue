@@ -34,7 +34,8 @@
     <div class="title">
       Prysm
       <!-- Info image which will soon link to about modal with credits to all makers of the project-->
-      <img class="info" src="../../public/info_icon.png" alt="About" />
+      <img class="info" @click = "openAboutPage()" src="../../public/info_icon.png" alt="About" />
+      <!-- <div class="info-button" @click="openAboutPage()">About Page</div> -->
     </div>
   </div>
 
@@ -134,6 +135,10 @@ export default {
   methods: {
     increase() {
       this.data++;
+    },
+
+    openAboutPage() {
+        
     },
     testFunc() {
     //only here for debugging purposes
@@ -334,6 +339,7 @@ export default {
     stage.draw();
   },
 }
+
 </script>
   
 <style>

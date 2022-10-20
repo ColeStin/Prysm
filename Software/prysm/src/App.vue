@@ -8,15 +8,18 @@
 -->
 <template>
 <HomeScreen></HomeScreen>
+<AboutScreen></AboutScreen>
 </template>
 
 <script>
 // import HelloWorld from './components/HelloWorld.vue'
 import HomeScreen from './components/HomeScreen.vue'
+import AboutScreen from './components/AboutScreen.vue'
 export default {
   name: 'App',
   components: {
-    HomeScreen,
+    HomeScreen, AboutScreen
+
 }
 }
 </script>
