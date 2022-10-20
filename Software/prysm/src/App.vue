@@ -18,7 +18,7 @@ import AboutScreen from './components/AboutScreen.vue'
 export default {
   name: 'App',
   components: {
-    HomeScreen, AboutScreen
+    HomeScreen, AboutScreen //take aboutScreen out when logic is figured out
 
 }
 }

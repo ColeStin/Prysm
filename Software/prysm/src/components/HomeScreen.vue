@@ -29,13 +29,13 @@
 -->
 
 <template>
-  <!-- Top navbar area to show name of app and soon to be info area button-->
+  <!-- Top navbar area to show name of app and info area button-->
   <div class="navbar">
     <div class="title">
       Prysm
       <!-- Info image which will soon link to about modal with credits to all makers of the project-->
       <img class="info" @click = "openAboutPage()" src="../../public/info_icon.png" alt="About" />
-      <!-- <div class="info-button" @click="openAboutPage()">About Page</div> -->
+    
     </div>
   </div>
 
@@ -137,9 +137,12 @@ export default {
       this.data++;
     },
 
-    openAboutPage() {
-        
+    openAboutPage() { //displays about Page
+      //add AboutScreen component on App.vue
+      //remove MainScreen component on App.vue
+
     },
+
     testFunc() {
     //only here for debugging purposes
     },
