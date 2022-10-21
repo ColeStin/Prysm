@@ -13,16 +13,18 @@
         
         <h1> Project Description: </h1>
 
-        <p> This project was created during our EECS 581 & EECS 581 Senior Computer Science Capstone classes at
+        <p> This project was created during our EECS 581 & EECS 582 Senior Computer Science Capstone classes at
         The University of Kansas in both Fall 2022 & Spring 2023. </p>
-
-        <p> This desktop app is a companion app to go with the physical synthesizer we produced. It is a wavetable generator and will load the generated tables onto an SD card and allow our synthesizer
+        <p>______________________________________________________________________________________________________________________________________</p>
+        <p> Prysm desktop app is a companion app to go with the physical synthesizer we produced. It is a wavetable
+        generator and will load the generated tables onto an SD </p>
+        <p> card and allow our synthesizer
         to read these wavetables and generate sounds to the users liking. The user can upload a wave table to be used on the actual synthesizer. </p>
 
         <h1>GitHub Link: </h1>
         
         <p>The GitHub link to our code as well as commit information can be found at the below GitHub Link: </p>
-        <p> https://github.com/ColeStin/Prysm </p>
+        <p>  <a href="https://github.com/ColeStin/Prysm">Visit Prysm GitHub</a> </p>
 
     </div> 
 
@@ -55,6 +57,10 @@ export default {
   background-color: #3e4444;
   width: 100%;
   height: 100%;
+}
+
+.h1 {
+  text-align: left;
 }
 
 </style>
