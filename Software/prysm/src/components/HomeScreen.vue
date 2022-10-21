@@ -29,17 +29,6 @@
 -->
 
 <template>
-  <!-- Top navbar area to show name of app and info area button-->
-  <div class="navbar">
-    <div class="title">
-      Prysm
-      <!-- Info image which will soon link to about modal with credits to all makers of the project-->
-      <img class="info" @click = "openAboutPage()" src="../../public/info_icon.png" alt="About" />
-    
-    </div>
-  </div>
-
-
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     <div class="wavetable" ref="wavetable">
@@ -135,12 +124,6 @@ export default {
   methods: {
     increase() {
       this.data++;
-    },
-
-    openAboutPage() { //displays about Page
-      //add AboutScreen component on App.vue
-      //remove MainScreen component on App.vue
-
     },
 
     testFunc() {
@@ -346,12 +329,6 @@ export default {
 </script>
   
 <style>
-.navbar {
-  background-color: #3e4444;
-  width: 100%;
-  height: 65px;
-  padding: 0px;
-}
 
 .wavetable-class {
 
@@ -366,36 +343,12 @@ export default {
 
 }
 
-.info {
-  height: 40px;
-  width: 40px;
-  margin-top: 12px;
-  float: right;
-}
-
 .wavetable {
   margin: auto;
   outline: 2px solid black;
   width: 90%;
   height: 70%;
 
-}
-
-.title {
-  color: #e6e2d3;
-  float: center;
-  font-size: 50px;
-  text-align: center;
-  font-family: Impact;
-  margin-left: 1%;
-  margin-right: 1%;
-}
-
-.about {
-  padding-left: 90%;
-  margin-top: -33px;
-  color: #e6e2d3;
-  font-family: Impact;
 }
 
 .mainbody {
