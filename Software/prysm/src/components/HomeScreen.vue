@@ -47,7 +47,7 @@
       <div class="delete-point" @click="deletePoint" >Delete Point</div> <!-- Deletes a selected point-->
       <div class="slidecontainer">
         <a>X: {{rangeXval}}</a> <!-- For adjusting the x value of a selected point-->
-        <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.x == 0) || (selectedPoint&&stage&&selectedPoint.config.x == stage.attrs.width)" id="myRange">
+        <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
         <a>Y: {{rangeYval}}</a> <!-- For adjusting the y value of a selected point-->
         <input type="range" min="0"  :max="maxHeight" v-model="rangeYval" class="slider" step=".5" :disabled="!pointIsSelected" id="myRange2">
         <a>Curve:</a> <!-- For adjusting the curvature of a selected line-->
@@ -109,7 +109,7 @@ export default {
         tension: 0,
         points: [],
         stroke: "black",
-        strokeWidth: 2,
+        strokeWidth: 4,
       },
       defaultCircle: {
         config: {
@@ -226,8 +226,8 @@ export default {
       point.forEach((x) => {
         //for each function, but should always have one item in array.
         //(x.config.x < 0) ? (x.config.x =0,e.target.attrs.x = 0) : (x.config.x > this.stage.attrs.width) ? (x.config.x = this.stage.attrs.width,e.target.attrs.x = this.stage.attrs.width) : x.config.x = xPos;
-        (x.config.x == 0 && sameX.length == 1) ? (x.config.x = 0,e.target.attrs.x=0) : (x.config.x == this.stage.attrs.width && sameX.length == 1) ? (x.config.x = this.stage.attrs.width,e.target.attrs.x = this.stage.attrs.width) : x.config.x = xPos;
-        (e.target.attrs.y <= 0) ? (x.config.y = 0,e.target.attrs.y =0) : (e.target.attrs.y == this.stage.attrs.height) ? (x.config.y = this.stage.attrs.height,e.target.attrs.y = this.stage.attrs.height) : (x.config.y = yPos);
+        // (x.config.x == 0 && sameX.length == 1) ? (x.config.x = 0,e.target.attrs.x=0) : (x.config.x == this.stage.attrs.width && sameX.length == 1) ? (x.config.x = this.stage.attrs.width,e.target.attrs.x = this.stage.attrs.width) : x.config.x = xPos;
+        // (e.target.attrs.y <= 0) ? (x.config.y = 0,e.target.attrs.y =0) : (e.target.attrs.y == this.stage.attrs.height) ? (x.config.y = this.stage.attrs.height,e.target.attrs.y = this.stage.attrs.height) : (x.config.y = yPos);
         x.config.y = yPos;
       });
       this.drawLines();
@@ -242,15 +242,24 @@ export default {
       let rect = this.$refs.wavetable.getBoundingClientRect();
       let xPos= Math.round(event.x - rect.x);
       let yPos = Math.round(event.y - rect.y);
-      if (!this.isSelected)
+      if (!this.lineIsSelected)
       {
-        self.lineIsSelected = true;
+        if (this.pointIsSelected)
+        {
+          this.dehighlight();
+        }
+        this.lineIsSelected = true;
         let lineSelected = this.lines.filter((x) => {
           return (e.target.attrs.points[0] == x.config.points[0] && e.target.attrs.points[2] == x.config.points[2]);
         });
         // console.log(lineSelected)
         this.selectedLine = lineSelected[0];
         this.highlightLine(lineSelected[0]);
+      }
+      else
+      {
+        
+        this.dehighlight();
       }
 
     },
@@ -303,7 +312,8 @@ export default {
     highlightLine(line){
       this.selectedLine = line;
       this.selectedLine.config.fill='red';
-      this.selectedLine.config.strokeWidth = 4;
+      this.selectedLine.config.stroke='red';
+      this.selectedLine.config.strokeWidth = 8;
       this.lineIsSelected == true;
     },  
     dehighlight(){
@@ -321,8 +331,11 @@ export default {
       if (this.selectedLine)
       {
         this.selectedLine.config.fill='black';
-        this.selectedLine.strokeWidth = 2;
+        this.selectedLine.config.stroke='black';
+        this.selectedLine.config.strokeWidth = 4;
         this.rangeCurve = 0.0;
+        this.selectedLine = null;
+        this.lineIsSelected = false;
 
       }
     },
