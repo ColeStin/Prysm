@@ -39,6 +39,7 @@
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
+          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
         </v-layer>
       </v-stage>
     </div>
@@ -50,8 +51,8 @@
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
         <a>Y: {{rangeYval}}</a> <!-- For adjusting the y value of a selected point-->
         <input type="range" min="0"  :max="maxHeight" v-model="rangeYval" class="slider" step=".5" :disabled="!pointIsSelected" id="myRange2">
-        <a>Curve:</a> <!-- For adjusting the curvature of a selected line-->
-        <input type="range" min="-50" max="50" v-model="rangeCurve" class="slider" id="myRange">
+        <a>Curve: {{rangeCurve}}</a> <!-- For adjusting the curvature of a selected line-->
+        <input type="range" min="-1" max="1" step=".1" v-model="rangeCurve" class="slider" id="myRange" :disabled="!lineIsSelected">
       </div>
 
     </div>
@@ -86,6 +87,7 @@ export default {
       path: null,
       points: [], //https://konvajs.org/docs/vue/index.html
       lines: [],
+      testpoints: [], //for testing only, remove for prod
       dragId: null,
 
       data: "the cat in the hat knows a lot about that",
@@ -143,6 +145,49 @@ export default {
       this.selectedPoint.config.y = parseFloat(this.rangeYval);
       this.drawLines();
     },
+    moveLine() {
+      if (!this.lineIsSelected) return;
+
+      let pointArr = this.selectedLine.config.points;
+      //two cases: positive slider and negative slider
+      if (this.rangeCurve > 0)
+      {
+        if (pointArr.length == 4)
+        {
+        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
+      
+        }
+        else
+        {
+        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
+        }
+        let x = JSON.parse(JSON.stringify(this.defaultCircle));
+        x.config.x = this.selectedLine.config.points[2];
+        x.config.y = this.selectedLine.config.points[3];
+        this.testpoints =  this.testpoints.concat([x])
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+
+      }
+      else if (this.rangeCurve < 0)
+      {
+        let curve = Math.abs(this.rangeCurve);
+        if (pointArr.length == 4)
+        {
+        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,this.stage.attrs.height,pointArr[2],pointArr[3]];
+        }
+        this.selectedLine.config.tension = parseFloat(curve);
+      }
+      else if (this.rangeCurve == 0)
+      {
+        this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+      }
+      // this.selectedLine.config.points = this.selectedLine.config.points.concat([(this.selectedLine.config.points[0]+this.selectedLine.config.points[2])/2,this.stage.attrs.height]);
+      
+      // console.log(this.selectedLine);
+      
+      // console.log(this.selectedLine.config.tension)
+    },
     resizeHandler(e) {
       //def does not work lol
       console.log(e);
@@ -150,7 +195,7 @@ export default {
       let widthRatio = 1;
     
       this.points.map(x =>{
-        console.log(x);
+        // console.log(x);
         x.config.x = x.config.x * widthRatio;
         x.config.y = x.config.y * heightRatio;
       });
@@ -208,7 +253,7 @@ export default {
           //this.lines = this.lines.concat([line]);
 
         }
-
+          // need to add logic that checks curve in original line and readds curve here
       }
       this.lines = linestmp;
     },
@@ -237,11 +282,9 @@ export default {
     //saving for later: https://codesandbox.io/s/github/konvajs/site/tree/master/vue-demos/basic_demo?from-embed=&file=/src/App.vue
     //need to normalize all lines to between 0 and 2 PI x and 0 and 1 y. will do later.
     clickLine(e) {
-      console.log(e);
+      // console.log(e);
       let event = e.evt;
       let rect = this.$refs.wavetable.getBoundingClientRect();
-      let xPos= Math.round(event.x - rect.x);
-      let yPos = Math.round(event.y - rect.y);
       if (!this.lineIsSelected)
       {
         if (this.pointIsSelected)
@@ -314,7 +357,8 @@ export default {
       this.selectedLine.config.fill='red';
       this.selectedLine.config.stroke='red';
       this.selectedLine.config.strokeWidth = 8;
-      this.lineIsSelected == true;
+      this.lineIsSelected = true;
+      this.rangeCurve = this.selectedLine.config.tension;
     },  
     dehighlight(){
       if(this.selectedPoint == null && this.selectedLine == null) return;
@@ -336,7 +380,7 @@ export default {
         this.rangeCurve = 0.0;
         this.selectedLine = null;
         this.lineIsSelected = false;
-
+        this.rangeCurve = 0.0;
       }
     },
     addPoint(){
@@ -429,6 +473,9 @@ this.movePointX();
     rangeYval: function(value) {
 this.movePointY();
     },
+    rangeCurve: function(value) {
+      this.moveLine();
+    }
   }
 }
 
