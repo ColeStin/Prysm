@@ -29,7 +29,7 @@ using namespace std;
 */
 void setup(){
     //initializes 4 gpio digital pins as input pins
-    pinMode(12, INPUT);
+    pinMode(12, INPUT_PULLUP); //Alex, replicate this
     pinMode(11, INPUT);
     pinMode(10, INPUT);
     pinMode(9, INPUT);
