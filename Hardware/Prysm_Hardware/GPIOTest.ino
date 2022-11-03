@@ -50,6 +50,11 @@ void setup(){
 */
 void loop()
 {
+
+    bool values[18] = {false};
+    for(int i = 20; i<38; i++){
+      values[i-20] = digitalRead(i) == LOW;
+    }
     val12 = digitalRead(12);
     val11 = digitalRead(11);
     val10 = digitalRead(10);
