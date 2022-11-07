@@ -32,7 +32,6 @@
 <template>
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
-    <div class="test">height: {{maxHeight}}width: {{maxWidth}}</div>
     
     <div class="wavetable" ref="wavetable">
       <v-stage ref="stage" :config="configKonva" >
@@ -518,7 +517,7 @@ this.movePointY();
   background-color: #bdcebe;
   width: 100%;
   margin-top: 0px;
-  height: 550px;
+  height: 100%;
   padding: 4px;
 }
 
@@ -569,30 +568,32 @@ this.movePointY();
 
 .add-point {
   float: left;
-  width: 8%;
-  height: 10%;
+  width: 100px;
+  height: 25px;
   margin: auto;
   margin-top: 10px;
+  padding:2px;
   color: black;
   font-family: Impact;
+  font-size: 18px;
   background-color: #c42021;
   border: 2px solid black;
-  padding: 4px;
   border-radius: 8px 8px;
   cursor: pointer;
 }
 
 .delete-point {
   float: right;
-  width: 8%;
-  height: 10%;
+  width: 100px;
+  height: 25px;
   margin: auto;
   margin-top: 10px;
+  padding:2px;
   color: black;
   font-family: Impact;
+  font-size: 18px;
   background-color: #c42021;
   border: 2px solid black;
-  padding: 4px;
   border-radius: 8px 8px;
   cursor: pointer;
 }
@@ -617,6 +618,7 @@ this.movePointY();
   -webkit-transition: .2s; /* 0.2 seconds transition on hover */
   transition: opacity .2s;
   border: 2px solid black;
+  border-radius: 5px;
 }
 
 /* Mouse-over effects */
@@ -630,17 +632,18 @@ this.movePointY();
   appearance: none;
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: #11e9f5; /* Green background */
+  background: #3e4444; /* Green background */
   cursor: pointer; /* Cursor on hover */
-  border: 2px solid black;
+  border: 1px solid black;
+  border-radius: 4px;
 }
 
 .slider::-moz-range-thumb {
   width: 25px; /* Set a specific slider handle width */
   height: 25px; /* Slider handle height */
-  background: #11e9f5; /* Green background */
+  background: #3e4444; /* Green background */
   cursor: pointer; /* Cursor on hover */
-  border: 2px solid black;
+  border-radius: 3px;
 }
 </style>
 
