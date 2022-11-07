@@ -39,7 +39,7 @@
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
-          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
+          <!--<v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle> -->
         </v-layer>
       </v-stage>
     </div>
@@ -413,6 +413,14 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() {
+      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x });
+      this.data = "START\n";
+      this.data = this.data + sortedArr.length + "\n";
+      for(let i = 0; i < sortedArr.length; i++){
+        this.data = this.data + sortedArr[i].config.x + " " + sortedArr[i].config.y + "\n";
+      }
+      this.data = this.data + "END";
+
       console.log(this.$root);
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.data));
