@@ -29,7 +29,7 @@ using namespace std;
 */
 void setup(){
     //initializes 4 gpio digital pins as input pins
-    pinMode(12, INPUT);
+    pinMode(12, INPUT_PULLUP); //Alex, replicate this
     pinMode(11, INPUT);
     pinMode(10, INPUT);
     pinMode(9, INPUT);
@@ -50,6 +50,11 @@ void setup(){
 */
 void loop()
 {
+
+    bool values[18] = {false};
+    for(int i = 20; i<38; i++){
+      values[i-20] = digitalRead(i) == LOW;
+    }
     val12 = digitalRead(12);
     val11 = digitalRead(11);
     val10 = digitalRead(10);
