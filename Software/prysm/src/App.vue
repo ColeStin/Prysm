@@ -11,12 +11,13 @@
     <div class="navbar">
       <div class="title"> 
         Prysm
-
       <!-- Info image which will link to about page which credits to all makers of the project-->
       <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
 
       <!-- Go Back brings you back to Home Screen page-->
-      <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
+      <img v-if = "iconClicked" class="goBack" @click = "iconClicked = false" src="../public/back.png" alt="Go Back" />
+      <!-- <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div> -->
+      
 
       </div>
 
@@ -90,18 +91,9 @@ export default {
   padding: 0px;
 }
 .goBack {
-  width: 8%;
-  height: 10%;
-  text-align: center;
-  margin-top: 10px;
-  color: black;
-  font-family: Impact;
-  font-size: 40px;
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
   float: right;
-  background-color: #FDDB93;
-  border: 3px solid black;
-  /* padding: 4px; */
-  border-radius: 8px 8px;
-  cursor: pointer;
 }
 </style>

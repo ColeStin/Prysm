@@ -43,8 +43,23 @@
       </v-stage>
     </div>
     <div class="point-adjustment">
-      <div class="add-point" @click="addPoint">Add Point</div> <!-- Creates a point in the center of the graph-->
-      <div class="delete-point" @click="deletePoint" >Delete Point</div> <!-- Deletes a selected point-->
+      <div class="add-point" @click="addPoint">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+        </svg>
+
+        Add Point
+       
+      </div> <!-- Creates a point in the center of the graph-->
+      <div class="delete-point" @click="deletePoint" >
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
+      </svg>
+
+      Delete Point</div> <!-- Deletes a selected point-->
+
       <div class="slidecontainer">
         <a>X: {{rangeXval}}</a> <!-- For adjusting the x value of a selected point-->
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
@@ -514,7 +529,7 @@ this.movePointY();
 }
 
 .mainbody {
-  background-color: #bdcebe;
+  background-color: #95B8D1;
   width: 100%;
   margin-top: 0px;
   height: 100%;
@@ -542,10 +557,10 @@ this.movePointY();
   width: 8%;
   height: 8%;
   text-align: center;
-  color: black;
+  color: white;
   font-family: Impact;
-  background-color: #b4a7d6ff;
-  border: 2px solid #8e7cc3;
+  background-color: #333333;
+  border: 2px solid #333333;
   padding: 4px;
   border-radius: 8px 8px;
   cursor: pointer;
@@ -557,10 +572,10 @@ this.movePointY();
   width: 8%;
   height: 8%;
   text-align: center;
-  color: black;
+  color: white;
   font-family: Impact;
-  background-color: #b4a7d6ff;
-  border: 2px solid #8e7cc3;
+  background-color: #333333;
+  border: 2px solid #333333;
   padding: 4px;
   border-radius: 8px 8px;
   cursor: pointer;
@@ -576,7 +591,7 @@ this.movePointY();
   color: black;
   font-family: Impact;
   font-size: 18px;
-  background-color: #c42021;
+  background-color: #95B8D1;
   border: 2px solid black;
   border-radius: 8px 8px;
   cursor: pointer;
@@ -584,7 +599,7 @@ this.movePointY();
 
 .delete-point {
   float: right;
-  width: 100px;
+  width: 120px;
   height: 25px;
   margin: auto;
   margin-top: 10px;
@@ -592,7 +607,7 @@ this.movePointY();
   color: black;
   font-family: Impact;
   font-size: 18px;
-  background-color: #c42021;
+  background-color: #95B8D1;
   border: 2px solid black;
   border-radius: 8px 8px;
   cursor: pointer;
