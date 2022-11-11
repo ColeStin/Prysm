@@ -108,7 +108,7 @@ height: 4%;
 }
 
 .headerLabel3 {
-margin-left: 43%;
+margin-left: 41.5%;
 border-radius: 50px;
 background-color: #333333;
 padding: 0px;
