@@ -43,6 +43,15 @@
       </v-stage>
     </div>
     <div class="point-adjustment">
+
+      <div class="new-button" @click="newFile()">New File
+      
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
+            </svg>
+
+      </div>
+      
       <div class="add-point" @click="addPoint">
 
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
@@ -60,6 +69,15 @@
 
       Delete Point</div> <!-- Deletes a selected point-->
 
+            <div class="save-button" @click="saveFile()">Save File
+      
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+            </svg>
+
+      </div>
+      
+
       <div class="slidecontainer">
         <a>X: {{rangeXval}}</a> <!-- For adjusting the x value of a selected point-->
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
@@ -73,8 +91,8 @@
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
-    <div class="save-button" @click="saveFile()">Save File</div>
-    <div class="new-button" @click="newFile()">New File</div>
+    <!-- <div class="save-button" @click="saveFile()">Save File</div>
+    <div class="new-button" @click="newFile()">New File</div> -->
   </div>
 </template>
   
@@ -529,11 +547,14 @@ this.movePointY();
 }
 
 .mainbody {
-  background-color: #95B8D1;
+  /* background-color: #97b4b3; */
+  background-image: url("../../Images/aboutBackground2.png");
+  background-size: cover;
   width: 100%;
   margin-top: 0px;
-  height: 100%;
+  height: 750px;
   padding: 4px;
+  padding-top: 10px; 
 }
 
 .point-adjustment {
@@ -544,49 +565,59 @@ this.movePointY();
 
 }
 
-.background {
-  color: red;
-  background-color: #3e4444;
-  width: 100%;
-  height: 100%;
-}
-
 .save-button {
-  float: left;
-  margin: auto;
-  width: 8%;
-  height: 8%;
-  text-align: center;
-  color: white;
-  font-family: Impact;
-  background-color: #333333;
-  border: 2px solid #333333;
-  padding: 4px;
-  border-radius: 8px 8px;
-  cursor: pointer;
-}
-
-.new-button {
-  float: right;
-  margin: auto;
-  width: 8%;
-  height: 8%;
-  text-align: center;
-  color: white;
-  font-family: Impact;
-  background-color: #333333;
-  border: 2px solid #333333;
-  padding: 4px;
-  border-radius: 8px 8px;
-  cursor: pointer;
-}
-
-.add-point {
-  float: left;
+  display: inline-block;
   width: 100px;
   height: 25px;
   margin: auto;
   margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: red;
+}
+
+.new-button {
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.new-button:hover {
+  background-color: red;
+}
+
+
+.add-point {
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   padding:2px;
   color: black;
   font-family: Impact;
@@ -597,21 +628,31 @@ this.movePointY();
   cursor: pointer;
 }
 
+.add-point:hover {
+  background-color: #6050DC;
+}
+
 .delete-point {
-  float: right;
+  display: inline-block;
   width: 120px;
   height: 25px;
   margin: auto;
   margin-top: 10px;
-  padding:2px;
+  margin-right: 10px;
+  padding: 2px;
   color: black;
   font-family: Impact;
   font-size: 18px;
-  background-color: #95B8D1;
+  background-color: #EDAFB8;
   border: 2px solid black;
   border-radius: 8px 8px;
   cursor: pointer;
 }
+
+.delete-point:hover {
+  background-color: #AA0000;
+}
+
 
 
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
