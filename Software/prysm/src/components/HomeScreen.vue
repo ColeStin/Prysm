@@ -27,6 +27,7 @@
 
        9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
        10/22-23 - Gage - Refactor and Bugfix/curve functionality
+       11/14 - Gage - add comments to stuff
 -->
 
 <template>
@@ -101,7 +102,7 @@
 
 export default {
   data: function () {
-    return {
+    return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
       //range values
       rangeXval: 0.0,
       rangeYval: 0.0,
@@ -129,7 +130,7 @@ export default {
         width: 0,
         height: 0,
       },
-      circleConfig: {
+      circleConfig: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         x: 300,
         y: 50,
         radius: 20,
@@ -138,14 +139,14 @@ export default {
         strokeWidth: 4,
         id: "test",
       },
-      defaultLine: {
+      defaultLine: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         fill: 'black',
         tension: 0,
         points: [],
         stroke: "black",
         strokeWidth: 4,
       },
-      defaultCircle: {
+      defaultCircle: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         config: {
           x: 300,
           y: 50,
@@ -184,23 +185,23 @@ export default {
       //two cases: positive slider and negative slider
       if (this.rangeCurve > 0)
       {
-        if (pointArr.length == 4)
+        if (pointArr.length == 4) //if pointArr has [x1,y1,x2,y2] then it has 4 points and needs a midpoint inserted to do curve stuff (at least for now)
         {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
       
         }
         else
-        {
+        { //otherwise change y value of midpoint
         this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
         }
         let x = JSON.parse(JSON.stringify(this.defaultCircle));
         x.config.x = this.selectedLine.config.points[2];
         x.config.y = this.selectedLine.config.points[3];
         this.testpoints =  this.testpoints.concat([x])
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
 
       }
-      else if (this.rangeCurve < 0)
+      else if (this.rangeCurve < 0) //same thing as above just negative case
       {
         let curve = Math.abs(this.rangeCurve);
         if (pointArr.length == 4)
@@ -212,7 +213,7 @@ export default {
       else if (this.rangeCurve == 0)
       {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
       }
       // this.selectedLine.config.points = this.selectedLine.config.points.concat([(this.selectedLine.config.points[0]+this.selectedLine.config.points[2])/2,this.stage.attrs.height]);
       
@@ -238,7 +239,7 @@ export default {
     //only here for debugging purposes
     },
     //resets the wavetable editor
-    newFile() {
+    newFile() { //basically does the same thing as mounted() check down there for more 
       this.lines = [];
       this.points = [];
       let rect = this.$refs.wavetable.getBoundingClientRect();
@@ -338,19 +339,19 @@ export default {
       }
 
     },
-    clickPoint(e) {
+    clickPoint(e) { 
       let event = e.evt;
       let self = this;
       let rect = this.$refs.wavetable.getBoundingClientRect();
       let xPos = Math.round(event.x - rect.x);
       let yPos = Math.round(event.y - rect.y);
-
+      //proximity check sees if there is a point close enough to your click to warrent highlighting a point. has a magic number of 10, should probably be a scale factor. oh well
       let proximityCheck = this.points.filter((x) => { return (Math.sqrt((x.config.x - xPos) * (x.config.x - xPos) + (x.config.y - yPos) * (x.config.y - yPos)) < 10) })
       //selected a point
       if (proximityCheck.length > 0) {
         if (!self.pointIsSelected) {
           self.pointIsSelected = true;
-          proximityCheck.forEach(x => {
+          proximityCheck.forEach(x => { //should always only be one of these 
             self.selectedPoint = x;
           });
           self.highlightPoint(self.selectedPoint);
@@ -381,10 +382,10 @@ export default {
       this.selectedPoint.config.strokeWidth = 1;
       this.selectedPoint.config.radius = 8;
       this.pointIsSelected = true;
-      this.rangeXval =  this.selectedPoint.config.x;
+      this.rangeXval =  this.selectedPoint.config.x; //set sliders to the point's config value
       this.rangeYval = this.selectedPoint.config.y;
     },
-    highlightLine(line){
+    highlightLine(line){ //changes selectedLine to the line given, and changes that line's config to reflect it's selection visually. same is true for highlightPoint(point) above but for points
       this.selectedLine = line;
       this.selectedLine.config.fill='red';
       this.selectedLine.config.stroke='red';
@@ -396,7 +397,7 @@ export default {
       if(this.selectedPoint == null && this.selectedLine == null) return;
       if (this.selectedPoint)
       {
-      this.selectedPoint.config.fill = 'black';
+      this.selectedPoint.config.fill = 'black'; //changes config of selectedPoint back to defaults. below does the same for line. also moves the selected point out of this.selectedPoint
       this.selectedPoint.config.strokeWidth=4;
       this.selectedPoint.config.radius =5;
       this.selectedPoint = null;
@@ -416,7 +417,7 @@ export default {
       }
     },
     addPoint(){
-      let point = JSON.parse(JSON.stringify(this.defaultCircle));
+      let point = JSON.parse(JSON.stringify(this.defaultCircle)); //copy circle config
       point.config.x = this.stage.attrs.width/2;
       point.config.y = this.stage.attrs.height/2;
       point.config.index = this.pointNum;
@@ -428,7 +429,7 @@ export default {
       this.points = this.points.concat([point]);
       this.drawLines();
     },
-    deletePoint() {
+    deletePoint() { //index should be order of creation I think
       if (!this.pointIsSelected || this.selectedPoint.config.index == 0 || this.selectedPoint.config.index == 1) // no deleting the two edge points!
       {
         return;
@@ -444,8 +445,8 @@ export default {
     },  
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
-    saveFile() {
-      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x });
+    saveFile() { 
+      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
       this.data = "START\n";
       this.data = this.data + sortedArr.length + "\n";
       for(let i = 0; i < sortedArr.length; i++){
@@ -453,7 +454,7 @@ export default {
       }
       this.data = this.data + "END";
 
-      console.log(this.$root);
+      // console.log(this.$root);
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.data));
       pom.setAttribute("download", "" + this.file + this.type);
@@ -476,12 +477,12 @@ export default {
   unmounted() {
     window.removeEventListener("resize",this.resizeHandler);
   },
-  mounted: function () {
+  mounted: function () { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     //inserts two points on the wavetable at the boundry edges.
     let rect = this.$refs.wavetable.getBoundingClientRect();
     this.configKonva.height = rect.height;
     this.configKonva.width = rect.width;
-    let x = JSON.parse(JSON.stringify(this.defaultCircle));
+    let x = JSON.parse(JSON.stringify(this.defaultCircle)); //JSON.parse does a deep copy of our object, so we have the correct amount of config objects rather than one
     let y = JSON.parse(JSON.stringify(x));
     x.config.x = 0;
     x.config.y = rect.height / 2;
@@ -492,8 +493,8 @@ export default {
     x.numId = 0;
     y.numId = 1;
     this.pointNum = 2;
-    this.points = this.points.concat([x, y]);
-    let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+    this.points = this.points.concat([x, y]); //add the point to our list of points, which will dynamically update
+    let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine)); //same idea for line
     defaultLineConfig.points = [0, rect.height / 2, rect.width, rect.height / 2];
     let line = {
       config: defaultLineConfig,
@@ -501,12 +502,12 @@ export default {
     }
     this.lineNum++;
     this.lines = [line];
-    this.stage = this.$refs.stage.getStage();
+    this.stage = this.$refs.stage.getStage(); //stores stage object for use later
     this.maxHeight = rect.height;
     this.maxWidth = rect.width;
     this.stage.draw();
   },
-  watch:{
+  watch:{ //watch runs a function every time the watched value changes
     rangeXval: function(value) {
 this.movePointX();
     },
