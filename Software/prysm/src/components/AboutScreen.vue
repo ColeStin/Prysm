@@ -7,7 +7,7 @@
 -->
 <template>
   <div class="aboutbody">
-
+      
       <div class="headerLabel">
         <h1> Contributors:
         </h1>  
