@@ -12,11 +12,11 @@
       <div class="title"> 
         Prysm
 
-        <!-- Info image which will link to about page which credits to all makers of the project-->
-        <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
+      <!-- Info image which will link to about page which credits to all makers of the project-->
+      <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
 
-        <!-- Go Back brings you back to Home Screen page-->
-        <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
+      <!-- Go Back brings you back to Home Screen page-->
+      <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
 
       </div>
 
@@ -53,6 +53,7 @@ export default {
 </script>
   
 <style>
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -65,44 +66,39 @@ export default {
   color: #e6e2d3;
   float: center;
   font-size: 70px;
-  padding: 25px;
+  padding: 0px;
   text-align: center;
   font-family: Impact;
   margin-left: 2.5%
 }
 
-.info {
+.about {
   margin-top: 1%;
-  height: 60px;
-  width: 60px;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
   float: right;
+  cursor: pointer;
 }
 
 .about {
   color: #e6e2d3;
   font-family: Impact;
-  margin: none;
 }
 
 .navbar {
   background-color: #3e4444;
   width: 100%;
-  height: 150px;
-  padding: 0px;
+  height: 100px;  
+  border: 4px solid #333333;
 }
+
 .goBack {
-  width: 8%;
-  height: 10%;
-  text-align: center;
-  margin-top: 10px;
-  color: black;
-  font-family: Impact;
-  font-size: 40px;
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
   float: right;
-  background-color: #FDDB93;
-  border: 3px solid black;
-  /* padding: 4px; */
-  border-radius: 8px 8px;
   cursor: pointer;
 }
+
 </style>
