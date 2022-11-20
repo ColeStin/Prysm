@@ -35,13 +35,15 @@
   <div class="mainbody">
     
     <div class="wavetable" ref="wavetable" id="wavetableConta">
-      <v-stage ref="stage" :config="configKonva" >
+      <div class="stage-wrapper">
+      <v-stage ref="stage" :config="configKonva" class="stage">
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
           <!--<v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle> -->
         </v-layer>
       </v-stage>
+    </div>
     </div>
     <div class="point-adjustment">
 
@@ -80,9 +82,9 @@
       
 
       <div class="slidecontainer">
-        <a>X: {{rangeXval}}</a> <!-- For adjusting the x value of a selected point-->
+        <a>X: {{(rangeXval  / ratioToDecimal).toFixed(2)}}</a> <!-- For adjusting the x value of a selected point-->
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
-        <a>Y: {{rangeYval}}</a> <!-- For adjusting the y value of a selected point-->
+        <a>Y: {{( 1 - (rangeYval / ratioToDecimal) ).toFixed(2)}}</a> <!-- For adjusting the y value of a selected point-->
         <input type="range" min="0"  :max="maxHeight" v-model="rangeYval" class="slider" step=".5" :disabled="!pointIsSelected" id="myRange2">
         <a>Curve: {{rangeCurve}}</a> <!-- For adjusting the curvature of a selected line-->
         <input type="range" min="-1" max="1" step=".1" v-model="rangeCurve" class="slider" id="myRange" :disabled="!lineIsSelected">
@@ -124,7 +126,7 @@ export default {
       lines: [],
       testpoints: [], //for testing only, remove for prod
       dragId: null,
-
+      ratioToDecimal: 1,
       data: "the cat in the hat knows a lot about that",
       file: "waveform",
       type: ".prsm",
@@ -236,6 +238,11 @@ export default {
       let canvasNewHeight = rect.width;
       let canvasNewWidth = rect.height;
       //console.log(rect.width)
+      this.ratioToDecimal = 1;
+      while (rect.width / this.ratioToDecimal > 2*Math.PI  )
+    {
+      this.ratioToDecimal++;
+    }
 
       //this happens the initial time when the thing is moved, it will mess up and try to make everything infinity
       if(this.currentHeight == 0 || this.currentWidth == 0){
@@ -248,7 +255,7 @@ export default {
       //def does not work lol
       let heightRatio = canvasNewHeight / this.currentHeight;
       let widthRatio = canvasNewWidth / this.currentWidth;
-
+      
       console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
 
 
@@ -512,6 +519,12 @@ export default {
     let rect = this.$refs.wavetable.getBoundingClientRect();
     this.configKonva.height = rect.height;
     this.configKonva.width = rect.width;
+    while (rect.width / this.ratioToDecimal > 2*Math.PI  )
+    {
+      this.ratioToDecimal++;
+    }
+
+    console.log(this.ratioToDecimal, rect.width,rect.height);
     let x = JSON.parse(JSON.stringify(this.defaultCircle)); //JSON.parse does a deep copy of our object, so we have the correct amount of config objects rather than one
     let y = JSON.parse(JSON.stringify(x));
     x.config.x = 0;
@@ -554,8 +567,7 @@ this.movePointY();
   
 <style>
 
-.wavetable-class {
-
+.stage{
   cursor: crosshair;
   width: 100% !important;
   height: 100% !important;
@@ -564,11 +576,37 @@ this.movePointY();
   display: block;
   margin: auto;
   box-shadow: 0 10px 8px -8px black;
+}
 
+
+  .stage-wrapper {
+    /*https://stackoverflow.com/questions/12121090/responsively-change-div-size-keeping-aspect-ratio
+    /* width within the parent.
+       can be any percentage. */
+    width: 100%;
+    background-color: pink;
+}
+.stage-wrapper:before {
+    content: "";
+    float: left;
+
+    /* essentially the aspect ratio. 100% means the
+       div will remain 100% as tall as it is wide, or
+       square in other words.  */
+    padding-bottom: 43%;
+}
+/* this is a clearfix. you can use whatever
+   clearfix you usually use, add
+   overflow:hidden to the parent element,
+   or simply float the parent container. */
+.stage-wrapper:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .wavetable {
-  margin: auto;
+  
   /* background-color: yellow;
   background-image: url("../../Images/aboutBackground4.jpg");
   background-size: cover;  */
@@ -577,16 +615,19 @@ this.movePointY();
         linear-gradient(to top left, lime, transparent),
         linear-gradient(to top right, blue, transparent);
     background-blend-mode: screen; */
+background-color: blue;
 
   /* opacity: 0.5; */
   background: rgba(0, 0, 0, 0.2);
   margin: auto;
   outline: 2px solid black;
-  min-width: 400px;
-  min-height: 300px;
-  width: 90%;
-  height: 70%;
+  /* min-width: 50%; */
+  /* min-height: 300px; */
+  max-width: 70%;
+  /* height: 70%; */
+  /* min-height: 400px; */
   box-sizing: border-box;
+
 }
 
 .mainbody {
