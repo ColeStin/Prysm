@@ -34,7 +34,7 @@
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     
-    <div class="wavetable" ref="wavetable">
+    <div class="wavetable" ref="wavetable" id="wavetableConta">
       <v-stage ref="stage" :config="configKonva" >
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
@@ -112,7 +112,9 @@ export default {
       lineIsSelected: false,
       selectedLine: null,
       maxHeight: 0,
+      currentHeight:0,
       maxWidth: 0,
+      currentWidth: 0,
       stage: null,
       pointNum: 0,
       lineNum: 0,
@@ -160,6 +162,7 @@ export default {
         relX: 0,
         relY: 0,
         numId: 0,
+        windowResizeCounter: 0,
       }
 
     };
@@ -222,15 +225,41 @@ export default {
       // console.log(this.selectedLine.config.tension)
     },
     resizeHandler(e) {
+      //e is the event, but don't need to prevent default
+
+
+
+      //e.preventDefault();
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      
+      //grab new heights
+      let canvasNewHeight = rect.width;
+      let canvasNewWidth = rect.height;
+      //console.log(rect.width)
+
+      //this happens the initial time when the thing is moved, it will mess up and try to make everything infinity
+      if(this.currentHeight == 0 || this.currentWidth == 0){
+        console.log("Somethnig was infinity")
+        this.currentHeight =  canvasNewHeight;
+        this.currentWidth = canvasNewWidth;
+        return;
+      }
+
       //def does not work lol
-      console.log(e);
-      let heightRatio = 1;
-      let widthRatio = 1;
-    
+      let heightRatio = canvasNewHeight / this.currentHeight;
+      let widthRatio = canvasNewWidth / this.currentWidth;
+
+      console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
+
+
+      this.currentHeight =  canvasNewHeight;
+      this.currentWidth = canvasNewWidth;
+      
+      
       this.points.map(x =>{
         // console.log(x);
-        x.config.x = x.config.x * widthRatio;
-        x.config.y = x.config.y * heightRatio;
+        x.config.x = x.config.x * heightRatio;
+        x.config.y = x.config.y * widthRatio;
       });
       this.drawLines();
     },
@@ -475,6 +504,7 @@ export default {
       window.addEventListener("resize",this.resizeHandler);
   },
   unmounted() {
+    console.log("Unmounted has been called!!!!!!");
     window.removeEventListener("resize",this.resizeHandler);
   },
   mounted: function () { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
