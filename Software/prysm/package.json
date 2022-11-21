@@ -13,6 +13,7 @@
   },
   "main": "background.js",
   "dependencies": {
+    "bootstrap": "^5.2.2",
     "core-js": "^3.8.3",
     "konva": "^8.3.13",
     "vue": "^3.2.13",

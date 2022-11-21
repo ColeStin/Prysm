@@ -27,14 +27,16 @@
 
        9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
        10/22-23 - Gage - Refactor and Bugfix/curve functionality
+       11/14 - Gage - add comments to stuff
 -->
 
 <template>
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     
-    <div class="wavetable" ref="wavetable">
-      <v-stage ref="stage" :config="configKonva" >
+    <div class="wavetable" ref="wavetable" id="wavetableConta">
+      <div class="stage-wrapper">
+      <v-stage ref="stage" :config="configKonva" class="stage">
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
@@ -42,13 +44,47 @@
         </v-layer>
       </v-stage>
     </div>
+    </div>
     <div class="point-adjustment">
-      <div class="add-point" @click="addPoint">Add Point</div> <!-- Creates a point in the center of the graph-->
-      <div class="delete-point" @click="deletePoint" >Delete Point</div> <!-- Deletes a selected point-->
+
+      <div class="new-button" @click="newFile()">New File
+      
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
+            </svg>
+
+      </div>
+      
+      <div class="add-point" @click="addPoint">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+        </svg>
+
+        Add Point
+       
+      </div> <!-- Creates a point in the center of the graph-->
+      <div class="delete-point" @click="deletePoint" >
+
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
+      </svg>
+
+      Delete Point</div> <!-- Deletes a selected point-->
+
+            <div class="save-button" @click="saveFile()">Save File
+      
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+            </svg>
+
+      </div>
+      
+
       <div class="slidecontainer">
-        <a>X: {{rangeXval}}</a> <!-- For adjusting the x value of a selected point-->
+        <a>X: {{(rangeXval  / ratioToDecimal).toFixed(2)}}</a> <!-- For adjusting the x value of a selected point-->
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
-        <a>Y: {{rangeYval}}</a> <!-- For adjusting the y value of a selected point-->
+        <a>Y: {{( 1 - (rangeYval / ratioToDecimal) ).toFixed(2)}}</a> <!-- For adjusting the y value of a selected point-->
         <input type="range" min="0"  :max="maxHeight" v-model="rangeYval" class="slider" step=".5" :disabled="!pointIsSelected" id="myRange2">
         <a>Curve: {{rangeCurve}}</a> <!-- For adjusting the curvature of a selected line-->
         <input type="range" min="-1" max="1" step=".1" v-model="rangeCurve" class="slider" id="myRange" :disabled="!lineIsSelected">
@@ -58,8 +94,8 @@
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
-    <div class="save-button" @click="saveFile()">Save File</div>
-    <div class="new-button" @click="newFile()">New File</div>
+    <!-- <div class="save-button" @click="saveFile()">Save File</div>
+    <div class="new-button" @click="newFile()">New File</div> -->
   </div>
 </template>
   
@@ -68,7 +104,7 @@
 
 export default {
   data: function () {
-    return {
+    return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
       //range values
       rangeXval: 0.0,
       rangeYval: 0.0,
@@ -78,7 +114,9 @@ export default {
       lineIsSelected: false,
       selectedLine: null,
       maxHeight: 0,
+      currentHeight:0,
       maxWidth: 0,
+      currentWidth: 0,
       stage: null,
       pointNum: 0,
       lineNum: 0,
@@ -88,7 +126,7 @@ export default {
       lines: [],
       testpoints: [], //for testing only, remove for prod
       dragId: null,
-
+      ratioToDecimal: 1,
       data: "the cat in the hat knows a lot about that",
       file: "waveform",
       type: ".prsm",
@@ -96,7 +134,7 @@ export default {
         width: 0,
         height: 0,
       },
-      circleConfig: {
+      circleConfig: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         x: 300,
         y: 50,
         radius: 20,
@@ -105,14 +143,14 @@ export default {
         strokeWidth: 4,
         id: "test",
       },
-      defaultLine: {
+      defaultLine: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         fill: 'black',
         tension: 0,
         points: [],
         stroke: "black",
         strokeWidth: 4,
       },
-      defaultCircle: {
+      defaultCircle: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         config: {
           x: 300,
           y: 50,
@@ -126,6 +164,7 @@ export default {
         relX: 0,
         relY: 0,
         numId: 0,
+        windowResizeCounter: 0,
       }
 
     };
@@ -151,23 +190,23 @@ export default {
       //two cases: positive slider and negative slider
       if (this.rangeCurve > 0)
       {
-        if (pointArr.length == 4)
+        if (pointArr.length == 4) //if pointArr has [x1,y1,x2,y2] then it has 4 points and needs a midpoint inserted to do curve stuff (at least for now)
         {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
       
         }
         else
-        {
+        { //otherwise change y value of midpoint
         this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
         }
         let x = JSON.parse(JSON.stringify(this.defaultCircle));
         x.config.x = this.selectedLine.config.points[2];
         x.config.y = this.selectedLine.config.points[3];
         this.testpoints =  this.testpoints.concat([x])
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
 
       }
-      else if (this.rangeCurve < 0)
+      else if (this.rangeCurve < 0) //same thing as above just negative case
       {
         let curve = Math.abs(this.rangeCurve);
         if (pointArr.length == 4)
@@ -179,7 +218,7 @@ export default {
       else if (this.rangeCurve == 0)
       {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve);
+        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
       }
       // this.selectedLine.config.points = this.selectedLine.config.points.concat([(this.selectedLine.config.points[0]+this.selectedLine.config.points[2])/2,this.stage.attrs.height]);
       
@@ -188,15 +227,46 @@ export default {
       // console.log(this.selectedLine.config.tension)
     },
     resizeHandler(e) {
+      //e is the event, but don't need to prevent default
+
+
+
+      //e.preventDefault();
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      
+      //grab new heights
+      let canvasNewHeight = rect.width;
+      let canvasNewWidth = rect.height;
+      //console.log(rect.width)
+      this.ratioToDecimal = 1;
+      while (rect.width / this.ratioToDecimal > 2*Math.PI  )
+    {
+      this.ratioToDecimal++;
+    }
+
+      //this happens the initial time when the thing is moved, it will mess up and try to make everything infinity
+      if(this.currentHeight == 0 || this.currentWidth == 0){
+        console.log("Somethnig was infinity")
+        this.currentHeight =  canvasNewHeight;
+        this.currentWidth = canvasNewWidth;
+        return;
+      }
+
       //def does not work lol
-      console.log(e);
-      let heightRatio = 1;
-      let widthRatio = 1;
-    
+      let heightRatio = canvasNewHeight / this.currentHeight;
+      let widthRatio = canvasNewWidth / this.currentWidth;
+      
+      console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
+
+
+      this.currentHeight =  canvasNewHeight;
+      this.currentWidth = canvasNewWidth;
+      
+      
       this.points.map(x =>{
         // console.log(x);
-        x.config.x = x.config.x * widthRatio;
-        x.config.y = x.config.y * heightRatio;
+        x.config.x = x.config.x * heightRatio;
+        x.config.y = x.config.y * widthRatio;
       });
       this.drawLines();
     },
@@ -205,7 +275,7 @@ export default {
     //only here for debugging purposes
     },
     //resets the wavetable editor
-    newFile() {
+    newFile() { //basically does the same thing as mounted() check down there for more 
       this.lines = [];
       this.points = [];
       let rect = this.$refs.wavetable.getBoundingClientRect();
@@ -305,19 +375,19 @@ export default {
       }
 
     },
-    clickPoint(e) {
+    clickPoint(e) { 
       let event = e.evt;
       let self = this;
       let rect = this.$refs.wavetable.getBoundingClientRect();
       let xPos = Math.round(event.x - rect.x);
       let yPos = Math.round(event.y - rect.y);
-
+      //proximity check sees if there is a point close enough to your click to warrent highlighting a point. has a magic number of 10, should probably be a scale factor. oh well
       let proximityCheck = this.points.filter((x) => { return (Math.sqrt((x.config.x - xPos) * (x.config.x - xPos) + (x.config.y - yPos) * (x.config.y - yPos)) < 10) })
       //selected a point
       if (proximityCheck.length > 0) {
         if (!self.pointIsSelected) {
           self.pointIsSelected = true;
-          proximityCheck.forEach(x => {
+          proximityCheck.forEach(x => { //should always only be one of these 
             self.selectedPoint = x;
           });
           self.highlightPoint(self.selectedPoint);
@@ -348,10 +418,10 @@ export default {
       this.selectedPoint.config.strokeWidth = 1;
       this.selectedPoint.config.radius = 8;
       this.pointIsSelected = true;
-      this.rangeXval =  this.selectedPoint.config.x;
+      this.rangeXval =  this.selectedPoint.config.x; //set sliders to the point's config value
       this.rangeYval = this.selectedPoint.config.y;
     },
-    highlightLine(line){
+    highlightLine(line){ //changes selectedLine to the line given, and changes that line's config to reflect it's selection visually. same is true for highlightPoint(point) above but for points
       this.selectedLine = line;
       this.selectedLine.config.fill='red';
       this.selectedLine.config.stroke='red';
@@ -363,7 +433,7 @@ export default {
       if(this.selectedPoint == null && this.selectedLine == null) return;
       if (this.selectedPoint)
       {
-      this.selectedPoint.config.fill = 'black';
+      this.selectedPoint.config.fill = 'black'; //changes config of selectedPoint back to defaults. below does the same for line. also moves the selected point out of this.selectedPoint
       this.selectedPoint.config.strokeWidth=4;
       this.selectedPoint.config.radius =5;
       this.selectedPoint = null;
@@ -383,7 +453,7 @@ export default {
       }
     },
     addPoint(){
-      let point = JSON.parse(JSON.stringify(this.defaultCircle));
+      let point = JSON.parse(JSON.stringify(this.defaultCircle)); //copy circle config
       point.config.x = this.stage.attrs.width/2;
       point.config.y = this.stage.attrs.height/2;
       point.config.index = this.pointNum;
@@ -395,7 +465,7 @@ export default {
       this.points = this.points.concat([point]);
       this.drawLines();
     },
-    deletePoint() {
+    deletePoint() { //index should be order of creation I think
       if (!this.pointIsSelected || this.selectedPoint.config.index == 0 || this.selectedPoint.config.index == 1) // no deleting the two edge points!
       {
         return;
@@ -411,8 +481,8 @@ export default {
     },  
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
-    saveFile() {
-      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x });
+    saveFile() { 
+      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
       this.data = "START\n";
       this.data = this.data + sortedArr.length + "\n";
       for(let i = 0; i < sortedArr.length; i++){
@@ -420,7 +490,7 @@ export default {
       }
       this.data = this.data + "END";
 
-      console.log(this.$root);
+      // console.log(this.$root);
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.data));
       pom.setAttribute("download", "" + this.file + this.type);
@@ -441,14 +511,21 @@ export default {
       window.addEventListener("resize",this.resizeHandler);
   },
   unmounted() {
+    console.log("Unmounted has been called!!!!!!");
     window.removeEventListener("resize",this.resizeHandler);
   },
-  mounted: function () {
+  mounted: function () { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     //inserts two points on the wavetable at the boundry edges.
     let rect = this.$refs.wavetable.getBoundingClientRect();
     this.configKonva.height = rect.height;
     this.configKonva.width = rect.width;
-    let x = JSON.parse(JSON.stringify(this.defaultCircle));
+    while (rect.width / this.ratioToDecimal > 2*Math.PI  )
+    {
+      this.ratioToDecimal++;
+    }
+
+    console.log(this.ratioToDecimal, rect.width,rect.height);
+    let x = JSON.parse(JSON.stringify(this.defaultCircle)); //JSON.parse does a deep copy of our object, so we have the correct amount of config objects rather than one
     let y = JSON.parse(JSON.stringify(x));
     x.config.x = 0;
     x.config.y = rect.height / 2;
@@ -459,8 +536,8 @@ export default {
     x.numId = 0;
     y.numId = 1;
     this.pointNum = 2;
-    this.points = this.points.concat([x, y]);
-    let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+    this.points = this.points.concat([x, y]); //add the point to our list of points, which will dynamically update
+    let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine)); //same idea for line
     defaultLineConfig.points = [0, rect.height / 2, rect.width, rect.height / 2];
     let line = {
       config: defaultLineConfig,
@@ -468,12 +545,12 @@ export default {
     }
     this.lineNum++;
     this.lines = [line];
-    this.stage = this.$refs.stage.getStage();
+    this.stage = this.$refs.stage.getStage(); //stores stage object for use later
     this.maxHeight = rect.height;
     this.maxWidth = rect.width;
     this.stage.draw();
   },
-  watch:{
+  watch:{ //watch runs a function every time the watched value changes
     rangeXval: function(value) {
 this.movePointX();
     },
@@ -490,8 +567,7 @@ this.movePointY();
   
 <style>
 
-.wavetable-class {
-
+.stage{
   cursor: crosshair;
   width: 100% !important;
   height: 100% !important;
@@ -500,25 +576,69 @@ this.movePointY();
   display: block;
   margin: auto;
   box-shadow: 0 10px 8px -8px black;
+}
 
+
+  .stage-wrapper {
+    /*https://stackoverflow.com/questions/12121090/responsively-change-div-size-keeping-aspect-ratio
+    /* width within the parent.
+       can be any percentage. */
+    width: 100%;
+    background-color: pink;
+}
+.stage-wrapper:before {
+    content: "";
+    float: left;
+
+    /* essentially the aspect ratio. 100% means the
+       div will remain 100% as tall as it is wide, or
+       square in other words.  */
+    padding-bottom: 43%;
+}
+/* this is a clearfix. you can use whatever
+   clearfix you usually use, add
+   overflow:hidden to the parent element,
+   or simply float the parent container. */
+.stage-wrapper:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .wavetable {
+  
+  /* background-color: yellow;
+  background-image: url("../../Images/aboutBackground4.jpg");
+  background-size: cover;  */
+  /* background:
+        linear-gradient(red, transparent),
+        linear-gradient(to top left, lime, transparent),
+        linear-gradient(to top right, blue, transparent);
+    background-blend-mode: screen; */
+background-color: blue;
+
+  /* opacity: 0.5; */
+  background: rgba(0, 0, 0, 0.2);
   margin: auto;
   outline: 2px solid black;
-  min-width: 400px;
-  min-height: 300px;
-  width: 90%;
-  height: 70%;
+  /* min-width: 50%; */
+  /* min-height: 300px; */
+  max-width: 70%;
+  /* height: 70%; */
+  /* min-height: 400px; */
   box-sizing: border-box;
+
 }
 
 .mainbody {
-  background-color: #bdcebe;
+  /* background-color: #97b4b3; */
+  background-image: url("../../Images/aboutBackground2.png");
+  background-size: cover;
   width: 100%;
   margin-top: 0px;
-  height: 100%;
+  height: 750px;
   padding: 4px;
+  padding-top: 10px; 
 }
 
 .point-adjustment {
@@ -529,74 +649,94 @@ this.movePointY();
 
 }
 
-.background {
-  color: red;
-  background-color: #3e4444;
-  width: 100%;
-  height: 100%;
-}
-
 .save-button {
-  float: left;
+  display: inline-block;
+  width: 100px;
+  height: 25px;
   margin: auto;
-  width: 8%;
-  height: 8%;
-  text-align: center;
-  color: black;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
   font-family: Impact;
-  background-color: #b4a7d6ff;
-  border: 2px solid #8e7cc3;
-  padding: 4px;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
   border-radius: 8px 8px;
   cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: red;
 }
 
 .new-button {
-  float: right;
-  margin: auto;
-  width: 8%;
-  height: 8%;
-  text-align: center;
-  color: black;
-  font-family: Impact;
-  background-color: #b4a7d6ff;
-  border: 2px solid #8e7cc3;
-  padding: 4px;
-  border-radius: 8px 8px;
-  cursor: pointer;
-}
-
-.add-point {
-  float: left;
+  display: inline-block;
   width: 100px;
   height: 25px;
   margin: auto;
   margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.new-button:hover {
+  background-color: red;
+}
+
+
+.add-point {
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
   padding:2px;
   color: black;
   font-family: Impact;
   font-size: 18px;
-  background-color: #c42021;
+  background-color: #95B8D1;
   border: 2px solid black;
   border-radius: 8px 8px;
   cursor: pointer;
+}
+
+.add-point:hover {
+  background-color: #6050DC;
 }
 
 .delete-point {
-  float: right;
-  width: 100px;
+  display: inline-block;
+  width: 120px;
   height: 25px;
   margin: auto;
   margin-top: 10px;
-  padding:2px;
+  margin-right: 10px;
+  padding: 2px;
   color: black;
   font-family: Impact;
   font-size: 18px;
-  background-color: #c42021;
+  background-color: #EDAFB8;
   border: 2px solid black;
   border-radius: 8px 8px;
   cursor: pointer;
 }
+
+.delete-point:hover {
+  background-color: #AA0000;
+}
+
 
 
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
