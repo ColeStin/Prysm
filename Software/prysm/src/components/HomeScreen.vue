@@ -146,6 +146,7 @@ export default {
       defaultLine: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         fill: 'black',
         tension: 0,
+        //bezier: true,
         points: [],
         stroke: "black",
         strokeWidth: 4,
@@ -240,9 +241,9 @@ export default {
       //console.log(rect.width)
       this.ratioToDecimal = 1;
       while (rect.width / this.ratioToDecimal > 2*Math.PI  )
-    {
-      this.ratioToDecimal++;
-    }
+      {
+        this.ratioToDecimal++;
+      }
 
       //this happens the initial time when the thing is moved, it will mess up and try to make everything infinity
       if(this.currentHeight == 0 || this.currentWidth == 0){
@@ -312,6 +313,8 @@ export default {
       for (let i = 0; i < sortedArr.length; i++) {
         if (i < sortedArr.length - 1) {
           let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
+          //let midpointX = (sortedArr[i].config.x + sortedArr[i+1].config.x)/2;
+          //let midpointY = (sortedArr[i].config.y + sortedArr[i+1].config.y)/2;
           defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, sortedArr[i + 1].config.x, sortedArr[i + 1].config.y];
           let line = {
             config: defaultLineConfig,

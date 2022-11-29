@@ -8,97 +8,93 @@
      10/20 - Alexander Wilhelm - Added AboutScreen switching
 -->
 <template>
-    <div class="navbar">
-      <div class="title"> 
-        Prysm
+  <div class="navbar">
+    <div class="title"> 
+      Prysm
 
-      <!-- Info image which will link to about page which credits to all makers of the project-->
-      <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
+    <!-- Info image which will link to about page which credits to all makers of the project-->
+    <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
 
-      <!-- Go Back brings you back to Home Screen page-->
-      <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
+    <!-- Go Back brings you back to Home Screen page-->
+    <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
 
-      </div>
-
-     
-
-    
- 
     </div>
- 
-  <HomeScreen v-if = "!iconClicked"></HomeScreen> 
-  <AboutScreen v-if = "iconClicked"></AboutScreen>
+
+   
+
+  
+
+  </div>
+
+<HomeScreen v-if = "!iconClicked"></HomeScreen> 
+<AboutScreen v-if = "iconClicked"></AboutScreen>
 
 </template>
 
 <script>
-
 import HomeScreen from './components/HomeScreen.vue'
 import AboutScreen from './components/AboutScreen.vue'
-
 export default {
-  
-  data: function () {
-    return {
-      iconClicked: false
-    };
-  },
-  name: 'App',
-  components: {
-    HomeScreen, AboutScreen
 
+data: function () {
+  return {
+    iconClicked: false
+  };
 },
-  methods: {}
+name: 'App',
+components: {
+  HomeScreen, AboutScreen
+},
+methods: {}
 }
 </script>
-  
+
 <style>
-
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+font-family: Avenir, Helvetica, Arial, sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+text-align: center;
+color: #2c3e50;
 }
-
 .title {
-  color: #e6e2d3;
-  float: center;
-  font-size: 70px;
-  padding: 0px;
-  text-align: center;
-  font-family: Impact;
-  margin-left: 2.5%
+color: #e6e2d3;
+float: center;
+font-size: 70px;
+padding: 25px;
+text-align: center;
+font-family: Impact;
+margin-left: 2.5%
 }
-
+.info {
+margin-top: 1%;
+height: 60px;
+width: 60px;
+float: right;
+}
 .about {
-  margin-top: 1%;
-  height: 50px;
-  width: 50px;
-  padding: 5px;
-  float: right;
-  cursor: pointer;
+color: #e6e2d3;
+font-family: Impact;
 }
-
-.about {
-  color: #e6e2d3;
-  font-family: Impact;
-}
-
 .navbar {
-  background-color: #3e4444;
-  width: 100%;
-  height: 100px;  
-  border: 4px solid #333333;
+background-color: #3e4444;
+width: 100%;
+height: 150px;
+padding: 0px;
 }
-
 .goBack {
-  margin-top: 1%;
-  height: 60px;
-  width: 60px;
-  float: right;
-  cursor: pointer;
+width: 8%;
+height: 10%;
+text-align: center;
+margin-top: 10px;
+color: black;
+font-family: Impact;
+font-size: 40px;
+float: right;
+background-color: #FDDB93;
+border: 3px solid black;
+/* padding: 4px; */
+border-radius: 8px 8px;
+cursor: pointer;
 }
-
 </style>
