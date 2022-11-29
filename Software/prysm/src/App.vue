@@ -6,44 +6,51 @@
     Date code was revised: 
      9/25 - Alexander Wilhelm - Prologue documentation
      10/20 - Alexander Wilhelm - Added AboutScreen switching
+     11/21 - Alexander Wilhelm - Added InstructionScreen switching
 -->
 <template>
-  <div class="navbar">
-    <div class="title"> 
-      Prysm
+    <div class="navbar">
+      <div class="title"> 
+        Prysm
+      <!-- Info image which will link to about page which credits to all makers of the project-->
+      <img v-if = "!aboutClicked && !instructionsClicked" class="about" @click = "aboutClicked = true, instructionsClicked = false" src="../Images/info_icon.png" alt="About"/> 
+       <!-- <div class = "about" v-if = "!iconClicked" @click= "iconClicked = true">About</div>  -->
 
-    <!-- Info image which will link to about page which credits to all makers of the project-->
-    <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
+       <!-- Instructions image which will link to instructions page which explains how to utilize software--> 
+      <img v-if = "!instructionsClicked" class="instructions" @click = "aboutClicked = false, instructionsClicked = true" src="../Images/instructions_icon.png" alt="About"/> 
+       <!-- <div class = "about" v-if = "!iconClicked" @click= "iconClicked = true">About</div> -->
 
-    <!-- Go Back brings you back to Home Screen page-->
-    <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
-
+      <!-- Go Back brings you back to Home Screen page-->
+      <img v-if = "aboutClicked || instructionsClicked" class="goBack" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
+      <!-- <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div> -->
+          
+      </div>
     </div>
-
-   
-
-  
-
-  </div>
-
-<HomeScreen v-if = "!iconClicked"></HomeScreen> 
-<AboutScreen v-if = "iconClicked"></AboutScreen>
+ 
+  <HomeScreen v-if = "!aboutClicked && !instructionsClicked"></HomeScreen> 
+  <AboutScreen v-if = "aboutClicked && !instructionsClicked"></AboutScreen>
+  <InstructionsScreen v-if = "!aboutClicked && instructionsClicked"></InstructionsScreen>
 
 </template>
 
 <script>
 import HomeScreen from './components/HomeScreen.vue'
 import AboutScreen from './components/AboutScreen.vue'
-export default {
+import InstructionsScreen from './components/InstructionsScreen.vue'
 
-data: function () {
-  return {
-    iconClicked: false
-  };
-},
-name: 'App',
-components: {
-  HomeScreen, AboutScreen
+export default {
+  
+  data: function () {
+    return {
+      instructionsClicked: false,
+      aboutClicked: false
+      
+    };
+  },
+  name: 'App',
+  components: {
+    HomeScreen, AboutScreen, InstructionsScreen
+
 },
 methods: {}
 }
@@ -72,9 +79,14 @@ height: 60px;
 width: 60px;
 float: right;
 }
-.about {
-color: #e6e2d3;
-font-family: Impact;
+
+.instructions {
+  margin-top: 1%;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  float: left;
+  cursor: pointer;
 }
 .navbar {
 background-color: #3e4444;
