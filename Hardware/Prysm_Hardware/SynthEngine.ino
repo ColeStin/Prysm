@@ -1,7 +1,38 @@
 #include <SPI.h>
 #include <string.h> //this library is used for test purposes only
+#include <cmath>
 
 using namespace std;
+
+//This is the class for the oscillators
+class Oscillator{
+
+  public:
+  //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
+      Oscillator(int keyNumber)
+      {
+        //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
+        oscFrequency = 440*pow(2,(keyNumber - 49)/12);
+      }
+
+
+      float getSample()
+      {
+      //need to come back to this
+      }
+
+      //probably not needed, may want to use this and have an empty constructor but not sure
+      void setFrequency(int keyNumber)
+      {
+        
+      }
+
+
+  private:
+      //private member variable
+      double oscFrequency;
+};
+
 
 
 //sharp keys are designated by upper case letters where as lower case letters are normal values
@@ -15,6 +46,14 @@ char getKey(int pinVal)
 }
 
 void setup() {
+
+  //definitely need to come back to this
+  for(int i= 40; i<58; i++)
+  {
+    Oscillator newOscillator(i)
+  }
+
+
   
   Serial.begin(9600);
 
