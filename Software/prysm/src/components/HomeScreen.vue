@@ -150,6 +150,7 @@ export default {
         points: [],
         stroke: "black",
         strokeWidth: 4,
+        bezier : false,
       },
       defaultCircle: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         config: {
@@ -257,7 +258,7 @@ export default {
       let heightRatio = canvasNewHeight / this.currentHeight;
       let widthRatio = canvasNewWidth / this.currentWidth;
       
-      console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
+      //console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
 
 
       this.currentHeight =  canvasNewHeight;
@@ -313,13 +314,15 @@ export default {
       for (let i = 0; i < sortedArr.length; i++) {
         if (i < sortedArr.length - 1) {
           let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
-          //let midpointX = (sortedArr[i].config.x + sortedArr[i+1].config.x)/2;
-          //let midpointY = (sortedArr[i].config.y + sortedArr[i+1].config.y)/2;
-          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, sortedArr[i + 1].config.x, sortedArr[i + 1].config.y];
+          //modified
+          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2 +50        , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
+          defaultLineConfig.bezier = false //if tention is 0, then bezier will not work, tension needs to be something more than 0 or it will fail
+          defaultLineConfig.tension = .5 // when the tension is set, you can have a tensioned line without bezier being set, but you will need a midpoint, and want to keep the tension the same and just move the midpoint up and down
           let line = {
             config: defaultLineConfig,
             lineId: this.lineNum,
           }
+          console.log(line)
           this.lineNum++;
           linestmp = linestmp.concat([line]);
           //this.lines = this.lines.concat([line]);
