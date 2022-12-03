@@ -1,9 +1,9 @@
-<!-- Name of Artifact: AboutScreen.vue
-    Summary: Vue file that is responsible for the display of our About Screen
-    including the credits of our desktop app from a development aspect.
-    Programmer's Name(s): Alexander Wilhelm
+<!-- Name of Artifact: HomeScreen.vue
+    Summary: Vue files that is responsible for the display of our Home Screen
+    including the title, background, nav bar, buttons, etc.
+    Programmer's Name(s): Alexander Wilhelm, Andrew Brown
     Date Code was Created: 10/20/22
-    Date code was revised: 11/21/22 - Alex - Revision of Documentation & Organization 
+    Date code was revised: 
 -->
 <template>
   <div class="aboutbody">
@@ -29,15 +29,16 @@
 
         <p>&nbsp;</p>
 
-       <div class="headerLabel3">    
-          <a href="https://github.com/ColeStin/Prysm">
-            <h1> Visit Prysm GitHub</h1>
-          </a>
-       </div>
-    
+       <a href="https://github.com/ColeStin/Prysm">   
+       <div class="headerLabel3"> 
+       <h1> Visit Prysm GitHub </h1></div></a>
        <p> The GitHub link to our code as well as commit information can be found at the above GitHub Link. </p> 
+          
+        
 
-      </div>
+
+</div>
+
 
  </template>
 
@@ -45,7 +46,10 @@
     
 export default {
     
-    methods: {}
+    methods: {
+    
+
+    }
 }
 
 </script>
@@ -59,6 +63,7 @@ export default {
  .p2 {
   visibility: hidden;
 }
+
 
 .aboutbody a:link
 {
