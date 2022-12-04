@@ -1,3 +1,16 @@
+/*
+** File Name: SynthEngine.ino
+** Description: File for Arduino with synth engine stuff
+** Created By: Dom D'Attilio
+** Edited By: Dom D'Attilio, COle Stinson
+** Last Edit: 12-2 Dom D'Attilio - Added oscillator functionality
+*/
+
+
+
+
+
+
 #include <SPI.h>
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
