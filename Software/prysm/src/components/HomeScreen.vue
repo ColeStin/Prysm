@@ -60,7 +60,7 @@
       <div class="open-button">
         <label for="open-input" style="cursor: pointer;">
           Open File
-          <input id="open-input" type="file" onchange="openFile()" style="display: none;"/>
+          <input id="open-input" type="file" @change="openFile()" style="display: none;"/>
         </label>
       </div>
       
@@ -529,20 +529,17 @@ export default {
       const [file] = document.querySelector('input[type=file]').files;
       const reader = new FileReader();
 
-      reader.addEventListener("load", () => {
-        // this will then display a text file
-        content.innerText = reader.result;
-      }, false);
-
+      let fileText = null;
       if (file) {
+        reader.readAsText(file);
         reader.onload = function(x){
           //x.target.result will have the text from the file
-          let fileText = x.target.result;
+          fileText = x.target.result;
         }
-        reader.readAsText(file);
+        
         console.log(fileText);
       }
-    }
+    },
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
   //need this to be able to handle resize events
