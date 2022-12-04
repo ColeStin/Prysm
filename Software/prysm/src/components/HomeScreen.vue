@@ -493,9 +493,17 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() { 
+      let rect = this.$refs.wavetable.getBoundingClientRect()
+      let canvasWidth = rect.width;
+      let canvasHeight = rect.height;
+
+
       let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
       this.data = "START\n";
       this.data = this.data + sortedArr.length + "\n";
+
+      this.data = this.data +"WIDTH : " + canvasWidth+"\nHEIGHT : " + canvasHeight +'\n';
+
       for(let i = 0; i < sortedArr.length; i++){
         this.data = this.data + sortedArr[i].config.x + " " + sortedArr[i].config.y + "\n";
       }
