@@ -28,8 +28,8 @@
        9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
        10/22-23 - Gage - Refactor and Bugfix/curve functionality
        11/14 - Gage - add comments to stuff
-
-       12/4 - Andrew - Added open file button
+       12/4 - Alex - Code Refactoring, creation of open file button
+       12/4 - Alex - Editing of open file button
 -->
 
 <template>
@@ -47,48 +47,57 @@
       </v-stage>
     </div>
     </div>
+
     <div class="point-adjustment">
 
-      <div class="new-button" @click="newFile()">New File
-      
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
-            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
-            </svg>
-
-      </div>
-
-      <div class="open-button">
-        <label for="open-input" style="cursor: pointer;">
-          Open File
-          <input id="open-input" type="file" @change="openFile()" style="display: none;"/>
-        </label>
-      </div>
-      
+      <!-- Creates a point in the center of the graph-->
       <div class="add-point" @click="addPoint">
-
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
         </svg>
+        Add Point 
+      </div>
 
-        Add Point
-       
-      </div> <!-- Creates a point in the center of the graph-->
+      <!-- Deletes a selected point-->
       <div class="delete-point" @click="deletePoint" >
-
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
         </svg>
-
         Delete Point
-      </div> <!-- Deletes a selected point-->
-
-      <div class="save-button" @click="saveFile()">Save File
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
-        </svg>
-
       </div>
+
+      <!-- Seperates New, Open, and Save File from Above Row-->
+      <div class = "new-open-save"> 
+
+        <!-- Resets the wavetable to original state-->
+        <div class="newFile-button" @click="newFile()">New File
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+              <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
+              </svg>
+        </div>
+
+        <!-- Opens an existing .prsm file -->
+        <div class="openFile-button">
+          <label for="open-input" style="cursor: pointer;">
+            Open File
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+            <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
+            </svg>
+
+            <input id="open-input" type="file" @change="openFile()" style="display: none;"/>
+          </label>
+        </div>
+
+        <!-- Saves .prsm file to computer-->
+        <div class="saveFile-button" @click="saveFile()">Save File
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+          </svg>
+        </div>
+
+    </div>
+  
       
 
       <div class="slidecontainer">
@@ -104,8 +113,8 @@
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
-    <!-- <div class="save-button" @click="saveFile()">Save File</div>
-    <div class="new-button" @click="newFile()">New File</div> -->
+    <!-- <div class="saveFile-button" @click="saveFile()">Save File</div>
+    <div class="newFile-button" @click="newFile()">New File</div> -->
   </div>
 </template>
   
@@ -672,7 +681,7 @@ background-color: blue;
   background-size: cover;
   width: 100%;
   margin-top: 0px;
-  height: 750px;
+  height: 975px;
   padding: 4px;
   padding-top: 10px; 
 }
@@ -685,7 +694,12 @@ background-color: blue;
 
 }
 
-.save-button {
+/* Necessary for keeping seperate rows between add, delete point and new, open, and save file.*/
+.new-open-save {
+  
+}
+
+.saveFile-button {
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -703,11 +717,11 @@ background-color: blue;
   cursor: pointer;
 }
 
-.save-button:hover {
+.saveFile-button:hover {
   background-color: red;
 }
 
-.new-button {
+.newFile-button {
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -725,11 +739,11 @@ background-color: blue;
   cursor: pointer;
 }
 
-.new-button:hover {
+.newFile-button:hover {
   background-color: red;
 }
 
-.open-button {
+.openFile-button {
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -747,7 +761,7 @@ background-color: blue;
   cursor: pointer;
 }
 
-.open-button:hover {
+.openFile-button:hover {
   background-color: red;
 }
 
@@ -794,8 +808,6 @@ background-color: blue;
 .delete-point:hover {
   background-color: #AA0000;
 }
-
-
 
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {

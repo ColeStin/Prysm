@@ -1,7 +1,7 @@
 <!-- Name of Artifact: InstructionsScreen.vue
     Summary: Vue file that is responsible for the display of our Instructions Screen
     that explains how to utilize the Prysm desktop app.
-    Programmer's Name(s): Alexander Wilhelm
+    Programmer's Name(s): Alex
     Date Code was Created: 10/20/22
     Date code was revised: 11/21/22 - Alex - Revision of Documentation & Organization
     11/24/22 - Alex - Text created for instructions page and change in styling.
@@ -13,10 +13,9 @@
         <div class="headerLabel">
             <h1> Wavetable: </h1>
         </div>
-        <p>The wavetable is a configurement of certain lines, points, and curves that can be edited to create
-             different sounds on the Prysm synthesizer when the different buttons on the physical Synthesizer is pressed.
-        </p>
-  
+        <p> The wavetable is a configurement of certain lines, points, and curves that can be edited to create </p>
+        <p> different sounds on the Prysm synthesizer when the different buttons on the physical Synthesizer are pressed. </p>
+        <p>&nbsp;</p>
 
         <div class="headerLabelAdd">
           <h1>  
@@ -27,8 +26,9 @@
           </h1>
         </div>
         <p> On the wavetable screen, you can add points (which will connect lines) by clicking this button.
-                    These points can be moved using the sliders.
+            These points can be moved using the sliders.
         </p>
+        <p>&nbsp;</p>
       
 
         <div class="headerLabelDelete">
@@ -38,11 +38,10 @@
             </svg>
           </h1> 
         </div>
-        <p>
-            Points can also be deleted by clicking this button. It will delete the point that is currently highlighted
-            (in red). If a point is not highlighted or there are no points left, there will not be points deleted.
-        </p>
-        
+        <p> Points can also be deleted by clicking this button. It will delete the point that is currently </p>
+        <p> highlighted (in red). If a point is not highlighted or there are no points left, there will not be points deleted. </p>
+        <p>&nbsp;</p>
+
         <div class="headerLabelFile">
           <h1> New File
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
@@ -53,6 +52,7 @@
         <p>
             This button will reset the wavetable to its original state.
         </p>
+        <p>&nbsp;</p>
 
           <div class="headerLabelFile">
           <h1> Open File
@@ -64,6 +64,7 @@
         <p>
             This button will open a .prsm file to load an already edited wavetable for further editing.    
         </p>
+        <p>&nbsp;</p>
 
         <div class="headerLabelFile">
           <h1> Save File
@@ -76,27 +77,17 @@
                   This button will save an edited wavetable to be opened/edited later by creating a .prsm file.
         </p>
 
-        <h1> X value Slider: </h1>
-        <div class="headerSlider">
-        </div>
-        <p> 
-                This slider will change the X value (left/right movement) of a selected point.
-        </p>
-   
+        <h1> Sliders: </h1>
+         
+        <img src = "../../Images/sliderExample.jpg" alt = "sliderExample">
 
-        <h1> Y value Slider: </h1>
-        <div class="headerSlider">
-        </div>
-        <p> 
-                 This slider will change the Y value (up/down movement) of a selected point.
-        </p>
+        <p> <b> X value Slider: </b> This slider will change the X value (left/right movement) of a selected point.  </p>
+ 
+        <p> <b> Y value Slider: </b> This slider will change the Y value (up/down movement) of a selected point. </p>
 
-        <h1> Curve Slider: </h1>
-        <div class="headerSlider">   
-        </div>
-        <p>
-              This slider will change the curve (up/down movement) of a selected point.
-        </p>
+        <p> <b> Curve Slider: </b> This slider will change the curve of a selected line. Moving the slider to the </p>
+        <p> left will curve downwards and moving slider to the right will curve upwards. Make sure </p>
+        <p> to click on a line connected by two points to be able to utilize the slider.</p>
 
     </div>
   
@@ -111,114 +102,95 @@
   
   </script>
    
-   <style>
-  
-  
-  .aboutbody {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-image: url("../../Images/aboutBackground2.png");
-    background-size: cover;
-    width: 100%;
-    height: 975px;
-    padding: 4px;
-  } 
-  
-  .h1 {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    text-align: left;
-  }
-  
-  .headerLabel {
-  margin-left: 5%;
-  border-radius: 50px;
-  background-color: #3188c6;
-  padding: 0px;
-  margin-bottom: 20px;
-  width: 7%;
-  height: 4%;
-  }
-  
-  .headerLabelFile {
-  margin-left: 5%;
-  border-radius: 50px;
-  background-color: #333333;
-  padding: 0px;
-  margin-bottom: 20px;
-  width: 7%;
-  height: 4%;
-  color: white;
-  font-size: 9px;
-  }
+  <style>
 
-  .headerLabelAdd {
-  margin-left: 5%;
-  border-radius: 50px;
-  background-color: #95B8D1;
-  padding: 0px;
-  margin-bottom: 20px;
-  width: 7%;
-  height: 4%;
-  color: white;
-  font-size: 9px;
-  }
-  
-  .headerLabelDelete {
-  margin-left: 5%;
-  border-radius: 50px;
-  background-color: #EDAFB8;
-  padding: 0px;
-  margin-bottom: 20px;
-  width: 7%;
-  height: 4%;
-  color: white;
-  font-size: 9px;
-  }
+    .aboutbody {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-image: url("../../Images/aboutBackground2.png");
+      background-size: cover;
+      width: 100%;
+      height: 1200px;
+      padding: 4px;
+    } 
 
-  .headerSlider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 200px; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #ffffff; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-  border: 2px solid black;
-  border-radius: 5px;
-}
-  
-  .headerLabel3 {
-  margin-left: 41.5%;
-  border-radius: 50px;
-  background-color: #333333;
-  padding: 0px;
-  margin-bottom: 0px;
-  width: 15%;
-  height: 6%;
-  }
-  
-  .headerLabelFile:hover {
+    .aboutbody .p
+    {
+      color: white;
+    }
+    
+    .h1 {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      text-align: left;
+    }
+
+    .imgLabel
+    {
+      margin-right: 68%;
+    }
+    
+    .headerLabel {
+    margin-left: 7%;
+    border-radius: 50px;
+    background-color: #3188c6;
+    padding: 0px;
+    margin-bottom: -50px;
+    width: 9%;
+    height: 3%;
+    }
+
+    .headerLabel h1{
+      color:white;
+      font-size: 18px;
+    }
+    
+    .headerLabelFile {
+    margin-left: 7%;
+    border-radius: 50px;
+    background-color: #333333;
+    padding: 0px;
+    margin-bottom: -50px;
+    width: 8%;
+    height: 3%;
+    color: white;
+    font-size: 9px;
+    }
+
+    .headerLabelFile:hover {
     background-color: red;
-  }
+    }
 
-  .headerLabelAdd:hover {
-    background-color: #6050DC;
-  }
+    .headerLabelAdd {
+    margin-left: 7%;
+    border-radius: 50px;
+    background-color: #95B8D1;
+    padding: 0px;
+    margin-bottom: -50px;
+    width: 9%;
+    height: 3%;
+    color: white;
+    font-size: 9px;
+    }
 
-  .headerLabelDelete:hover {
-    background-color: #AA0000;
-  }
+    .headerLabelAdd:hover {
+      background-color: #6050DC;
+    }
+    
+    .headerLabelDelete {
+    margin-left: 7%;
+    border-radius: 50px;
+    background-color: #EDAFB8;
+    padding: 0px;
+    margin-bottom: -50px;
+    width: 9%;
+    height: 3%;
+    color: white;
+    font-size: 9px;
+    }
+
+    .headerLabelDelete:hover {
+      background-color: #AA0000;
+    }
   
-  .headerLabel h1{
-  color:white;
-  font-size: 18px;
-  }
-  
-  .headerLabel3 h1{
-  color:white;
-  font-size: 30px;
-  }
   
   </style>
   

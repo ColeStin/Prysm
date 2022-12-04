@@ -6,50 +6,57 @@
     Date code was revised: 
      9/25 - Alexander Wilhelm - Prologue documentation
      10/20 - Alexander Wilhelm - Added AboutScreen switching
+     12/4 - Alex - Refactoring of code
 -->
 <template>
   <div class="navbar">
     <div class="title"> 
       Prysm
 
-      <!-- Info image which will link to about page which credits to all makers of the project-->
-      <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
+      <!-- AboutScreen Navigation System--> 
+      <img v-if = "!aboutClicked" class="about" @click = "aboutClicked = true, instructionsClicked = false" src="../Images/info_icon.png" alt="About"/> 
 
-      <!-- Go Back brings you back to Home Screen page-->
-      <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
+      <!-- InstructionScreen Navigation System--> 
+      <img v-if = "!instructionsClicked" class="instructions" @click = "aboutClicked = false, instructionsClicked = true" src="../Images/instructions_icon.png" alt="About"/> 
+
+      <!-- HomeScreen Navigation System--> 
+       <img v-if = "aboutClicked && !instructionsClicked" class="goBack" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
+       <img v-if = "!aboutClicked && instructionsClicked" class="goBack2" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
 
     </div>
-
-   
-
-  
-
   </div>
 
-<HomeScreen v-if = "!iconClicked"></HomeScreen> 
-<AboutScreen v-if = "iconClicked"></AboutScreen>
+  <!--If conditions met, displays certain screen --> 
+  <HomeScreen v-if = "!aboutClicked && !instructionsClicked"></HomeScreen> 
+  <AboutScreen v-if = "aboutClicked && !instructionsClicked"></AboutScreen>
+  <InstructionsScreen v-if = "!aboutClicked && instructionsClicked"></InstructionsScreen>
 
 </template>
 
 <script>
+
 import HomeScreen from './components/HomeScreen.vue'
 import AboutScreen from './components/AboutScreen.vue'
+import InstructionsScreen from './components/InstructionsScreen.vue'
+
 export default {
 
 data: function () {
   return {
-    iconClicked: false
+    instructionsClicked: false,
+    aboutClicked: false
   };
 },
 name: 'App',
 components: {
-  HomeScreen, AboutScreen
+  HomeScreen, AboutScreen, InstructionsScreen
 },
 methods: {}
 }
 </script>
 
 <style>
+
 #app {
 font-family: Avenir, Helvetica, Arial, sans-serif;
 -webkit-font-smoothing: antialiased;
@@ -57,6 +64,14 @@ font-family: Avenir, Helvetica, Arial, sans-serif;
 text-align: center;
 color: #2c3e50;
 }
+
+.navbar {
+background-color: #3e4444;
+width: 100.5%;
+height: 150px;
+padding: 0px;
+}
+
 .title {
 color: #e6e2d3;
 float: center;
@@ -66,35 +81,38 @@ text-align: center;
 font-family: Impact;
 margin-left: 2.5%
 }
-.info {
-margin-top: 1%;
-height: 60px;
-width: 60px;
-float: right;
-}
+
 .about {
-  color: #e6e2d3;
-  font-family: Impact;
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
+  float: right;
+  cursor: pointer;
 }
-.navbar {
-background-color: #3e4444;
-width: 100%;
-height: 150px;
-padding: 0px;
+
+.instructions {
+  margin-top: 1%;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  float: left;
+  cursor: pointer;
 }
+
 .goBack {
-width: 8%;
-height: 10%;
-text-align: center;
-margin-top: 10px;
-color: black;
-font-family: Impact;
-font-size: 40px;
-float: right;
-background-color: #FDDB93;
-border: 3px solid black;
-/* padding: 4px; */
-border-radius: 8px 8px;
-cursor: pointer;
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
+  float: right;
+  cursor: pointer;
 }
+
+.goBack2 {
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
+  float: left;
+  cursor: pointer;
+}
+
 </style>
