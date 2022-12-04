@@ -12,11 +12,11 @@
     <div class="title"> 
       Prysm
 
-    <!-- Info image which will link to about page which credits to all makers of the project-->
-    <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
+      <!-- Info image which will link to about page which credits to all makers of the project-->
+      <img v-if = "!iconClicked" class="info" @click = "iconClicked = true" src="../public/info_icon.png" alt="About" />  
 
-    <!-- Go Back brings you back to Home Screen page-->
-    <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
+      <!-- Go Back brings you back to Home Screen page-->
+      <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div>
 
     </div>
 
@@ -73,8 +73,8 @@ width: 60px;
 float: right;
 }
 .about {
-color: #e6e2d3;
-font-family: Impact;
+  color: #e6e2d3;
+  font-family: Impact;
 }
 .navbar {
 background-color: #3e4444;

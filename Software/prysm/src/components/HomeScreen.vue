@@ -40,7 +40,7 @@
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
-          <!--<v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle> -->
+          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
         </v-layer>
       </v-stage>
     </div>
@@ -190,43 +190,38 @@ export default {
 
       let pointArr = this.selectedLine.config.points;
       //two cases: positive slider and negative slider
-      if (this.rangeCurve > 0)
-      {
-        if (pointArr.length == 4) //if pointArr has [x1,y1,x2,y2] then it has 4 points and needs a midpoint inserted to do curve stuff (at least for now)
-        {
-        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
+      if(this.rangecurve != 0){
+
       
-        }
-        else
-        { //otherwise change y value of midpoint
-        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
-        }
+        //this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
+        
+        
+        //otherwise change y value of midpoint
+        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[5])/2) - this.rangeCurve*((pointArr[1]+pointArr[5])/2);
+        
         let x = JSON.parse(JSON.stringify(this.defaultCircle));
         x.config.x = this.selectedLine.config.points[2];
         x.config.y = this.selectedLine.config.points[3];
-        this.testpoints =  this.testpoints.concat([x])
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
-
+        this.testpoints =  this.testpoints.concat([x]);
+        this.selectedLine.config.tension = Math.abs(parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
+        console.log(this.selectedLine.config.tension);
       }
-      else if (this.rangeCurve < 0) //same thing as above just negative case
-      {
-        let curve = Math.abs(this.rangeCurve);
-        if (pointArr.length == 4)
-        {
-        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,this.stage.attrs.height,pointArr[2],pointArr[3]];
-        }
-        this.selectedLine.config.tension = parseFloat(curve);
-      }
+      // else if(this.rangeCurve < 0){
+      //   this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
+        
+      //   let x = JSON.parse(JSON.stringify(this.defaultCircle));
+      //   x.config.x = this.selectedLine.config.points[2];
+      //   x.config.y = this.selectedLine.config.points[3];
+      //   this.testpoints =  this.testpoints.concat([x])
+      //   this.selectedLine.config.tension = (parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
+      // }
       else if (this.rangeCurve == 0)
       {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
+        this.selectedLine.config.tension = 0.5; //tension parameter (who knows what this does?)
       }
-      // this.selectedLine.config.points = this.selectedLine.config.points.concat([(this.selectedLine.config.points[0]+this.selectedLine.config.points[2])/2,this.stage.attrs.height]);
       
-      // console.log(this.selectedLine);
-      
-      // console.log(this.selectedLine.config.tension)
+
     },
     resizeHandler(e) {
       //e is the event, but don't need to prevent default
@@ -315,7 +310,7 @@ export default {
         if (i < sortedArr.length - 1) {
           let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
           //modified
-          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2 +50        , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
+          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2       , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
           defaultLineConfig.bezier = false //if tention is 0, then bezier will not work, tension needs to be something more than 0 or it will fail
           defaultLineConfig.tension = .5 // when the tension is set, you can have a tensioned line without bezier being set, but you will need a midpoint, and want to keep the tension the same and just move the midpoint up and down
           let line = {
@@ -433,7 +428,7 @@ export default {
       this.selectedLine.config.stroke='red';
       this.selectedLine.config.strokeWidth = 8;
       this.lineIsSelected = true;
-      this.rangeCurve = this.selectedLine.config.tension;
+      
     },  
     dehighlight(){
       if(this.selectedPoint == null && this.selectedLine == null) return;
