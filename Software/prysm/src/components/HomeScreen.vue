@@ -483,9 +483,17 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() { 
+      let rect = this.$refs.wavetable.getBoundingClientRect()
+      let canvasWidth = rect.width;
+      let canvasHeight = rect.height;
+
+
       let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
       this.data = "START\n";
       this.data = this.data + sortedArr.length + "\n";
+
+      this.data = this.data +"WIDTH : " + canvasWidth+"\nHEIGHT : " + canvasHeight +'\n';
+
       for(let i = 0; i < sortedArr.length; i++){
         this.data = this.data + sortedArr[i].config.x + " " + sortedArr[i].config.y + "\n";
       }
@@ -505,6 +513,70 @@ export default {
         pom.click();
       }
     },
+    openFile(){
+      // need to clear the points to be able to inut new ones
+      this.points = [];
+
+      //grab current heights because you will need this for scale factor
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      let currentCanvasHeight = rect.height; //used for scale factor
+      let currentCanvasWidth = rect.width; //used for scale factor
+      
+      //need to somehow open file - may need to mess with the HTML to have a <input> with input type "file"
+      //then need to somehow traverse it and grab stuff
+      var file = this.files[0];
+
+      var reader = new FileReader();
+    
+      // const events = require('events');//this allows for the async funciton to process events (end of file, end of line)
+      // const fs = require('fs'); //required module (file system module) NODE CANNOT FIND THIS
+      // const readline = require('readline'); //required module (readline module) NODE CANNOT FIND THIS
+
+      // (async function processLineByLine() {
+      //   try {
+      //     const rl = readline.createInterface({
+      //       input: fs.createReadStream(file), //this is the file name
+      //       crlfDelay: Infinity //this allows a '\r\n' to be counted as just a single new line
+      //     });
+
+      //     rl.on('line', (line) => {
+      //       console.log(`Line from file: ${line}`); //read in line by line, can do whatever with it here
+      //     });
+
+      //     await events.once(rl, 'close'); //end of file event, close the file
+
+      //     console.log('Reading file line by line with readline done.');
+      //   } catch (err) {
+      //     console.error(err); //if there is an error, then console it
+      //   }
+      // })();
+
+
+
+
+      let lineCount = 0;
+      let previousCanvasWidth = 1; 
+      let previousCanvasHeight = 1;
+
+      let scaleFactorY = currentCanvasHeight / previousCanvasHeight;
+      let scaleFactorX = currentCanvasWidth / previousCanvasWidth;
+      
+
+      //this is where you travese the point section and grab all the points
+      let newPoints = []
+
+
+
+      newPoints.forEach(element => {
+        element.x = element.x * scaleFactorX //apply new scale factor to points
+        element.y = element.y * scaleFactorY //apply new scale factor to points
+      });
+
+      this.points = newPoints;
+
+    
+
+    }
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
   //need this to be able to handle resize events
