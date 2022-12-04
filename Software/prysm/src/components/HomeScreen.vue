@@ -41,7 +41,7 @@
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
-          <!--<v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle> -->
+          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
         </v-layer>
       </v-stage>
     </div>
@@ -98,8 +98,8 @@
         <input type="range"  min="0" :max="maxWidth" v-model="rangeXval" class="slider" step=".5" :disabled="!pointIsSelected || (selectedPoint&&selectedPoint.config.index == 0) || (selectedPoint&&stage&&selectedPoint.config.index == 1)" id="myRange">
         <a>Y: {{( 1 - (rangeYval / ratioToDecimal) ).toFixed(2)}}</a> <!-- For adjusting the y value of a selected point-->
         <input type="range" min="0"  :max="maxHeight" v-model="rangeYval" class="slider" step=".5" :disabled="!pointIsSelected" id="myRange2">
-        <a>Curve: {{rangeCurve}}</a> <!-- For adjusting the curvature of a selected line-->
-        <input type="range" min="-1" max="1" step=".1" v-model="rangeCurve" class="slider" id="myRange" :disabled="!lineIsSelected">
+        <!-- <a>Curve: {{rangeCurve}}</a>  For adjusting the curvature of a selected line
+        <input type="range" min="-1" max="1" step=".1" v-model="rangeCurve" class="slider" id="myRange" :disabled="!lineIsSelected"> -->
       </div>
 
     </div>
@@ -121,6 +121,7 @@ export default {
       rangeXval: 0.0,
       rangeYval: 0.0,
       rangeCurve: 0.0,
+      tension: .5,
       selectedPoint: null,
       pointIsSelected: false,
       lineIsSelected: false,
@@ -209,14 +210,16 @@ export default {
       
         }
         else
-        { //otherwise change y value of midpoint
+       { //otherwise change y value of midpoint
         this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
+        console.log("this.selectedLine.config.points[3]", this.selectedLine.config.points[3])
         }
         let x = JSON.parse(JSON.stringify(this.defaultCircle));
         x.config.x = this.selectedLine.config.points[2];
         x.config.y = this.selectedLine.config.points[3];
+        this.selectedLine.config.bezier = true;
         this.testpoints =  this.testpoints.concat([x])
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
+        this.selectedLine.config.tension = .5; //tension parameter (who knows what this does?)
 
       }
       else if (this.rangeCurve < 0) //same thing as above just negative case
@@ -326,7 +329,7 @@ export default {
         if (i < sortedArr.length - 1) {
           let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
           //modified
-          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2 +50        , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
+          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2        , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
           defaultLineConfig.bezier = false //if tention is 0, then bezier will not work, tension needs to be something more than 0 or it will fail
           defaultLineConfig.tension = .5 // when the tension is set, you can have a tensioned line without bezier being set, but you will need a midpoint, and want to keep the tension the same and just move the midpoint up and down
           let line = {
@@ -444,7 +447,8 @@ export default {
       this.selectedLine.config.stroke='red';
       this.selectedLine.config.strokeWidth = 8;
       this.lineIsSelected = true;
-      this.rangeCurve = this.selectedLine.config.tension;
+      console.log(line);
+      // this.rangeCurve = this.selectedLine.config.tension;
     },  
     dehighlight(){
       if(this.selectedPoint == null && this.selectedLine == null) return;
@@ -480,6 +484,7 @@ export default {
       //select the point we just drew
       this.highlightPoint(point);
       this.points = this.points.concat([point]);
+      console.log(point.config);
       this.drawLines();
     },
     deletePoint() { //index should be order of creation I think
