@@ -1,6 +1,7 @@
 #include <SPI.h>
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -16,9 +17,14 @@ class Oscillator{
       }
 
 
+      //gets 1 sample of oscillator and advances index
       float getSample()
       {
-      //need to come back to this
+          jassert(isPlaying());
+          index = std::fmod(index, static_cast<float>(waveTable.size()));
+          const auto sample = interpolateLinearly();
+          index += indexImplement;
+
       }
 
       //probably not needed, may want to use this and have an empty constructor but not sure
@@ -27,10 +33,35 @@ class Oscillator{
         
       }
 
+      //stops sampling, resets indexes to 0
+      void stop()
+      {
+        index = 0.f;
+        indexIncrement = 0.f;
+      }
+
+      //determines if oscillator is getting sample, if indexIncrement equals 0, its not running
+      bool isPlaying() const
+      {
+        return indexIncrement != 0.f;
+      }
 
   private:
-      //private member variable
+     //interpolate between values in wave table
+      float interpolate() const
+      {
+        const auto truncatedIndex = static_cast<typename  decltype(waveTable)::size_type>(index);
+        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>
+                                                      (std::ceil(index)) % waveTable.size();
+        const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
+        return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
+      }
+
+    //private member variables
       double oscFrequency;
+      float index = 0.f;
+      float indexIncrement = 0.f;
+      std::vector<float> waveTable;
 };
 
 
