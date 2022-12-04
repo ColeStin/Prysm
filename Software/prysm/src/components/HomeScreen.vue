@@ -28,6 +28,8 @@
        9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
        10/22-23 - Gage - Refactor and Bugfix/curve functionality
        11/14 - Gage - add comments to stuff
+
+       12/4 - Andrew - Added open file button
 -->
 
 <template>
@@ -54,6 +56,13 @@
             </svg>
 
       </div>
+
+      <div class="open-button">
+        <label for="open-input" style="cursor: pointer;">
+          Open File
+          <input id="open-input" type="file" onchange="openFile()" style="display: none;"/>
+        </label>
+      </div>
       
       <div class="add-point" @click="addPoint">
 
@@ -66,17 +75,18 @@
       </div> <!-- Creates a point in the center of the graph-->
       <div class="delete-point" @click="deletePoint" >
 
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
-      <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
-      </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
+        </svg>
 
-      Delete Point</div> <!-- Deletes a selected point-->
+        Delete Point
+      </div> <!-- Deletes a selected point-->
 
-            <div class="save-button" @click="saveFile()">Save File
-      
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
-            </svg>
+      <div class="save-button" @click="saveFile()">Save File
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+        </svg>
 
       </div>
       
@@ -505,6 +515,26 @@ export default {
         pom.click();
       }
     },
+
+    openFile(){
+      const content = document.querySelector('.content');
+      const [file] = document.querySelector('input[type=file]').files;
+      const reader = new FileReader();
+
+      reader.addEventListener("load", () => {
+        // this will then display a text file
+        content.innerText = reader.result;
+      }, false);
+
+      if (file) {
+        reader.onload = function(x){
+          //x.target.result will have the text from the file
+          let fileText = x.target.result;
+        }
+        reader.readAsText(file);
+        console.log(fileText);
+      }
+    }
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
   //need this to be able to handle resize events
@@ -553,10 +583,10 @@ export default {
   },
   watch:{ //watch runs a function every time the watched value changes
     rangeXval: function(value) {
-this.movePointX();
+      this.movePointX();
     },
     rangeYval: function(value) {
-this.movePointY();
+      this.movePointY();
     },
     rangeCurve: function(value) {
       this.moveLine();
@@ -691,6 +721,28 @@ background-color: blue;
 }
 
 .new-button:hover {
+  background-color: red;
+}
+
+.open-button {
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.open-button:hover {
   background-color: red;
 }
 
