@@ -6,30 +6,30 @@
     Date code was revised: 
      9/25 - Alexander Wilhelm - Prologue documentation
      10/20 - Alexander Wilhelm - Added AboutScreen switching
+     12/4 - Alex - Refactoring of code
 -->
 <template>
-    <div class="navbar">
-      <div class="title"> 
-        Prysm
-      <!-- Info image which will link to about page which credits to all makers of the project-->
-      <img v-if = "!iconClicked" class="about" @click = "iconClicked = true" src="../Images/info_icon.png" alt="About"/> 
-       <!-- <div class = "about" v-if = "!iconClicked" @click= "iconClicked = true">About</div>  -->
+  <div class="navbar">
+    <div class="title"> 
+      Prysm
 
-      <!-- Go Back brings you back to Home Screen page-->
-      <img v-if = "iconClicked" class="goBack" @click = "iconClicked = false" src="../Images/back.png" alt="Go Back" />
-      <!-- <div class = "goBack" v-if = "iconClicked" @click= "iconClicked = false">Go Back</div> -->
-      
+      <!-- AboutScreen Navigation System--> 
+      <img v-if = "!aboutClicked" class="about" @click = "aboutClicked = true, instructionsClicked = false" src="../Images/info_icon.png" alt="About"/> 
 
-      </div>
+      <!-- InstructionScreen Navigation System--> 
+      <img v-if = "!instructionsClicked" class="instructions" @click = "aboutClicked = false, instructionsClicked = true" src="../Images/instructions_icon.png" alt="About"/> 
 
-     
+      <!-- HomeScreen Navigation System--> 
+       <img v-if = "aboutClicked && !instructionsClicked" class="goBack" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
+       <img v-if = "!aboutClicked && instructionsClicked" class="goBack2" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
 
-    
- 
     </div>
- 
-  <HomeScreen v-if = "!iconClicked"></HomeScreen> 
-  <AboutScreen v-if = "iconClicked"></AboutScreen>
+  </div>
+
+  <!--If conditions met, displays certain screen --> 
+  <HomeScreen v-if = "!aboutClicked && !instructionsClicked"></HomeScreen> 
+  <AboutScreen v-if = "aboutClicked && !instructionsClicked"></AboutScreen>
+  <InstructionsScreen v-if = "!aboutClicked && instructionsClicked"></InstructionsScreen>
 
 </template>
 
@@ -37,61 +37,66 @@
 
 import HomeScreen from './components/HomeScreen.vue'
 import AboutScreen from './components/AboutScreen.vue'
+import InstructionsScreen from './components/InstructionsScreen.vue'
 
 export default {
-  
-  data: function () {
-    return {
-      iconClicked: false
-    };
-  },
-  name: 'App',
-  components: {
-    HomeScreen, AboutScreen
 
+data: function () {
+  return {
+    instructionsClicked: false,
+    aboutClicked: false
+  };
 },
-  methods: {}
+name: 'App',
+components: {
+  HomeScreen, AboutScreen, InstructionsScreen
+},
+methods: {}
 }
 </script>
-  
+
 <style>
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+font-family: Avenir, Helvetica, Arial, sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+text-align: center;
+color: #2c3e50;
+}
+
+.navbar {
+background-color: #3e4444;
+width: 100.5%;
+height: 150px;
+padding: 0px;
 }
 
 .title {
-  color: #e6e2d3;
-  float: center;
-  font-size: 70px;
-  padding: 0px;
-  text-align: center;
-  font-family: Impact;
-  margin-left: 2.5%
+color: #e6e2d3;
+float: center;
+font-size: 70px;
+padding: 25px;
+text-align: center;
+font-family: Impact;
+margin-left: 2.5%
 }
 
 .about {
   margin-top: 1%;
-  height: 50px;
-  width: 50px;
-  padding: 5px;
+  height: 60px;
+  width: 60px;
   float: right;
   cursor: pointer;
 }
 
 .instructions {
-
-}
-
-.navbar {
-  background-color: #3e4444;
-  width: 100%;
-  height: 100px;  
-  border: 4px solid #333333;
+  margin-top: 1%;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  float: left;
+  cursor: pointer;
 }
 
 .goBack {
@@ -99,6 +104,14 @@ export default {
   height: 60px;
   width: 60px;
   float: right;
+  cursor: pointer;
+}
+
+.goBack2 {
+  margin-top: 1%;
+  height: 60px;
+  width: 60px;
+  float: left;
   cursor: pointer;
 }
 

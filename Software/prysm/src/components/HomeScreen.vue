@@ -28,6 +28,8 @@
        9/28 - Alexander Wilhelm - Added "Add Point" and "Remove Point" buttons
        10/22-23 - Gage - Refactor and Bugfix/curve functionality
        11/14 - Gage - add comments to stuff
+       12/4 - Alex - Code Refactoring, creation of open file button
+       12/4 - Alex - Editing of open file button
 -->
 
 <template>
@@ -40,45 +42,62 @@
         <v-layer ref="layer">
           <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
           <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
-          <!--<v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle> -->
+          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
         </v-layer>
       </v-stage>
     </div>
     </div>
+
     <div class="point-adjustment">
 
-      <div class="new-button" @click="newFile()">New File
-      
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
-            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
-            </svg>
-
-      </div>
-      
+      <!-- Creates a point in the center of the graph-->
       <div class="add-point" @click="addPoint">
-
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
         </svg>
+        Add Point 
+      </div>
 
-        Add Point
-       
-      </div> <!-- Creates a point in the center of the graph-->
+      <!-- Deletes a selected point-->
       <div class="delete-point" @click="deletePoint" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
+        </svg>
+        Delete Point
+      </div>
 
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
-      <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
-      </svg>
+      <!-- Seperates New, Open, and Save File from Above Row-->
+      <div class = "new-open-save"> 
 
-      Delete Point</div> <!-- Deletes a selected point-->
+        <!-- Resets the wavetable to original state-->
+        <div class="newFile-button" @click="newFile()">New File
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+              <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
+              </svg>
+        </div>
 
-            <div class="save-button" @click="saveFile()">Save File
-      
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-            <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+        <!-- Opens an existing .prsm file -->
+        <div class="openFile-button">
+          <label for="open-input" style="cursor: pointer;">
+            Open File
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
+            <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
             </svg>
 
-      </div>
+            <input id="open-input" type="file" @change="openFile()" style="display: none;"/>
+          </label>
+        </div>
+
+        <!-- Saves .prsm file to computer-->
+        <div class="saveFile-button" @click="saveFile()">Save File
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+          </svg>
+        </div>
+
+    </div>
+  
       
 
       <div class="slidecontainer">
@@ -94,8 +113,8 @@
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
-    <!-- <div class="save-button" @click="saveFile()">Save File</div>
-    <div class="new-button" @click="newFile()">New File</div> -->
+    <!-- <div class="saveFile-button" @click="saveFile()">Save File</div>
+    <div class="newFile-button" @click="newFile()">New File</div> -->
   </div>
 </template>
   
@@ -146,9 +165,11 @@ export default {
       defaultLine: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         fill: 'black',
         tension: 0,
+        //bezier: true,
         points: [],
         stroke: "black",
         strokeWidth: 4,
+        bezier : false,
       },
       defaultCircle: { //we have default konva object properties to copy every time we make a new object (add it to its respective list)
         config: {
@@ -188,43 +209,38 @@ export default {
 
       let pointArr = this.selectedLine.config.points;
       //two cases: positive slider and negative slider
-      if (this.rangeCurve > 0)
-      {
-        if (pointArr.length == 4) //if pointArr has [x1,y1,x2,y2] then it has 4 points and needs a midpoint inserted to do curve stuff (at least for now)
-        {
-        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
+      if(this.rangecurve != 0){
+
       
-        }
-        else
-        { //otherwise change y value of midpoint
-        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
-        }
+        //this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
+        
+        
+        //otherwise change y value of midpoint
+        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[5])/2) - this.rangeCurve*((pointArr[1]+pointArr[5])/2);
+        
         let x = JSON.parse(JSON.stringify(this.defaultCircle));
         x.config.x = this.selectedLine.config.points[2];
         x.config.y = this.selectedLine.config.points[3];
-        this.testpoints =  this.testpoints.concat([x])
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
-
+        this.testpoints =  this.testpoints.concat([x]);
+        this.selectedLine.config.tension = Math.abs(parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
+        console.log(this.selectedLine.config.tension);
       }
-      else if (this.rangeCurve < 0) //same thing as above just negative case
-      {
-        let curve = Math.abs(this.rangeCurve);
-        if (pointArr.length == 4)
-        {
-        this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,this.stage.attrs.height,pointArr[2],pointArr[3]];
-        }
-        this.selectedLine.config.tension = parseFloat(curve);
-      }
+      // else if(this.rangeCurve < 0){
+      //   this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
+        
+      //   let x = JSON.parse(JSON.stringify(this.defaultCircle));
+      //   x.config.x = this.selectedLine.config.points[2];
+      //   x.config.y = this.selectedLine.config.points[3];
+      //   this.testpoints =  this.testpoints.concat([x])
+      //   this.selectedLine.config.tension = (parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
+      // }
       else if (this.rangeCurve == 0)
       {
         this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
-        this.selectedLine.config.tension = parseFloat(this.rangeCurve); //tension parameter (who knows what this does?)
+        this.selectedLine.config.tension = 0.5; //tension parameter (who knows what this does?)
       }
-      // this.selectedLine.config.points = this.selectedLine.config.points.concat([(this.selectedLine.config.points[0]+this.selectedLine.config.points[2])/2,this.stage.attrs.height]);
       
-      // console.log(this.selectedLine);
-      
-      // console.log(this.selectedLine.config.tension)
+
     },
     resizeHandler(e) {
       //e is the event, but don't need to prevent default
@@ -240,9 +256,9 @@ export default {
       //console.log(rect.width)
       this.ratioToDecimal = 1;
       while (rect.width / this.ratioToDecimal > 2*Math.PI  )
-    {
-      this.ratioToDecimal++;
-    }
+      {
+        this.ratioToDecimal++;
+      }
 
       //this happens the initial time when the thing is moved, it will mess up and try to make everything infinity
       if(this.currentHeight == 0 || this.currentWidth == 0){
@@ -256,7 +272,7 @@ export default {
       let heightRatio = canvasNewHeight / this.currentHeight;
       let widthRatio = canvasNewWidth / this.currentWidth;
       
-      console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
+      //console.log("Old Height : "+this.currentHeight,"Old Width :" + this.currentWidth,"New Height : " + canvasNewHeight, "New Width : " + canvasNewWidth, "Height Ratio : " + heightRatio, "Width Ratio :" + widthRatio);
 
 
       this.currentHeight =  canvasNewHeight;
@@ -312,11 +328,15 @@ export default {
       for (let i = 0; i < sortedArr.length; i++) {
         if (i < sortedArr.length - 1) {
           let defaultLineConfig = JSON.parse(JSON.stringify(this.defaultLine));
-          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, sortedArr[i + 1].config.x, sortedArr[i + 1].config.y];
+          //modified
+          defaultLineConfig.points = [sortedArr[i].config.x, sortedArr[i].config.y, (sortedArr[i].config.x + sortedArr[i+1].config.x )/2,     (sortedArr[i].config.y + sortedArr[i+1].config.y )/2       , sortedArr[i + 1].config.x, sortedArr[i + 1].config.y]; //for bezier curves, pass 6 points, [startx, starty, midx, midy, endx, endy]
+          defaultLineConfig.bezier = false //if tention is 0, then bezier will not work, tension needs to be something more than 0 or it will fail
+          defaultLineConfig.tension = .5 // when the tension is set, you can have a tensioned line without bezier being set, but you will need a midpoint, and want to keep the tension the same and just move the midpoint up and down
           let line = {
             config: defaultLineConfig,
             lineId: this.lineNum,
           }
+          console.log(line)
           this.lineNum++;
           linestmp = linestmp.concat([line]);
           //this.lines = this.lines.concat([line]);
@@ -427,7 +447,7 @@ export default {
       this.selectedLine.config.stroke='red';
       this.selectedLine.config.strokeWidth = 8;
       this.lineIsSelected = true;
-      this.rangeCurve = this.selectedLine.config.tension;
+      
     },  
     dehighlight(){
       if(this.selectedPoint == null && this.selectedLine == null) return;
@@ -482,9 +502,17 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() { 
+      let rect = this.$refs.wavetable.getBoundingClientRect()
+      let canvasWidth = rect.width;
+      let canvasHeight = rect.height;
+
+
       let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
       this.data = "START\n";
       this.data = this.data + sortedArr.length + "\n";
+
+      this.data = this.data +"WIDTH : " + canvasWidth+"\nHEIGHT : " + canvasHeight +'\n';
+
       for(let i = 0; i < sortedArr.length; i++){
         this.data = this.data + sortedArr[i].config.x + " " + sortedArr[i].config.y + "\n";
       }
@@ -503,6 +531,92 @@ export default {
       else {
         pom.click();
       }
+    },
+
+    openFile(){
+      
+      this.points = [];
+      this.lines = [];
+      console.log(this.points,this.lines)
+      this.lineNum = 0;
+      let vue = this;
+      //grab current heights because you will need this for scale factor
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      let currentCanvasHeight = rect.height; //used for scale factor
+      let currentCanvasWidth = rect.width; //used for scale factor
+      console.log(currentCanvasHeight, currentCanvasWidth)
+
+      const content = document.querySelector('.content');
+      const [file] = document.querySelector('input[type=file]').files;
+      const reader = new FileReader();
+      let circleConfig = JSON.parse(JSON.stringify(this.defaultCircle));
+      let fileText = null;
+      if (file) {
+        this.points = []
+        reader.readAsText(file);
+        reader.onload = function(x){
+          //x.target.result will have the text from the file
+          console.log(x)
+          fileText = x.target.result;
+          fileText = fileText.split("\n")
+          console.log(fileText);
+          
+          let lineCount = parseInt(fileText[1]);
+          vue.lineNum = lineCount
+          let previousCanvasWidth = parseInt(fileText[2]); 
+          let previousCanvasHeight = parseInt(fileText[3]);
+          //console.log(previousCanvasHeight, previousCanvasWidth)
+          let scaleFactorY = currentCanvasHeight / previousCanvasHeight;
+          let scaleFactorX = currentCanvasWidth / previousCanvasWidth;
+          //console.log(scaleFactorX, scaleFactorY)
+          //this is where you travese the point section and grab all the points
+          let pointLines = fileText.slice(4, 4+parseInt(lineCount))
+          let newPoints = []
+          console.log("ready to compute new points")
+          let numId = 0;
+          pointLines.forEach(element => {
+
+            //console.log("new point!")
+            //let point = JSON.parse(JSON.stringify(this.parent.defaultCircle));
+            //console.log("LINE")
+            let line = element.split(" ")
+            let newCircle = circleConfig;
+            let config ={
+              fill: "black",
+              id :"test",
+              radius:5,
+              stroke:'black',
+              strokeWidth:4,
+              x: 0,
+              y:0,
+              index: numId,
+              endpoin: false,
+            }
+            if(numId == 0 || numId+1 == lineCount){
+              console.log("ENDPOINT")
+              config.endpoint = true;
+            }
+            let circle = {
+              config : config,
+              relX: 0,
+              relY: 0,
+              numId: numId,
+              windowResizeCounter: 0,
+            }
+            //console.log(vue.circleConfig)
+            circle.config.x = parseInt(line[0]) * scaleFactorX //apply new scale factor to points
+            circle.config.y = parseInt(line[1]) * scaleFactorY //apply new scale factor to points
+            console.log(circle)
+            vue.points = vue.points.concat(circle) ; //add the thingy
+            //console.log("added the thingy")
+            numId += 1;
+          });
+          //console.log(newPoints)
+          this.points = newPoints;
+          console.log(vue.points,vue.lines)
+          vue.drawLines()
+
+        }}
     },
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
@@ -552,10 +666,10 @@ export default {
   },
   watch:{ //watch runs a function every time the watched value changes
     rangeXval: function(value) {
-this.movePointX();
+      this.movePointX();
     },
     rangeYval: function(value) {
-this.movePointY();
+      this.movePointY();
     },
     rangeCurve: function(value) {
       this.moveLine();
@@ -636,7 +750,7 @@ background-color: blue;
   background-size: cover;
   width: 100%;
   margin-top: 0px;
-  height: 750px;
+  height: 975px;
   padding: 4px;
   padding-top: 10px; 
 }
@@ -649,7 +763,12 @@ background-color: blue;
 
 }
 
-.save-button {
+/* Necessary for keeping seperate rows between add, delete point and new, open, and save file.*/
+.new-open-save {
+  
+}
+
+.saveFile-button {
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -667,11 +786,11 @@ background-color: blue;
   cursor: pointer;
 }
 
-.save-button:hover {
+.saveFile-button:hover {
   background-color: red;
 }
 
-.new-button {
+.newFile-button {
   display: inline-block;
   width: 100px;
   height: 25px;
@@ -689,7 +808,29 @@ background-color: blue;
   cursor: pointer;
 }
 
-.new-button:hover {
+.newFile-button:hover {
+  background-color: red;
+}
+
+.openFile-button {
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  margin: auto;
+  margin-top: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding:2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.openFile-button:hover {
   background-color: red;
 }
 
@@ -736,8 +877,6 @@ background-color: blue;
 .delete-point:hover {
   background-color: #AA0000;
 }
-
-
 
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {
