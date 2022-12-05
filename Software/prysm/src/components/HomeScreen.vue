@@ -534,20 +534,89 @@ export default {
     },
 
     openFile(){
+      
+      this.points = [];
+      this.lines = [];
+      console.log(this.points,this.lines)
+      this.lineNum = 0;
+      let vue = this;
+      //grab current heights because you will need this for scale factor
+      let rect = this.$refs.wavetable.getBoundingClientRect();
+      let currentCanvasHeight = rect.height; //used for scale factor
+      let currentCanvasWidth = rect.width; //used for scale factor
+      console.log(currentCanvasHeight, currentCanvasWidth)
+
       const content = document.querySelector('.content');
       const [file] = document.querySelector('input[type=file]').files;
       const reader = new FileReader();
-
+      let circleConfig = JSON.parse(JSON.stringify(this.defaultCircle));
       let fileText = null;
       if (file) {
+        this.points = []
         reader.readAsText(file);
         reader.onload = function(x){
           //x.target.result will have the text from the file
+          console.log(x)
           fileText = x.target.result;
-        }
-        
-        console.log(fileText);
-      }
+          fileText = fileText.split("\n")
+          console.log(fileText);
+          
+          let lineCount = parseInt(fileText[1]);
+          vue.lineNum = lineCount
+          let previousCanvasWidth = parseInt(fileText[2]); 
+          let previousCanvasHeight = parseInt(fileText[3]);
+          //console.log(previousCanvasHeight, previousCanvasWidth)
+          let scaleFactorY = currentCanvasHeight / previousCanvasHeight;
+          let scaleFactorX = currentCanvasWidth / previousCanvasWidth;
+          //console.log(scaleFactorX, scaleFactorY)
+          //this is where you travese the point section and grab all the points
+          let pointLines = fileText.slice(4, 4+parseInt(lineCount))
+          let newPoints = []
+          console.log("ready to compute new points")
+          let numId = 0;
+          pointLines.forEach(element => {
+
+            //console.log("new point!")
+            //let point = JSON.parse(JSON.stringify(this.parent.defaultCircle));
+            //console.log("LINE")
+            let line = element.split(" ")
+            let newCircle = circleConfig;
+            let config ={
+              fill: "black",
+              id :"test",
+              radius:5,
+              stroke:'black',
+              strokeWidth:4,
+              x: 0,
+              y:0,
+              index: numId,
+              endpoin: false,
+            }
+            if(numId == 0 || numId+1 == lineCount){
+              console.log("ENDPOINT")
+              config.endpoint = true;
+            }
+            let circle = {
+              config : config,
+              relX: 0,
+              relY: 0,
+              numId: numId,
+              windowResizeCounter: 0,
+            }
+            //console.log(vue.circleConfig)
+            circle.config.x = parseInt(line[0]) * scaleFactorX //apply new scale factor to points
+            circle.config.y = parseInt(line[1]) * scaleFactorY //apply new scale factor to points
+            console.log(circle)
+            vue.points = vue.points.concat(circle) ; //add the thingy
+            //console.log("added the thingy")
+            numId += 1;
+          });
+          //console.log(newPoints)
+          this.points = newPoints;
+          console.log(vue.points,vue.lines)
+          vue.drawLines()
+
+        }}
     },
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
