@@ -35,7 +35,7 @@
 <template>
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
-    
+    <BarChart />
     <div class="wavetable" ref="wavetable" id="wavetableConta">
       <div class="stage-wrapper">
       <v-stage ref="stage" :config="configKonva" class="stage">
@@ -119,7 +119,7 @@
 </template>
   
 <script>
-
+import BarChart from './chart.vue'
 
 export default {
   data: function () {
@@ -674,7 +674,8 @@ export default {
     rangeCurve: function(value) {
       this.moveLine();
     }
-  }
+  },
+  components: {BarChart}
 }
 
 </script>

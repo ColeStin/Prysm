@@ -14,9 +14,13 @@
   "main": "background.js",
   "dependencies": {
     "bootstrap": "^5.2.2",
+    "chart.js": "^4.2.0",
+    "chartjs": "^0.3.24",
     "core-js": "^3.8.3",
     "konva": "^8.3.13",
     "vue": "^3.2.13",
+    "vue-chart.js": "^0.2.0",
+    "vue-chartjs": "^5.2.0",
     "vue-konva": "^3.0.1"
   },
   "devDependencies": {
