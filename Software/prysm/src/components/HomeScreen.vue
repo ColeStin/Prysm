@@ -36,17 +36,6 @@
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     <BarChart />
-    <div class="wavetable" ref="wavetable" id="wavetableConta">
-      <div class="stage-wrapper">
-      <v-stage ref="stage" :config="configKonva" class="stage">
-        <v-layer ref="layer">
-          <v-line v-for="item in lines" :key="item.lineId" :config="item.config" @click="clickLine"></v-line>
-          <v-circle v-for="item in points" :key="item.numId" :config="item.config" @click="clickPoint"></v-circle>
-          <v-circle v-for="item in testpoints" :key="item.numId" :config="item.config" ></v-circle>
-        </v-layer>
-      </v-stage>
-    </div>
-    </div>
 
     <div class="point-adjustment">
 
