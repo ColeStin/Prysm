@@ -15,9 +15,16 @@
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
+
+
+
+
+
+/*****************************************************************************************************************/
 //This is the class for the oscillators
 class Oscillator{
 
@@ -29,7 +36,6 @@ class Oscillator{
         oscFrequency = 440*pow(2,(keyNumber - 49)/12);
       }
 
-
       //gets 1 sample of oscillator and advances index
       float getSample()
       {
@@ -37,13 +43,6 @@ class Oscillator{
           index = std::fmod(index, static_cast<float>(waveTable.size()));
           const auto sample = interpolateLinearly();
           index += indexImplement;
-
-      }
-
-      //probably not needed, may want to use this and have an empty constructor but not sure
-      void setFrequency(int keyNumber)
-      {
-        
       }
 
       //stops sampling, resets indexes to 0
@@ -64,18 +63,47 @@ class Oscillator{
       float interpolate() const
       {
         const auto truncatedIndex = static_cast<typename  decltype(waveTable)::size_type>(index);
-        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>
-                                                      (std::ceil(index)) % waveTable.size();
+        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>(std::ceil(index)) % waveTable.size();
         const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
-
     //private member variables
       double oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
       std::vector<float> waveTable;
 };
+
+/********************************************************************************************************************************/
+
+//In Filing 
+std::vector<float> fileToVector(std::string input)
+{
+    std::vector<float> tmpVector;
+   std::ifstream inFile;
+	inFile.open(input);
+	if (!inFile.is_open())
+	{
+		//error handle
+        return tmpVector;
+	}
+    std::string stringRead;
+    float tmpFloat =0;
+    int size;
+    inFile >> stringRead;
+    inFile >> size;
+    int i = 0;
+    while (i > size)
+    {
+        inFile >> tmpFloat;
+        tmpVector.push_back(tmpFloat);
+
+    }
+	
+    inFile.close();
+    return tmpVector;
+}
+/*****************************************************************************************/
 
 
 
@@ -89,6 +117,8 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
+
+
 void setup() {
 
   //definitely need to come back to this
@@ -97,7 +127,7 @@ void setup() {
     Oscillator newOscillator(i)
   }
 
-
+  std::vector<float> pointVector = fileToVector();
   
   Serial.begin(9600);
 
