@@ -36,153 +36,172 @@
   <!-- Main body which will contain wave table as well as buttons for user input-->
   <div class="mainbody">
     <div class="chartcontainer">
-      <BarChart />
+      <Line v-if="loaded" ref="chartElement" id="my-chart-id" :options="chartOptions" :data="data" />
     </div>
-    
+
 
     <div class="point-adjustment">
 
       <!-- Creates a point in the center of the graph-->
       <div class="add-point" @click="addPoint">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+            d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z" />
         </svg>
-        Add Point 
+        Add Point
       </div>
 
       <!-- Deletes a selected point-->
-      <div class="delete-point" @click="deletePoint" >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
+      <div class="delete-point" @click="deletePoint">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus"
+          viewBox="0 0 16 16">
+          <path fill-rule="evenodd"
+            d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z" />
         </svg>
         Delete Point
       </div>
-
       <!-- Seperates New, Open, and Save File from Above Row-->
-      <div class = "new-open-save"> 
-
+      <div class="new-open-save">
         <!-- Resets the wavetable to original state-->
-        <div class="newFile-button" @click="newFile()">New File
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
-              <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z"/>
-              </svg>
+        <div class="newFile-button" @click="testFunc()">New File
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8.5 7v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 1 0z" />
+          </svg>
         </div>
-
         <!-- Opens an existing .prsm file -->
         <div class="openFile-button">
           <label for="open-input" style="cursor: pointer;">
             Open File
-
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files" viewBox="0 0 16 16">
-            <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-files"
+              viewBox="0 0 16 16">
+              <path
+                d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" />
             </svg>
-
-            <input id="open-input" type="file" @change="openFile()" style="display: none;"/>
+            <input id="open-input" type="file" @change="openFile()" style="display: none;" />
           </label>
         </div>
-
         <!-- Saves .prsm file to computer-->
         <div class="saveFile-button" @click="saveFile()">Save File
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-          <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+            <path
+              d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
           </svg>
         </div>
-
-    </div>
-    <div class="function-input">
-      <div class="input-boxes">
-        Function:
-        <input type="text" /> Range:
-      min: <input type="text"/>max: <input type="number"/>  
       </div>
-      <div class="previous-functions">
-
+      <div class="function-input">
+        <div class="input-boxes">
+          Function:
+          <input type="text" /> Range:
+          min: <input type="text" />max: <input type="number" /> <button>submit</button>
+        </div>
+        <div class="previous-functions">
+        </div>
       </div>
     </div>
-  </div>
   </div>
   <!-- Bottom section of file containing save and new file buttons-->
   <div class="background">
-    <!-- <div class="saveFile-button" @click="saveFile()">Save File</div>
-    <div class="newFile-button" @click="newFile()">New File</div> -->
   </div>
 </template>
   
 <script>
-import BarChart from './chart.vue'
-
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from 'chart.js'
+import { Chart, Line } from 'vue-chartjs'
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+)
 export default {
   data: function () {
     return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
-      data: "the cat in the hat knows a lot about that",
+      exportData: "the cat in the hat knows a lot about that",
       file: "waveform",
       type: ".prsm",
-     
-      
+      chart: null,
+      loaded: true,
+      data: {datasets: []},
+      chartData: {
+        labels: [0],
+        datasets: [
+          {
 
+            label: 'waveform',
+            backgroundColor: '#f87979',
+            data: [10, 20, 30, 40]
+          }
+        ]
+      },
+      chartOptions: {
+        elements: {
+          point: {
+            radius: 0
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: true,
+        autoPadding: true,
+        scales: {
+          x: {
+            grid: {
+              display: true
+            },
+            ticks: {
+              display: true
+            }
+          },
+          y: {
+            grid: {
+              display: true
+            }
+          },
+        },
+      }
     };
+
+  },
+  components: { Line },
+  computed: {
+    mutableData() { return this.chartData },
+    mutableOptions() { return this.chartOptions },
   },
   methods: {
     increase() {
       this.data++;
     },
-    movePointX() {
-      if (!this.pointIsSelected) return;
-      this.selectedPoint.config.x = parseFloat(this.rangeXval);
-      this.drawLines();
-    },
-    movePointY() {
-      if (!this.pointIsSelected) return;
-      this.selectedPoint.config.y = parseFloat(this.rangeYval);
-      this.drawLines();
-    },
-    moveLine() {
-      if (!this.lineIsSelected) return;
-
-      let pointArr = this.selectedLine.config.points;
-      //two cases: positive slider and negative slider
-      if(this.rangecurve != 0){
-
-      
-        //this.selectedLine.config.points = [pointArr[0],pointArr[1],(pointArr[0]+pointArr[2])/2,((pointArr[1]+pointArr[3])/2) - this.rangeCurve((pointArr[1]+pointArr[3])/2),pointArr[2],pointArr[3]];
-        
-        
-        //otherwise change y value of midpoint
-        this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[5])/2) - this.rangeCurve*((pointArr[1]+pointArr[5])/2);
-        
-        let x = JSON.parse(JSON.stringify(this.defaultCircle));
-        x.config.x = this.selectedLine.config.points[2];
-        x.config.y = this.selectedLine.config.points[3];
-        this.testpoints =  this.testpoints.concat([x]);
-        this.selectedLine.config.tension = Math.abs(parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
-        console.log(this.selectedLine.config.tension);
-      }
-      // else if(this.rangeCurve < 0){
-      //   this.selectedLine.config.points[3] = ((pointArr[1]+pointArr[3])/2) - this.rangeCurve*((pointArr[1]+pointArr[3])/2);
-        
-      //   let x = JSON.parse(JSON.stringify(this.defaultCircle));
-      //   x.config.x = this.selectedLine.config.points[2];
-      //   x.config.y = this.selectedLine.config.points[3];
-      //   this.testpoints =  this.testpoints.concat([x])
-      //   this.selectedLine.config.tension = (parseFloat(this.rangeCurve)); //tension parameter (who knows what this does?)
-      // }
-      else if (this.rangeCurve == 0)
-      {
-        this.selectedLine.config.points = [pointArr[0],pointArr[1],pointArr[4],pointArr[5]];
-        this.selectedLine.config.tension = 0.5; //tension parameter (who knows what this does?)
-      }
-      
-
-    },
-    resizeHandler(e) {
-
-    },
     testFunc(e) {
-      console.log(e);
-    //only here for debugging purposes
+      let tmp = [];
+      for (let i = 0; i < 100;i++)
+  {
+   tmp = tmp.concat([i])
+  }
+      console.log('tmp',tmp)
+      this.chartData.labels = tmp;
+      this.chartData.datasets[0].data = [1, 2, 3, 4, 56, 2, 4, 23, 56, 745, 2, 5643, 52654, 3, 2]
+      console.log('chartData', this.chartData)
+      this.data = this.chartData;
+      console.log(this.data);
+      console.log(this.$refs.chartElement.chart.update())
+
+      // this.loaded = false;
+      // this.chartData.datasets[0].data = [1, 2, 3, 4, 56, 2, 4, 23, 56, 745, 2, 5643, 52654, 3, 2]
+      // this.moveLine();
+      // this.loaded = true; let x = JSON.parse(JSON.stringify(this.defaultCircle));
+
     },
     //resets the wavetable editor
-    newFile() { //basically does the same thing as mounted() check down there for more 
+    newFile() {
 
     },
     //drawLines looks at all the points we have available, and connects the closest points on the x axis via line. Done by filtering points by x Position
@@ -190,26 +209,9 @@ export default {
 
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
-    saveFile() { 
-      // let rect = this.$refs.wavetable.getBoundingClientRect()
-      let canvasWidth = rect.width;
-      let canvasHeight = rect.height;
-
-
-      let sortedArr = this.points.sort((a, b) => { return a.config.x - b.config.x }); //sorts points by x value ascending
-      this.data = "START\n";
-      this.data = this.data + sortedArr.length + "\n";
-
-      this.data = this.data +"WIDTH : " + canvasWidth+"\nHEIGHT : " + canvasHeight +'\n';
-
-      for(let i = 0; i < sortedArr.length; i++){
-        this.data = this.data + sortedArr[i].config.x + " " + sortedArr[i].config.y + "\n";
-      }
-      this.data = this.data + "END";
-
-      // console.log(this.$root);
+    saveFile() {
       var pom = document.createElement("a");
-      pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.data));
+      pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.exportData));
       pom.setAttribute("download", "" + this.file + this.type);
       if (document.createEvent) {
         var event = document.createEvent("MouseEvents");
@@ -221,32 +223,29 @@ export default {
         pom.click();
       }
     },
-
-    openFile(){
-      
-    },
   },
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
   //need this to be able to handle resize events
   created() {
-    
+
   },
   unmounted() {
-   
+
   },
   mounted: function () { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
-   
+  for (let i = 0; i < 100;i++)
+  {
+    this.chartData.labels.concat[i];
+  }
   },
-  watch:{ //watch runs a function every time the watched value changes
-  
+  watch: { //watch runs a function every time the watched value changes
+
   },
-  components: {BarChart}
 }
 
 </script>
   
 <style>
-
 .chartcontainer {
   margin-left: 15%;
   margin-right: 15%;
@@ -261,7 +260,7 @@ export default {
   margin-top: 0px;
   height: 975px;
   padding: 4px;
-  padding-top: 10px; 
+  padding-top: 10px;
 }
 
 .point-adjustment {
@@ -272,9 +271,7 @@ export default {
 }
 
 /* Necessary for keeping seperate rows between add, delete point and new, open, and save file.*/
-.new-open-save {
-  
-}
+.new-open-save {}
 
 .saveFile-button {
   display: inline-block;
@@ -284,7 +281,7 @@ export default {
   margin-top: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
-  padding:2px;
+  padding: 2px;
   color: white;
   font-family: Impact;
   font-size: 18px;
@@ -306,7 +303,7 @@ export default {
   margin-top: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
-  padding:2px;
+  padding: 2px;
   color: white;
   font-family: Impact;
   font-size: 18px;
@@ -351,7 +348,7 @@ export default {
   margin-top: 10px;
   margin-right: 10px;
   margin-bottom: 10px;
-  padding:2px;
+  padding: 2px;
   color: black;
   font-family: Impact;
   font-size: 18px;
@@ -389,20 +386,28 @@ export default {
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {
   margin: auto;
-  width: 25%; /* Width of the outside container */
-  
+  width: 25%;
+  /* Width of the outside container */
+
 }
 
 /* The slider itself */
 .slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
+  -webkit-appearance: none;
+  /* Override default CSS styles */
   appearance: none;
-  width: 100%; /* Full-width */
-  height: 25px; /* Specified height */
-  background: #ffffff; /* Grey background */
-  outline: none; /* Remove outline */
-  opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  width: 100%;
+  /* Full-width */
+  height: 25px;
+  /* Specified height */
+  background: #ffffff;
+  /* Grey background */
+  outline: none;
+  /* Remove outline */
+  opacity: 0.7;
+  /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s;
+  /* 0.2 seconds transition on hover */
   transition: opacity .2s;
   border: 2px solid black;
   border-radius: 5px;
@@ -410,26 +415,36 @@ export default {
 
 /* Mouse-over effects */
 .slider:hover {
-  opacity: 1; /* Fully shown on mouse-over */
+  opacity: 1;
+  /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none; /* Override default look */
+  -webkit-appearance: none;
+  /* Override default look */
   appearance: none;
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #3e4444; /* Green background */
-  cursor: pointer; /* Cursor on hover */
+  width: 25px;
+  /* Set a specific slider handle width */
+  height: 25px;
+  /* Slider handle height */
+  background: #3e4444;
+  /* Green background */
+  cursor: pointer;
+  /* Cursor on hover */
   border: 1px solid black;
   border-radius: 4px;
 }
 
 .slider::-moz-range-thumb {
-  width: 25px; /* Set a specific slider handle width */
-  height: 25px; /* Slider handle height */
-  background: #3e4444; /* Green background */
-  cursor: pointer; /* Cursor on hover */
+  width: 25px;
+  /* Set a specific slider handle width */
+  height: 25px;
+  /* Slider handle height */
+  background: #3e4444;
+  /* Green background */
+  cursor: pointer;
+  /* Cursor on hover */
   border-radius: 3px;
 }
 </style>

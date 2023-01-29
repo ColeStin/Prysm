@@ -23,19 +23,13 @@
   export default {
     name: 'BarChart',
     components: { Line },
+    props: {chartData: {}},
+    mounted: () => {
+     console.log(this.chartData);
+    },
     data() {
       return {
-        chartData: {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],    
-    datasets: [
-    {
-      
-      label: 'waveform',
-      backgroundColor: '#f87979',
-      data: [40, 39, 10, 40, 39, 80]
-    }
-  ]
-        },
+        
         chartOptions: {
           responsive: true,
           maintainAspectRatio: true,
@@ -46,12 +40,12 @@
                       display:false
                   },
                   ticks: {
-                      display:false
+                      display:true
                   }
               },
               y: {
                   grid: {
-                      display:false
+                      display:true
                   }
               },
           },
