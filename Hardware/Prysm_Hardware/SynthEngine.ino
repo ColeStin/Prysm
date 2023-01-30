@@ -82,28 +82,7 @@ class Oscillator{
 std::vector<float> fileToVector()
 {
     std::vector<float> tmpVector;
-  /*std::ifstream inFile;
-	inFile.open(input);
-	if (!inFile.is_open())
-	{
-		//error handle
-        return tmpVector;
-	}
-    std::string stringRead;
-    float tmpFloat =0;
-    int size;
-    inFile >> stringRead;
-    inFile >> size;
-    int i = 0;
-    while (i < size)
-    {
-        inFile >> tmpFloat;
-        tmpVector.push_back(tmpFloat);
-        i++;
-    }
-	
-    inFile.close();*/
-
+ 
   File root = SD.open("/");
   String filename = root.openNextFile().name();
   File file = SD.open(filename);
@@ -123,7 +102,7 @@ std::vector<float> fileToVector()
       val = strtok (line, " ");
       while(val != NULL)
       {
-        n = atoi(val);
+        n = atof(val);
         tmpVector.push_back(n);
         val = strtok(NULL, " ");
       }
