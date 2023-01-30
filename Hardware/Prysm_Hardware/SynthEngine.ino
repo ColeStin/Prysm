@@ -10,40 +10,40 @@
 
 
 
-
+#include <ArduinoSTL.h>
 #include <SPI.h>
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
 #include <vector>
 
+
 using namespace std;
 
+
+
+
+
+
+/*****************************************************************************************************************/
 //This is the class for the oscillators
 class Oscillator{
 
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(int keyNumber)
+      Oscillator(float keyNumber)
       {
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
-        oscFrequency = 440*pow(2,(keyNumber - 49)/12);
+        oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
       }
-
 
       //gets 1 sample of oscillator and advances index
       float getSample()
       {
-          jassert(isPlaying());
+         if(isPlaying()){
           index = std::fmod(index, static_cast<float>(waveTable.size()));
-          const auto sample = interpolateLinearly();
-          index += indexImplement;
-
-      }
-
-      //probably not needed, may want to use this and have an empty constructor but not sure
-      void setFrequency(int keyNumber)
-      {
-        
+          const auto sample = interpolate();
+          index += indexIncrement;
+         }
       }
 
       //stops sampling, resets indexes to 0
@@ -64,18 +64,83 @@ class Oscillator{
       float interpolate() const
       {
         const auto truncatedIndex = static_cast<typename  decltype(waveTable)::size_type>(index);
-        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>
-                                                      (std::ceil(index)) % waveTable.size();
+        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>(std::ceil(index)) % waveTable.size();
         const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
-
     //private member variables
-      double oscFrequency;
+      float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
       std::vector<float> waveTable;
 };
+
+/********************************************************************************************************************************/
+
+//In Filing 
+//THis function reads in a file, parses it, and adds the data to a vector. It is then called in setup() to create the vector we are using in the synth engine
+std::vector<float> fileToVector()
+{
+    std::vector<float> tmpVector;
+  /*std::ifstream inFile;
+	inFile.open(input);
+	if (!inFile.is_open())
+	{
+		//error handle
+        return tmpVector;
+	}
+    std::string stringRead;
+    float tmpFloat =0;
+    int size;
+    inFile >> stringRead;
+    inFile >> size;
+    int i = 0;
+    while (i < size)
+    {
+        inFile >> tmpFloat;
+        tmpVector.push_back(tmpFloat);
+        i++;
+    }
+	
+    inFile.close();*/
+
+  File root = SD.open("/");
+  String filename = root.openNextFile().name();
+  File file = SD.open(filename);
+  if (file) Serial.println("FILE CANNOT BE OPENED");
+  char line[25];
+  int n;
+  char * val;
+  // read lines from the file
+  while (true){
+    char c = file.read();
+    if (line[n - 1] == '\n') {
+      // remove '\n'
+      line[n-1] = 0;
+      Serial.println(line);
+      //split up the line and then add it to vector
+      //MAKE SURE TO TRIM IT
+      val = strtok (line, " ");
+      while(val != NULL)
+      {
+        n = atoi(val);
+        tmpVector.push_back(n);
+        val = strtok(NULL, " ");
+      }
+    } else {
+      // no '\n' - line too long or missing '\n' at EOF
+      // handle error
+      Serial.println("something is amiss");
+      break;
+    }
+  }
+  Serial.println("FILE HAS BEEN READ");
+
+
+
+    return tmpVector;
+}
+/*****************************************************************************************/
 
 
 
@@ -89,15 +154,17 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
+
+
 void setup() {
 
   //definitely need to come back to this
   for(int i= 40; i<58; i++)
   {
-    Oscillator newOscillator(i)
+    Oscillator newOscillator(i);
   }
 
-
+  std::vector<float> pointVector = fileToVector();
   
   Serial.begin(9600);
 
