@@ -27,7 +27,6 @@
         generator and will load the generated tables onto an SD </p>
         <p> card and allow our synthesizer
         to read these wavetables and generate sounds to the users liking. The user can upload a wave table to be used on the actual synthesizer. </p>
-        <p>&nbsp;</p>
 
       <div class="headerGitHub">    
         <a href="https://github.com/ColeStin/Prysm">

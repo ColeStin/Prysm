@@ -760,7 +760,6 @@ background-color: blue;
   margin-top: 5px;
   width: 90%;
   height: 30%;
-
 }
 
 /* Necessary for keeping seperate rows between add, delete point and new, open, and save file.*/
@@ -771,7 +770,7 @@ background-color: blue;
 .saveFile-button {
   display: inline-block;
   width: 100px;
-  height: 25px;
+  height: 30px;
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;
@@ -793,7 +792,7 @@ background-color: blue;
 .newFile-button {
   display: inline-block;
   width: 100px;
-  height: 25px;
+  height: 30px;
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;
@@ -815,12 +814,12 @@ background-color: blue;
 .openFile-button {
   display: inline-block;
   width: 100px;
-  height: 25px;
+  height: 30px;
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;
-  margin-bottom: 10px;
-  padding:2px;
+  margin-bottom: 15px;
+  padding: 2px;
   color: white;
   font-family: Impact;
   font-size: 18px;
@@ -838,7 +837,7 @@ background-color: blue;
 .add-point {
   display: inline-block;
   width: 100px;
-  height: 25px;
+  height: 30px;
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;
@@ -860,7 +859,7 @@ background-color: blue;
 .delete-point {
   display: inline-block;
   width: 120px;
-  height: 25px;
+  height: 30px;
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;

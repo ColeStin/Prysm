@@ -7,29 +7,35 @@
      9/25 - Alexander Wilhelm - Prologue documentation
      10/20 - Alexander Wilhelm - Added AboutScreen switching
      12/4 - Alex - Refactoring of code
+     12/6 - Alex - Completion of new updated Navbar
 -->
 <template>
-  <div class="navbar">
-    <div class="title"> 
-      Prysm
+<div class="navbar">
+  <head>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1.0">
+  </head>
+  <body>
+    <nav>
+      <label class = "logo" > Prysm </label>
+      <ul>
+        <!-- Home Navigation System--> 
+        <li><a v-if = "stayVisible" class = "pageSelector" @click = "aboutClicked = false, instructionsClicked = false"> Home </a></li>
 
-      <!-- AboutScreen Navigation System--> 
-      <img v-if = "!aboutClicked" class="about" @click = "aboutClicked = true, instructionsClicked = false" src="../Images/info_icon.png" alt="About"/> 
+        <!-- InstructionScreen Navigation System--> 
+        <li><a v-if = "stayVisible" class = "pageSelector" @click = "aboutClicked = false, instructionsClicked = true"> Instructions </a></li> 
 
-      <!-- InstructionScreen Navigation System--> 
-      <img v-if = "!instructionsClicked" class="instructions" @click = "aboutClicked = false, instructionsClicked = true" src="../Images/instructions_icon.png" alt="About"/> 
-
-      <!-- HomeScreen Navigation System--> 
-       <img v-if = "aboutClicked && !instructionsClicked" class="goBack" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
-       <img v-if = "!aboutClicked && instructionsClicked" class="goBack2" @click = "aboutClicked = false, instructionsClicked = false" src="../Images/back.png" alt="Go Back" />
-
-    </div>
-  </div>
+        <!-- AboutScreen Navigation System--> 
+        <li><a v-if = "stayVisible" class = "pageSelector" @click = "aboutClicked = true, instructionsClicked = false"> About </a></li>
+      </ul> 
+    </nav>
+  </body>  
+</div>
 
   <!--If conditions met, displays certain screen --> 
   <HomeScreen v-if = "!aboutClicked && !instructionsClicked"></HomeScreen> 
   <AboutScreen v-if = "aboutClicked && !instructionsClicked"></AboutScreen>
-  <InstructionsScreen v-if = "!aboutClicked && instructionsClicked"></InstructionsScreen>
+  <InstructionsScreen v-if = "!aboutClicked && instructionsClicked"></InstructionsScreen>   
 
 </template>
 
@@ -44,7 +50,8 @@ export default {
 data: function () {
   return {
     instructionsClicked: false,
-    aboutClicked: false
+    aboutClicked: false,
+    stayVisible: true
   };
 },
 name: 'App',
@@ -53,6 +60,7 @@ components: {
 },
 methods: {}
 }
+
 </script>
 
 <style>
@@ -63,56 +71,68 @@ font-family: Avenir, Helvetica, Arial, sans-serif;
 -moz-osx-font-smoothing: grayscale;
 text-align: center;
 color: #2c3e50;
+background-image: url("../Images/aboutBackground2.png");
 }
 
-.navbar {
-background-color: #3e4444;
-width: 100.5%;
-height: 150px;
-padding: 0px;
+*{
+ padding: 0;
+ /* margin: 0; */
+ text-decoration: none;
+ list-style: none;
+ box-sizing: border-box; 
+} 
+
+body
+{
+  font-family: montserrat;
 }
 
-.title {
-color: #e6e2d3;
-float: center;
-font-size: 70px;
-padding: 25px;
-text-align: center;
-font-family: Impact;
-margin-left: 2.5%
+nav {
+  background: #2c3e50;
+  height: 80px;
+  width: 100.5%;
+  border-radius: 5px;
 }
 
-.about {
-  margin-top: 1%;
-  height: 60px;
-  width: 60px;
+nav ul {
   float: right;
-  cursor: pointer;
+  margin-right: 20px;
 }
 
-.instructions {
-  margin-top: 1%;
-  height: 50px;
-  width: 50px;
-  padding: 5px;
-  float: left;
-  cursor: pointer;
+nav ul li {
+  display: inline-block;
+  line-height: 60px;
+  margin: 0 5px;
 }
 
-.goBack {
-  margin-top: 1%;
-  height: 60px;
-  width: 60px;
-  float: right;
-  cursor: pointer;
+nav ul li a 
+{
+  color: white;
+  font-size: 17px;
+  /* padding: 7px 13px; */
+  border-radius: 3 px;
+  text-transform: uppercase;
 }
 
-.goBack2 {
-  margin-top: 1%;
-  height: 60px;
-  width: 60px;
-  float: left;
-  cursor: pointer;
+a:hover {
+  background: #1b9bff;
+  border-radius: 5px;
+  transition: 1s;
 }
+
+label.logo 
+{
+  color: white;
+  font-size: 35px;
+  line-height: 80px;
+  padding: 0 100px;
+  margin-right: 59%;
+  font-weight: bold;
+}
+
+.pageSelector
+{
+  cursor: pointer;
+} 
 
 </style>

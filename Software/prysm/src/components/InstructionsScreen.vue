@@ -130,7 +130,7 @@
     
     .headerLabel {
     margin-left: 7%;
-    border-radius: 50px;
+    border-radius: 15px 15px;
     background-color: #3188c6;
     padding: 0px;
     margin-bottom: -50px;
@@ -145,7 +145,7 @@
     
     .headerLabelFile {
     margin-left: 7%;
-    border-radius: 50px;
+    border-radius: 15px 15px;
     background-color: #333333;
     padding: 0px;
     margin-bottom: -50px;
@@ -161,7 +161,7 @@
 
     .headerLabelAdd {
     margin-left: 7%;
-    border-radius: 50px;
+    border-radius: 15px 15px;
     background-color: #95B8D1;
     padding: 0px;
     margin-bottom: -50px;
@@ -177,9 +177,8 @@
     
     .headerLabelDelete {
     margin-left: 7%;
-    border-radius: 50px;
+    border-radius: 15px 15px;
     background-color: #EDAFB8;
-    padding: 0px;
     margin-bottom: -50px;
     width: 9%;
     height: 3%;
@@ -190,7 +189,6 @@
     .headerLabelDelete:hover {
       background-color: #AA0000;
     }
-  
   
   </style>
   
