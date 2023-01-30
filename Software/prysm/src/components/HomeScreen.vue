@@ -94,9 +94,9 @@
       </div>
       <div class="function-input">
         <div class="input-boxes">
-          Function:
-          <input type="text" /> Range:
-          min: <input type="text" />max: <input type="number" /> <button>submit</button>
+          Function: <input type='text' v-model="functionIn"/>
+          Range:
+          min: <input type="text" v-model="inputMin"/>max: <input type="number" v-model="inputMax"/> <button @click="addFunction()">submit</button>
         </div>
         <div class="previous-functions">
         </div>
@@ -109,6 +109,8 @@
 </template>
   
 <script>
+import { create, all } from "mathjs";
+const math = create(all);
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -131,7 +133,12 @@ export default {
       type: ".prsm",
       chart: null,
       loaded: true,
-      data: {datasets: []},
+      functionIn: '',
+      inputMin: 1,
+      inputMax: 1000,
+      ceiling: 2,
+      floor: 0,
+      data: {datasets: [], labels: []},
       chartData: {
         labels: [0],
         datasets: [
@@ -164,7 +171,9 @@ export default {
           y: {
             grid: {
               display: true
-            }
+            },
+            beginAtZero: true,
+            suggestedMax: 2,
           },
         },
       }
@@ -178,27 +187,50 @@ export default {
   },
   methods: {
     increase() {
-      this.data++;
+      console.log(this.chartData.datasets[0].data);
+    },
+    addFunction() { // this inputs your data into the chart and then displays it
+      // console.log('functionIN,min,max',this.functionIn,this.inputMin,this.inputMax);
+
+      let tmp = this.functionIn;
+      
+      //gotta wrap in parentheses so if there are two numbers next to each other the one being put in still gets multiplied correctly
+      //a la 2(x)2 = 2*x*2 not 222 if x=2
+      tmp = tmp.replaceAll('x', '(x)');
+      let result;
+      for (let i = this.inputMin; i <=this.inputMax;i++)
+      {
+        // console.log(this.inputMin,this.inputMax,'min and max');
+        tmp = tmp.replaceAll('x',i);
+        try {
+          //mathjs parses your input and evaluates
+          result = math.evaluate(tmp);
+        } catch (error) {
+          //ha ha no error checking here yet
+          console.log('error',tmp);
+          return;
+        }
+        if (result > this.ceiling)
+        {
+          result = this.ceiling;
+        }
+        else if (result < this.floor)
+        {
+          result = this.floor;
+        }
+        console.log('i,res',i,result);
+        this.chartData.datasets[0].data[i-1] = result;
+        // console.log('i plus this.chartData.datasets[0].data[i-1]',i,this.chartData.datasets[0].data[i-1]);
+      }
+      // console.log(this.chartData);
+      this.renderChart();
+    },
+    renderChart() {
+      let tmp = JSON.parse(JSON.stringify(this.chartData));
+      this.data = tmp;
     },
     testFunc(e) {
-      let tmp = [];
-      for (let i = 0; i < 100;i++)
-  {
-   tmp = tmp.concat([i])
-  }
-      console.log('tmp',tmp)
-      this.chartData.labels = tmp;
-      this.chartData.datasets[0].data = [1, 2, 3, 4, 56, 2, 4, 23, 56, 745, 2, 5643, 52654, 3, 2]
-      console.log('chartData', this.chartData)
-      this.data = this.chartData;
-      console.log(this.data);
-      console.log(this.$refs.chartElement.chart.update())
-
-      // this.loaded = false;
-      // this.chartData.datasets[0].data = [1, 2, 3, 4, 56, 2, 4, 23, 56, 745, 2, 5643, 52654, 3, 2]
-      // this.moveLine();
-      // this.loaded = true; let x = JSON.parse(JSON.stringify(this.defaultCircle));
-
+      this.chartData.datasets[0].data = this.chartData.datasets[0].data.map((x) => {return x+1})
     },
     //resets the wavetable editor
     newFile() {
@@ -210,6 +242,14 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() {
+
+      let tmp = this.data.datasets[0].data;
+      for(let i = 0; i < tmp.length; i++){
+        this.exportData = this.exportData + "" + tmp[i] + "\n";
+      }
+
+
+
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.exportData));
       pom.setAttribute("download", "" + this.file + this.type);
@@ -232,11 +272,18 @@ export default {
   unmounted() {
 
   },
-  mounted: function () { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
-  for (let i = 0; i < 100;i++)
+  mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
+  
+  
+  
+  // this.chartData.datasets[0].data = [];
+  for (let i = 0; i < 1000;i++)
   {
-    this.chartData.labels.concat[i];
+    this.chartData.labels = this.chartData.labels.concat([i]);
+    this.chartData.datasets[0].data[i] = 1;
   }
+  this.data = JSON.parse(JSON.stringify(this.chartData));
+  
   },
   watch: { //watch runs a function every time the watched value changes
 
