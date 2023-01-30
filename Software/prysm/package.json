@@ -14,10 +14,19 @@
   "main": "background.js",
   "dependencies": {
     "bootstrap": "^5.2.2",
+    "chart.js": "^4.2.0",
+    "chartjs": "^0.3.24",
     "core-js": "^3.8.3",
     "konva": "^8.3.13",
+    "mathjax": "^3.2.2",
+    "mathjs": "^11.5.0",
+    "mathlive": "^0.87.1",
     "vue": "^3.2.13",
-    "vue-konva": "^3.0.1"
+    "vue-chart.js": "^0.2.0",
+    "vue-chartjs": "^5.2.0",
+    "vue-konva": "^3.0.1",
+    "vue-math-field": "^0.5.0",
+    "vue-mathjax-next": "^0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
