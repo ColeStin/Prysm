@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import VueKonva from 'vue-konva';
+import VueMathjax from 'vue-mathjax-next'
 const app = createApp(App);
-app.use(VueKonva); //imports the konva module to our vue instance 
+app.use(VueMathjax);
 //Vue.use(paper);
 app.mount('#app');
