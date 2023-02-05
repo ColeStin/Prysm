@@ -15,6 +15,7 @@
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
 #include <vector>
+#include <SD.h>
 
 
 using namespace std;
@@ -206,4 +207,5 @@ void loop()
     output = output + "END]";
     //output the string to see which keys are being pressed
     Serial.println(output);
+
 }
