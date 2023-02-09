@@ -64,7 +64,7 @@
       <!-- Seperates New, Open, and Save File from Above Row-->
       <div class="new-open-save">
         <!-- Resets the wavetable to original state-->
-        <div class="newFile-button" @click="testFunc()">New File
+        <div class="newFile-button" @click="newFile()">New File
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
             <path
@@ -80,7 +80,7 @@
               <path
                 d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1zM3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" />
             </svg>
-            <input id="open-input" type="file" @change="openFile()" style="display: none;" />
+            <input id="open-input" type="file" ref="fileIn" @change="openFile()" style="display: none;" />
           </label>
         </div>
         <!-- Saves .prsm file to computer-->
@@ -94,9 +94,10 @@
       </div>
       <div class="function-input">
         <div class="input-boxes">
-          Function: <input type='text' v-model="functionIn"/>
+          Function: <input type='text' v-model="functionIn" />
           Range:
-          min: <input type="text" v-model="inputMin"/>max: <input type="number" v-model="inputMax"/> <button @click="addFunction()">submit</button>
+          min: <input type="text" v-model="inputMin" />max: <input type="number" v-model="inputMax" /> <button
+            @click="addFunction()">submit</button>
         </div>
         <div class="previous-functions">
         </div>
@@ -136,9 +137,9 @@ export default {
       functionIn: '',
       inputMin: 1,
       inputMax: 1000,
-      ceiling: 2,
+      ceiling: 200,
       floor: 0,
-      data: {datasets: [], labels: []},
+      data: { datasets: [], labels: [] },
       chartData: {
         labels: [0],
         datasets: [
@@ -173,7 +174,7 @@ export default {
               display: true
             },
             beginAtZero: true,
-            suggestedMax: 2,
+            suggestedMax: 200,
           },
         },
       }
@@ -193,33 +194,32 @@ export default {
       // console.log('functionIN,min,max',this.functionIn,this.inputMin,this.inputMax);
 
       let tmp = this.functionIn;
-      
+
       //gotta wrap in parentheses so if there are two numbers next to each other the one being put in still gets multiplied correctly
       //a la 2(x)2 = 2*x*2 not 222 if x=2
       tmp = tmp.replaceAll('x', '(x)');
       let result;
-      for (let i = this.inputMin; i <=this.inputMax;i++)
-      {
+      let tmp2;
+      for (let i = this.inputMin; i <= this.inputMax; i++) {
         // console.log(this.inputMin,this.inputMax,'min and max');
-        tmp = tmp.replaceAll('x',i);
+        //you have to use an inner temp here because otherwise youre replacing x in the string on the first pass and then there are no more strings.
+        tmp2 = tmp.replaceAll('x', i);
         try {
           //mathjs parses your input and evaluates
-          result = math.evaluate(tmp);
+          result = math.evaluate(tmp2);
         } catch (error) {
           //ha ha no error checking here yet
-          console.log('error',tmp);
+          console.log('error', tmp2);
           return;
         }
-        if (result > this.ceiling)
-        {
+        if (result > this.ceiling) {
           result = this.ceiling;
         }
-        else if (result < this.floor)
-        {
+        else if (result < this.floor) {
           result = this.floor;
         }
-        console.log('i,res',i,result);
-        this.chartData.datasets[0].data[i-1] = result;
+        console.log('i,res', i, result);
+        this.chartData.datasets[0].data[i - 1] = result;
         // console.log('i plus this.chartData.datasets[0].data[i-1]',i,this.chartData.datasets[0].data[i-1]);
       }
       // console.log(this.chartData);
@@ -230,11 +230,43 @@ export default {
       this.data = tmp;
     },
     testFunc(e) {
-      this.chartData.datasets[0].data = this.chartData.datasets[0].data.map((x) => {return x+1})
+      console.log(this.data.datasets[0].data)
     },
     //resets the wavetable editor
     newFile() {
+      this.chartData.labels = [];
+      for (let i = 0; i < 1000; i++) {
+        this.chartData.labels = this.chartData.labels.concat([i]);
+        this.chartData.datasets[0].data[i] = this.ceiling / 2;
+      }
+      this.data = JSON.parse(JSON.stringify(this.chartData));
 
+    },
+    //https://masteringjs.io/tutorials/vue/file
+    //file opening with VUE
+    openFile() {
+      console.log(this.$refs.fileIn.files)
+      //this section is ripped and modified from the website directly above
+      const reader = new FileReader();
+      if (this.$refs.fileIn.files[0].name.includes(".prsm")) {
+        reader.onload = (res) => {
+          let tmp = res.target.result.split('\n');
+          this.chartData.labels = [];
+          for (let i = 0; i < 1000; i++) {
+            this.chartData.labels = this.chartData.labels.concat([i]);
+            this.chartData.datasets[0].data[i] = tmp[i] * 100;
+          }
+          this.data = JSON.parse(JSON.stringify(this.chartData));
+        };
+        reader.onerror = (err) => console.log(err);
+        reader.readAsText(this.$refs.fileIn.files[0]);
+      } else {
+        console.log('error in file input!')
+      }
+    },
+    resizeHandler() {
+      console.log(this.$refs.chartElement.chart.resize())
+      // this.$refs.chartElement.renderChart(this.data,this.chartOptions)
     },
     //drawLines looks at all the points we have available, and connects the closest points on the x axis via line. Done by filtering points by x Position
     //https://stackoverflow.com/questions/25835510/draw-curved-line-between-two-points <- oh boy this one is going to be a doozy
@@ -244,8 +276,8 @@ export default {
     saveFile() {
 
       let tmp = this.data.datasets[0].data;
-      for(let i = 0; i < tmp.length; i++){
-        this.exportData = this.exportData + "" + tmp[i] + "\n";
+      for (let i = 0; i < tmp.length; i++) {
+        this.exportData = this.exportData + "" + tmp[i] / 100 + "\n";
       }
 
 
@@ -267,23 +299,19 @@ export default {
   //https://dev.to/sandrarodgers/listen-for-and-debounce-window-resize-event-in-vuejs-2pn2
   //need this to be able to handle resize events
   created() {
-
+    window.addEventListener("resize",this.resizeHandler);
   },
   unmounted() {
-
+    window.removeEventListener("resize",this.resizeHandler);
   },
   mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
-  
-  
-  
-  // this.chartData.datasets[0].data = [];
-  for (let i = 0; i < 1000;i++)
-  {
-    this.chartData.labels = this.chartData.labels.concat([i]);
-    this.chartData.datasets[0].data[i] = 1;
-  }
-  this.data = JSON.parse(JSON.stringify(this.chartData));
-  
+    // this.chartData.datasets[0].data = [];
+    for (let i = 0; i < 1000; i++) {
+      this.chartData.labels = this.chartData.labels.concat([i]);
+      this.chartData.datasets[0].data[i] = this.ceiling / 2;
+    }
+    this.data = JSON.parse(JSON.stringify(this.chartData));
+
   },
   watch: { //watch runs a function every time the watched value changes
 
