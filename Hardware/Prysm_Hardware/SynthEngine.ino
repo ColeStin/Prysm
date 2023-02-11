@@ -122,7 +122,9 @@ std::vector<float> fileToVector()
 }
 /*****************************************************************************************/
 
-
+//Oscilator vector
+//Will store all of the oscillator frequencies created
+std::vector<Oscillator> oscVector;
 
 //sharp keys are designated by upper case letters where as lower case letters are normal values
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
