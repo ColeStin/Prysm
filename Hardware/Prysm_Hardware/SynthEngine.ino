@@ -28,12 +28,12 @@ using namespace std;
 /*****************************************************************************************************************/
 //This is the class for the oscillators
 class Oscillator{
-
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(float keyNumber)
+      Oscillator(float keyNumber, std::vector<float> waveTable)
       {
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
+        waveTable = waveTable
         oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
       }
 
@@ -70,6 +70,7 @@ class Oscillator{
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
     //private member variables
+      int sampleRate = 64
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
@@ -136,17 +137,25 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
+  //initalizes vectors and places them in oscillator vector
+  for(int i= 40; i<58; i++)
+  {
+    //push back onto oscillator vector
+  
+    Oscillator newOscillator(i, wavetable);
+    oscVector.emplace_back(newOscillator);
+  }
+
 
 
 void setup() {
 
   //definitely need to come back to this
-  for(int i= 40; i<58; i++)
-  {
-    Oscillator newOscillator(i);
-  }
 
-  std::vector<float> pointVector = fileToVector();
+
+  
+
+  
   
   Serial.begin(9600);
 
