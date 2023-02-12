@@ -33,7 +33,7 @@ class Oscillator{
       Oscillator(float keyNumber, std::vector<float> waveTable)
       {
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
-        waveTable = waveTable
+        waveTable = waveTable;
         oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
       }
 
@@ -70,7 +70,7 @@ class Oscillator{
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
     //private member variables
-      int sampleRate = 64
+      int sampleRate = 64;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
@@ -137,6 +137,7 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
+  //why is this just out here???
   //initalizes vectors and places them in oscillator vector
   for(int i= 40; i<58; i++)
   {
@@ -147,8 +148,15 @@ char getKey(int pinVal)
   }
 
 
+//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
+bool* current_playing = NULL;
+bool* previous_playing = NULL;
+//use pointers so you can easily swap the previous and current without having to move all values over
 
 void setup() {
+
+  //initailize the current_playing var
+  current_playing = (bool*) malloc(18*sizeof(bool));
 
   //definitely need to come back to this
 
@@ -189,6 +197,15 @@ void setup() {
 
 void loop() 
 {
+    //first free up previous_playing
+    free(previous_playing);
+    //reallocate whatever was in current_playing into previous_playing
+    previous_playing = (bool*) realloc (current_playing, 18*sizeof(bool));
+
+    //re-initalize current_playing  
+    current_playing = (bool*) malloc(18*sizeof(bool));
+
+
     int amount_of_vals = 18; //used for testing purposes
     int start_pin = 20; //used for testing purposes
     bool values[amount_of_vals] = {false}; //delcare an array of bools and set them all to false
@@ -196,9 +213,22 @@ void loop()
 
       //look at the current pin (20-38) and see if it is reading
       //set the bool value to the array instance for that pin (0-17)
-      values[i-start_pin] = digitalRead(i) == LOW; 
+      *current_playing[i-start_pin] = digitalRead(i) == LOW; 
     }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
     //this section is for testing purposes only!!!!
     //it is used to generate a string to output to the terminal so that
     //we can see all the buttons being pressed.
