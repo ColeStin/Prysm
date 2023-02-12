@@ -30,6 +30,7 @@
        11/14 - Gage - add comments to stuff
        12/4 - Alex - Code Refactoring, creation of open file button
        12/4 - Alex - Editing of open file button
+       2/12 - Alex - Editing of UI for min/max/range buttons
 -->
 
 <template>
@@ -91,13 +92,18 @@
               d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
           </svg>
         </div>
+
+        <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" />
       </div>
       <div class="function-input">
         <div class="input-boxes">
           Function: <input type='text' v-model="functionIn" />
-          Range:
-          min: <input type="text" v-model="inputMin" />max: <input type="number" v-model="inputMax" /> <button
-            @click="addFunction()">submit</button>
+          Range: <input type="text" v-model="inputRange" />
+          Minimum: <input type="text" v-model="inputMin" />Maximum: <input type="number" v-model="inputMax" /> 
+          <!-- <button @click="addFunction()">submit</button> -->
+          <div class="submit-button" @click="addFunction()">Submit
+            
+        </div>
         </div>
         <div class="previous-functions">
         </div>
@@ -458,6 +464,47 @@ export default {
   background-color: #AA0000;
 }
 
+.submit-button {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: red;
+}
+
+.nameFile-button {
+  display: inline-block;
+  width: 100px;
+  height: 30px;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 2px;
+  color: white;
+  font-family: Impact;
+  font-size: 18px;
+  background-color: #333333;
+  border: 2px solid #333333;
+  border-radius: 8px 8px;
+  cursor: pointer;
+}
+
+.nameFile-button:hover {
+  background-color: red;
+}
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {
   margin: auto;
