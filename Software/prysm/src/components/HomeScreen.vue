@@ -85,6 +85,11 @@
           </label>
         </div>
         <!-- Saves .prsm file to computer-->
+        <div class = "input-boxes">
+          <span> Name File </span> 
+          <input type = "text" required = "required"> 
+        </div>
+
         <div class="saveFile-button" @click="saveFile()">Save File
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
@@ -92,14 +97,14 @@
               d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
           </svg>
         </div>
-
-        <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" />
-      </div>
+       
+        <!-- <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" /> -->
+      </div> 
       <div class="function-input">
         <div class="input-boxes">
           Function: <input type='text' v-model="functionIn" />
           Range: <input type="text" v-model="inputRange" />
-          Minimum: <input type="text" v-model="inputMin" />Maximum: <input type="number" v-model="inputMax" /> 
+          Minimum: <input type="text" v-model="inputMin" /> Maximum: <input type="number" v-model="inputMax" /> 
           <!-- <button @click="addFunction()">submit</button> -->
           <div class="submit-button" @click="addFunction()">Submit
             
@@ -136,7 +141,8 @@ export default {
   data: function () {
     return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
       exportData: "the cat in the hat knows a lot about that",
-      file: "waveform",
+      //file: document.getElementById('input-boxes input').value,
+      file: "newfile1",
       type: ".prsm",
       chart: null,
       loaded: true,
@@ -361,6 +367,7 @@ export default {
   margin: auto;
   margin-top: 10px;
   margin-right: 10px;
+  margin-left: 5px;
   margin-bottom: 10px;
   padding: 2px;
   color: white;
@@ -471,6 +478,7 @@ export default {
   margin: auto;
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-left: 5px;
   padding: 2px;
   color: white;
   font-family: Impact;
@@ -505,12 +513,50 @@ export default {
 .nameFile-button:hover {
   background-color: red;
 }
+
+.input-boxes
+{
+  display: inline-block;
+  /* position: relative; */
+  /* width: 250px; */
+  /* margin-left: 5px; */
+}
+
+.input-boxes input
+{
+  /* width: 100%; */
+  padding: 10px;
+  width: 150px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  background: #1d2b3a;
+  outline: none;
+  color: #fff;
+  font-size: 1em; 
+  outline: none;
+}
+
+.input-boxes span
+{
+  position: absolute;
+  /* left: 0; */
+  padding: 10px;
+  pointer-events: none;
+  font-size: 1em;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+}
+
+.input-boxes input:valid ~ span,
+.input-boxes input:focus ~ span /* ~ span does not work */
+{
+  color: #00dfc4;
+}
 /* Slider css data from W3School tutorial https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 .slidecontainer {
   margin: auto;
   width: 25%;
   /* Width of the outside container */
-
 }
 
 /* The slider itself */
