@@ -15,6 +15,7 @@
 #include <string.h> //this library is used for test purposes only
 #include <cmath>
 #include <vector>
+#include <SD.h>
 
 
 using namespace std;
@@ -27,12 +28,12 @@ using namespace std;
 /*****************************************************************************************************************/
 //This is the class for the oscillators
 class Oscillator{
-
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(float keyNumber)
+      Oscillator(float keyNumber, std::vector<float> waveTable)
       {
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
+        waveTable = waveTable;
         oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
       }
 
@@ -69,6 +70,7 @@ class Oscillator{
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
     //private member variables
+      int sampleRate = 64;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
@@ -82,28 +84,7 @@ class Oscillator{
 std::vector<float> fileToVector()
 {
     std::vector<float> tmpVector;
-  /*std::ifstream inFile;
-	inFile.open(input);
-	if (!inFile.is_open())
-	{
-		//error handle
-        return tmpVector;
-	}
-    std::string stringRead;
-    float tmpFloat =0;
-    int size;
-    inFile >> stringRead;
-    inFile >> size;
-    int i = 0;
-    while (i < size)
-    {
-        inFile >> tmpFloat;
-        tmpVector.push_back(tmpFloat);
-        i++;
-    }
-	
-    inFile.close();*/
-
+ 
   File root = SD.open("/");
   String filename = root.openNextFile().name();
   File file = SD.open(filename);
@@ -123,7 +104,7 @@ std::vector<float> fileToVector()
       val = strtok (line, " ");
       while(val != NULL)
       {
-        n = atoi(val);
+        n = atof(val);
         tmpVector.push_back(n);
         val = strtok(NULL, " ");
       }
@@ -142,7 +123,9 @@ std::vector<float> fileToVector()
 }
 /*****************************************************************************************/
 
-
+//Oscilator vector
+//Will store all of the oscillator frequencies created
+std::vector<Oscillator> oscVector;
 
 //sharp keys are designated by upper case letters where as lower case letters are normal values
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
@@ -154,17 +137,33 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
+  //why is this just out here???
+  //initalizes vectors and places them in oscillator vector
+  for(int i= 40; i<58; i++)
+  {
+    //push back onto oscillator vector
+  
+    Oscillator newOscillator(i, wavetable);
+    oscVector.emplace_back(newOscillator);
+  }
 
+
+//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
+bool* current_playing = NULL;
+bool* previous_playing = NULL;
+//use pointers so you can easily swap the previous and current without having to move all values over
 
 void setup() {
 
-  //definitely need to come back to this
-  for(int i= 40; i<58; i++)
-  {
-    Oscillator newOscillator(i);
-  }
+  //initailize the current_playing var
+  current_playing = (bool*) malloc(18*sizeof(bool));
 
-  std::vector<float> pointVector = fileToVector();
+  //definitely need to come back to this
+
+
+  
+
+  
   
   Serial.begin(9600);
 
@@ -198,6 +197,15 @@ void setup() {
 
 void loop() 
 {
+    //first free up previous_playing
+    free(previous_playing);
+    //reallocate whatever was in current_playing into previous_playing
+    previous_playing = (bool*) realloc (current_playing, 18*sizeof(bool));
+
+    //re-initalize current_playing  
+    current_playing = (bool*) malloc(18*sizeof(bool));
+
+
     int amount_of_vals = 18; //used for testing purposes
     int start_pin = 20; //used for testing purposes
     bool values[amount_of_vals] = {false}; //delcare an array of bools and set them all to false
@@ -205,9 +213,22 @@ void loop()
 
       //look at the current pin (20-38) and see if it is reading
       //set the bool value to the array instance for that pin (0-17)
-      values[i-start_pin] = digitalRead(i) == LOW; 
+      *current_playing[i-start_pin] = digitalRead(i) == LOW; 
     }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
     //this section is for testing purposes only!!!!
     //it is used to generate a string to output to the terminal so that
     //we can see all the buttons being pressed.
@@ -227,4 +248,5 @@ void loop()
     output = output + "END]";
     //output the string to see which keys are being pressed
     Serial.println(output);
+
 }
