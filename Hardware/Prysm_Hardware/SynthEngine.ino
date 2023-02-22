@@ -2,12 +2,9 @@
 ** File Name: SynthEngine.ino
 ** Description: File for Arduino with synth engine stuff
 ** Created By: Dom D'Attilio
-** Edited By: Dom D'Attilio, COle Stinson
-** Last Edit: 12-2 Dom D'Attilio - Added oscillator functionality
+** Edited By: Dom D'Attilio, Cole Stinson, Gage Burmaster
+** Last Edit: 2-22-23 Gage Burmaster - re-did file read and changed floating code to use array
 */
-
-
-
 
 
 #include <ArduinoSTL.h>
@@ -88,31 +85,31 @@ std::vector<float> fileToVector()
   File root = SD.open("/");
   String filename = root.openNextFile().name();
   File file = SD.open(filename);
-  if (file) Serial.println("FILE CANNOT BE OPENED");
-  char line[25];
-  int n;
+  if (!file) Serial.println("FILE CANNOT BE OPENED");
+  char line[20];
+  int n = 0;
   char * val;
   // read lines from the file
-  while (true){
+  while (file.available()){
+    //add characters to our buf
+    //UNTIL you hit a newline, then reset
+
     char c = file.read();
-    if (line[n - 1] == '\n') {
-      // remove '\n'
-      line[n-1] = 0;
-      Serial.println(line);
-      //split up the line and then add it to vector
-      //MAKE SURE TO TRIM IT
-      val = strtok (line, " ");
-      while(val != NULL)
+    if (c == '\n') {
+      //we have hit the end of one input to our vector.
+      char out[n];
+      for (int i = 0; i < n; i++)
       {
-        n = atof(val);
-        tmpVector.push_back(n);
-        val = strtok(NULL, " ");
+        out[i] = line[i];
       }
+      //turn out into a float
+      //add it to the vector/array
+      Serial.println(out);
+      n=0;
     } else {
-      // no '\n' - line too long or missing '\n' at EOF
-      // handle error
-      Serial.println("something is amiss");
-      break;
+      line[n] = c;
+      n++;
+
     }
   }
   Serial.println("FILE HAS BEEN READ");
@@ -121,11 +118,11 @@ std::vector<float> fileToVector()
 
     return tmpVector;
 }
-/*****************************************************************************************/
+/*****************************************************************************************
 
 //Oscilator vector
 //Will store all of the oscillator frequencies created
-std::vector<Oscillator> oscVector;
+Oscillator[18] oscArray;
 
 //sharp keys are designated by upper case letters where as lower case letters are normal values
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
@@ -143,8 +140,9 @@ char getKey(int pinVal)
   {
     //push back onto oscillator vector
   
+    //is this line real code??  
     Oscillator newOscillator(i, wavetable);
-    oscVector.emplace_back(newOscillator);
+    oscArray[i-40]=newOscillator;
   }
 
 
@@ -152,7 +150,7 @@ char getKey(int pinVal)
 bool* current_playing = NULL;
 bool* previous_playing = NULL;
 //use pointers so you can easily swap the previous and current without having to move all values over
-
+*/
 void setup() {
 
   //initailize the current_playing var
@@ -192,7 +190,7 @@ void setup() {
   pinMode(35, INPUT_PULLUP);
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
-
+  fileToVector();
 }
 
 void loop() 
