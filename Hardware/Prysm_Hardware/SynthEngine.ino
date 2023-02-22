@@ -102,8 +102,8 @@ std::vector<float> fileToVector()
       {
         out[i] = line[i];
       }
-      //turn out into a float
-      //add it to the vector/array
+      float tmp = atof(out);
+      tmpVector.push_back(tmp);
       Serial.println(out);
       n=0;
     } else {
