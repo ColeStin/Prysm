@@ -3,7 +3,7 @@
 ** Description: File for Arduino with synth engine stuff
 ** Created By: Dom D'Attilio
 ** Edited By: Dom D'Attilio, Cole Stinson, Gage Burmaster
-** Last Edit: 2-22-23 Gage Burmaster - re-did file read and changed floating code to use array
+** Last Edit: 2-23-23 Gage Burmaster - organized code, moved init to init function
 */
 
 
@@ -17,7 +17,18 @@
 
 using namespace std;
 
+//global variable declaration
+//Will store all of the oscillator frequencies created
+Oscillator[18] oscArray;
+//sharp keys are designated by upper case letters where as lower case letters are normal values
 
+
+//this is done because we wanted to keep them as chars so they did not take up too much RAM
+char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
+//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
+bool* current_playing = NULL;
+bool* previous_playing = NULL;
+//use pointers so you can easily swap the previous and current without having to move all values over
 
 
 
@@ -74,6 +85,13 @@ class Oscillator{
       std::vector<float> waveTable;
 };
 
+
+char getKey(int pinVal)
+{
+  pinVal = pinVal-20;
+  return keyValues[pinVal % 18];
+}
+
 /********************************************************************************************************************************/
 
 //In Filing 
@@ -118,46 +136,22 @@ std::vector<float> fileToVector()
 
     return tmpVector;
 }
-/*****************************************************************************************
-
-//Oscilator vector
-//Will store all of the oscillator frequencies created
-Oscillator[18] oscArray;
-
-//sharp keys are designated by upper case letters where as lower case letters are normal values
-//this is done because we wanted to keep them as chars so they did not take up too much RAM
-char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
-
-char getKey(int pinVal)
-{
-  pinVal = pinVal-20;
-  return keyValues[pinVal % 18];
-}
-
-  //why is this just out here???
-  //initalizes vectors and places them in oscillator vector
-  for(int i= 40; i<58; i++)
-  {
-    //push back onto oscillator vector
-  
-    //is this line real code??  
-    Oscillator newOscillator(i, wavetable);
-    oscArray[i-40]=newOscillator;
-  }
 
 
-//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
-bool* current_playing = NULL;
-bool* previous_playing = NULL;
-//use pointers so you can easily swap the previous and current without having to move all values over
-*/
 void setup() {
 
   //initailize the current_playing var
   current_playing = (bool*) malloc(18*sizeof(bool));
 
   //definitely need to come back to this
-
+  for(int i= 40; i<58; i++)
+  {
+    //push back onto oscillator vector
+  
+    //is this line real code??  
+    Oscillator newOscillator = Oscillator(i, wavetable);
+    oscArray[i-40]=newOscillator;
+  }
 
   
 
@@ -190,6 +184,8 @@ void setup() {
   pinMode(35, INPUT_PULLUP);
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
+  
+  //Do we need to store the result of this somewhere???
   fileToVector();
 }
 
