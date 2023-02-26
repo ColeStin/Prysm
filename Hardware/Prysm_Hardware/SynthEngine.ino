@@ -20,9 +20,12 @@ using namespace std;
 //global variable declaration
 //Will store all of the oscillator frequencies created
 Oscillator[18] oscArray;
+
+
+//global variable for waveTable, will be filled in setup() with result of infile
+std::vector<float> waveTableVector;
+
 //sharp keys are designated by upper case letters where as lower case letters are normal values
-
-
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
 char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
 //the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
@@ -138,6 +141,41 @@ std::vector<float> fileToVector()
 }
 
 
+/************************************************************************************************/
+//Process BLock Function, will be called in loop. This is the main code for taking a key press and calling the necessary methods to follow
+
+void processor()
+{
+  auto currSample = 0;
+
+
+
+  renderSound();
+}
+
+
+/************************************************************************************************/
+
+void renderSound(int key,){
+
+
+
+}
+
+
+
+
+/**********************************************************************************************/
+
+void keyHandler()
+{
+  
+}
+
+
+
+/**********************************************************************************************/
+
 void setup() {
 
   //initailize the current_playing var
@@ -186,7 +224,7 @@ void setup() {
   pinMode(37, INPUT_PULLUP);
   
   //Do we need to store the result of this somewhere???
-  fileToVector();
+  waveTableVector = fileToVector();
 }
 
 void loop() 
