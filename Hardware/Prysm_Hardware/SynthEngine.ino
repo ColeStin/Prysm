@@ -25,6 +25,9 @@ Oscillator[18] oscArray;
 //global variable for waveTable, will be filled in setup() with result of infile
 std::vector<float> waveTableVector;
 
+//vector for storing samples
+std::vector<float> sampleVector;
+
 //sharp keys are designated by upper case letters where as lower case letters are normal values
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
 char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
@@ -41,10 +44,10 @@ bool* previous_playing = NULL;
 class Oscillator{
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(float keyNumber, std::vector<float> waveTable)
+      Oscillator(float keyNumber, std::vector<float> inwaveTable)
       {
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
-        waveTable = waveTable;
+        waveTable = inwaveTable;
         oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
       }
 
@@ -65,6 +68,11 @@ class Oscillator{
         indexIncrement = 0.f;
       }
 
+      void start()
+      {
+        indexIncrement = oscFrequency * static_cast<float>(waveTable.size()) / static_cast<float>(sampleRate);
+      }
+
       //determines if oscillator is getting sample, if indexIncrement equals 0, its not running
       bool isPlaying() const
       {
@@ -81,7 +89,7 @@ class Oscillator{
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
     //private member variables
-      int sampleRate = 64;
+      int sampleRate = 1000;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
@@ -150,16 +158,25 @@ void processor()
 
 
 
-  renderSound();
+
+  render();
 }
 
 
 /************************************************************************************************/
 
-void renderSound(int key,){
-
-
-
+void render(int startSample, int endSample)
+{
+  for(auto& Oscillator : oscArray)
+  {
+    if (Oscillator.isPlaying())
+    {
+      for(int sample = startSample; sample < endSample; ++sample)
+      {
+        sampleVector.push_back(Oscillator.getSample())
+      }
+    }
+  }
 }
 
 
@@ -187,7 +204,7 @@ void setup() {
     //push back onto oscillator vector
   
     //is this line real code??  
-    Oscillator newOscillator = Oscillator(i, wavetable);
+    Oscillator newOscillator = Oscillator(i, waveTableVector);
     oscArray[i-40]=newOscillator;
   }
 
