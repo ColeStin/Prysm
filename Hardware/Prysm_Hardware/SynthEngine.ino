@@ -186,7 +186,15 @@ void render(int startSample, int endSample)
 
 void keyHandler()
 {
-  
+  for(int i = 20; i <38; i++){
+    if(digitalRead(i) == HIGH){   //Button is not being pressed
+      current_playing[i-20] = 0;
+    }else{                        //Button is being pressed
+      current_playing[i-20] = 1;
+    }
+  }
+
+
 }
 
 
