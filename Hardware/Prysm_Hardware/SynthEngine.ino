@@ -4,6 +4,7 @@
 ** Created By: Dom D'Attilio
 ** Edited By: Dom D'Attilio, Cole Stinson, Gage Burmaster
 ** Last Edit: 2-23-23 Gage Burmaster - organized code, moved init to init function
+** Edited 2-26: Added 4 functions, render, processor, keyHandler, handleEvent -- Dom D'Attilio
 */
 
 
@@ -16,25 +17,6 @@
 
 
 using namespace std;
-
-//global variable declaration
-//Will store all of the oscillator frequencies created
-Oscillator[18] oscArray;
-
-
-//global variable for waveTable, will be filled in setup() with result of infile
-std::vector<float> waveTableVector;
-
-//vector for storing samples
-std::vector<float> sampleVector;
-
-//sharp keys are designated by upper case letters where as lower case letters are normal values
-//this is done because we wanted to keep them as chars so they did not take up too much RAM
-char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
-//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
-bool* current_playing = NULL;
-bool* previous_playing = NULL;
-//use pointers so you can easily swap the previous and current without having to move all values over
 
 
 
@@ -97,6 +79,33 @@ class Oscillator{
 };
 
 
+/**************************************************************************************************************************************/
+
+//global variable declaration
+//Will store all of the oscillator frequencies created
+Oscillator[18] oscArray;
+
+
+//global variable for waveTable, will be filled in setup() with result of infile
+std::vector<float> waveTableVector;
+
+//vector for storing samples
+std::vector<float> sampleVector;
+
+//sharp keys are designated by upper case letters where as lower case letters are normal values
+//this is done because we wanted to keep them as chars so they did not take up too much RAM
+char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
+//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
+bool* current_playing = NULL;
+bool* previous_playing = NULL;
+//use pointers so you can easily swap the previous and current without having to move all values over
+
+
+
+
+
+
+
 char getKey(int pinVal)
 {
   pinVal = pinVal-20;
@@ -151,20 +160,24 @@ std::vector<float> fileToVector()
 
 /************************************************************************************************/
 //Process BLock Function, will be called in loop. This is the main code for taking a key press and calling the necessary methods to follow
-
 void processor()
 {
   auto currSample = 0;
 
+  for(int i = 0; i< 18; i++)
+  {
+    render(currSample, currSample + 1);
+    currSample = currSample + 1;
+    handleEvent(i);
+  }
 
 
-
-  render();
+  render(currSample, sampleVector.size());
 }
 
 
 /************************************************************************************************/
-
+//gets samples from all active oscillators
 void render(int startSample, int endSample)
 {
   for(auto& Oscillator : oscArray)
@@ -180,10 +193,25 @@ void render(int startSample, int endSample)
 }
 
 
+/**************************************************************************************************/
+//This turns the oscillator on off depending on if it isPlaying returns true or not
+void handleEvent(int i)
+{
+  if(oscArray[i].isPlaying())
+  {
+    oscArray[i].start();
+  }
+  else
+  {
+    oscArray[i].stop();
+  }
+}
+
+
 
 
 /**********************************************************************************************/
-
+//this updates currentPLaying buffer depending on if its reading high or low, high being key is pressed = 1, low being not pressed = 0
 void keyHandler()
 {
   for(int i = 20; i <38; i++){
@@ -193,7 +221,6 @@ void keyHandler()
       current_playing[i-20] = 1;
     }
   }
-
 
 }
 
@@ -270,7 +297,7 @@ void loop()
 
       //look at the current pin (20-38) and see if it is reading
       //set the bool value to the array instance for that pin (0-17)
-      *current_playing[i-start_pin] = digitalRead(i) == LOW; 
+      current_playing[i-start_pin] = digitalRead(i) == LOW; 
     }
     
 
