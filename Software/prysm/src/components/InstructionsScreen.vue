@@ -17,31 +17,6 @@
         <p> different sounds on the Prysm synthesizer when the different buttons on the physical Synthesizer are pressed. </p>
         <p>&nbsp;</p>
 
-        <div class="headerLabelAdd">
-          <h1>  
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-plus" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM11 5a.5.5 0 0 1 .5.5v2h2a.5.5 0 0 1 0 1h-2v2a.5.5 0 0 1-1 0v-2h-2a.5.5 0 0 1 0-1h2v-2A.5.5 0 0 1 11 5zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
-                </svg>
-                Add Point  
-          </h1>
-        </div>
-        <p> On the wavetable screen, you can add points (which will connect lines) by clicking this button.
-            These points can be moved using the sliders.
-        </p>
-        <p>&nbsp;</p>
-      
-
-        <div class="headerLabelDelete">
-          <h1> Delete Point
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-node-minus" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M11 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6.025 7.5a5 5 0 1 1 0 1H4A1.5 1.5 0 0 1 2.5 10h-1A1.5 1.5 0 0 1 0 8.5v-1A1.5 1.5 0 0 1 1.5 6h1A1.5 1.5 0 0 1 4 7.5h2.025zM1.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM8 8a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5A.5.5 0 0 1 8 8z"/>
-            </svg>
-          </h1> 
-        </div>
-        <p> Points can also be deleted by clicking this button. It will delete the point that is currently </p>
-        <p> highlighted (in red). If a point is not highlighted or there are no points left, there will not be points deleted. </p>
-        <p>&nbsp;</p>
-
         <div class="headerLabelFile">
           <h1> New File
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus-fill" viewBox="0 0 16 16">
@@ -73,22 +48,18 @@
             </svg>
           </h1>
         </div>
-        <p>
-                  This button will save an edited wavetable to be opened/edited later by creating a .prsm file.
-        </p>
+        <p> This button will save an edited wavetable to be opened/edited later by creating a .prsm file. </p>
 
-        <h1> Sliders: </h1>
-         
-        <img src = "../../Images/sliderExample.jpg" alt = "sliderExample">
-
-        <p> <b> X value Slider: </b> This slider will change the X value (left/right movement) of a selected point.  </p>
+        There is also a textbox right before it if you would like to name this file before it is downloaded.
  
-        <p> <b> Y value Slider: </b> This slider will change the Y value (up/down movement) of a selected point. </p>
+        <h1> Function - Minimum - Maximum: </h1>
+         
 
-        <p> <b> Curve Slider: </b> This slider will change the curve of a selected line. Moving the slider to the </p>
-        <p> left will curve downwards and moving slider to the right will curve upwards. Make sure </p>
-        <p> to click on a line connected by two points to be able to utilize the slider.</p>
+        <p> <b> Function: </b> This slider will graph the function given (use equation like y = "7x + 3" for example) onto the entire wavetable. </p>
+ 
+        <p> <b> Minimum: </b> This will decide the initial starting point of the equation to be graphed. </p>
 
+        <p> <b> Maximum: </b> This value will decide the initial ending point of the equation to be graphed. </p>
     </div>
   
    </template>

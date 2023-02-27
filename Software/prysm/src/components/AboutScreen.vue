@@ -30,6 +30,7 @@
 
       <div class="headerGitHub">    
         <a href="https://github.com/ColeStin/Prysm">
+          <!-- <p> &nbsp; </p> -->
           <h1> Visit Prysm GitHub</h1>
         </a>
       </div>
@@ -97,8 +98,8 @@ border-radius: 50px;
 background-color: #333333;
 padding: 0px;
 margin-bottom: 0px;
-width: 15%;
-height: 7%;
+width: 13%;
+height: 4%;
 }
 
 .headerGitHub:hover {
@@ -107,7 +108,7 @@ height: 7%;
 
 .headerGitHub h1{
   color:white;
-  font-size: 30px;
+  font-size: 20px;
 }
 
 .h1 {
