@@ -28,9 +28,13 @@ class Oscillator{
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
       Oscillator(float keyNumber, std::vector<float> inwaveTable)
       {
+        Serial.println("NEW OSC");
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
         waveTable = inwaveTable;
-        oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
+        Serial.println("WAVE TABLE SAVED");
+
+        //oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
+        Serial.println("FREQUENCY SAVED");
       }
 
       //gets 1 sample of oscillator and advances index
@@ -125,16 +129,18 @@ std::vector<float> fileToVector()
   File root = SD.open("/");
   String filename = root.openNextFile().name();
   File file = SD.open(filename);
-  if (!file) Serial.println("FILE CANNOT BE OPENED");
+  if (file) Serial.println("FILE CANNOT BE OPENED");
   char line[20];
   int n = 0;
   char * val;
   // read lines from the file
   while (file.available()){
+    
     //add characters to our buf
     //UNTIL you hit a newline, then reset
 
     char c = file.read();
+    Serial.println(c);
     if (c == '\n') {
       //we have hit the end of one input to our vector.
       char out[n];
@@ -231,22 +237,26 @@ void keyHandler()
 /**********************************************************************************************/
 
 void setup() {
-
-  Serial.println("Joe");
-  //initailize the current_playing var
-  current_playing = (bool*) malloc(18*sizeof(bool));
-
-  //definitely need to come back to this
- for( int i = 0; i < 18; i++){
-      oscArray[i] = new Oscillator(i+40, waveTableVector);
-
-  }
-
-  
-
-  
-  
   Serial.begin(9600);
+  Serial.println("Joe");
+  // waveTableVector = fileToVector();
+  //initailize the current_playing var
+  //   current_playing = (bool*) malloc(18*sizeof(bool));
+
+  //   //definitely need to come back to this
+  for( int i = 0; i < 18; i++){
+        oscArray[i] = new Oscillator(i+40, waveTableVector);
+        Serial.println("OSC CREATED");
+
+
+    }
+    Serial.println("ALL OSCS CREATED");
+
+  
+
+  
+  
+  
 
   // for (int pinNumber = 20, pinNumber < 38, pinNumber++) //Sets up PIN Numbers 20 - 37
   // {
@@ -276,7 +286,7 @@ void setup() {
   
     Serial.println("here");
   //Do we need to store the result of this somewhere???
-  waveTableVector = fileToVector();
+  
 }
 
 void loop() 
