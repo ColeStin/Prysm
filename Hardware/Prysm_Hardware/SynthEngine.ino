@@ -83,7 +83,9 @@ class Oscillator{
 
 //global variable declaration
 //Will store all of the oscillator frequencies created
-Oscillator[18] oscArray;
+
+Oscillator * oscArray[18];
+
 
 
 //global variable for waveTable, will be filled in setup() with result of infile
@@ -182,11 +184,11 @@ void render(int startSample, int endSample)
 {
   for(auto& Oscillator : oscArray)
   {
-    if (Oscillator.isPlaying())
+    if (Oscillator->isPlaying())
     {
       for(int sample = startSample; sample < endSample; ++sample)
       {
-        sampleVector.push_back(Oscillator.getSample())
+        sampleVector.push_back(Oscillator->getSample());
       }
     }
   }
@@ -197,13 +199,13 @@ void render(int startSample, int endSample)
 //This turns the oscillator on off depending on if it isPlaying returns true or not
 void handleEvent(int i)
 {
-  if(oscArray[i].isPlaying())
+  if(oscArray[i]->isPlaying())
   {
-    oscArray[i].start();
+    oscArray[i]->start();
   }
   else
   {
-    oscArray[i].stop();
+    oscArray[i]->stop();
   }
 }
 
@@ -230,17 +232,14 @@ void keyHandler()
 
 void setup() {
 
+  Serial.println("Joe");
   //initailize the current_playing var
   current_playing = (bool*) malloc(18*sizeof(bool));
 
   //definitely need to come back to this
-  for(int i= 40; i<58; i++)
-  {
-    //push back onto oscillator vector
-  
-    //is this line real code??  
-    Oscillator newOscillator = Oscillator(i, waveTableVector);
-    oscArray[i-40]=newOscillator;
+ for( int i = 0; i < 18; i++){
+      oscArray[i] = new Oscillator(i+40, waveTableVector);
+
   }
 
   
@@ -275,12 +274,14 @@ void setup() {
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
   
+    Serial.println("here");
   //Do we need to store the result of this somewhere???
   waveTableVector = fileToVector();
 }
 
 void loop() 
 {
+  Serial.println("inside loop");
     //first free up previous_playing
     free(previous_playing);
     //reallocate whatever was in current_playing into previous_playing
