@@ -303,13 +303,13 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() {
-
+      this.exportData = "";
       let tmp = this.data.datasets[0].data;
       for (let i = 0; i < tmp.length; i++) {
-        this.exportData = this.exportData + "" + tmp[i] / 100 + "\n";
+        this.exportData = this.exportData + "" + (tmp[i] / 100).toFixed(20)+ "\n";
       }
-
-
+      //end character
+      this.exportData = this.exportData + "W";
 
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.exportData));
