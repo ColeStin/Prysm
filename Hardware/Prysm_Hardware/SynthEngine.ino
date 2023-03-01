@@ -128,19 +128,22 @@ std::vector<float> fileToVector()
  
   File root = SD.open("/");
   String filename = root.openNextFile().name();
+ filename = root.openNextFile().name();
+  root.close();
   File file = SD.open(filename);
-  if (file) Serial.println("FILE CANNOT BE OPENED");
+  if (!file) Serial.println("FILE CANNOT BE OPENED");
   char line[20];
   int n = 0;
   char * val;
   // read lines from the file
-  while (file.available()){
-    
+long fileSize = file.size();
+  while (fileSize > 0){
+    fileSize--;
     //add characters to our buf
     //UNTIL you hit a newline, then reset
-
+  // Serial.println(file.available());
     char c = file.read();
-    Serial.println(c);
+    
     if (c == '\n') {
       //we have hit the end of one input to our vector.
       char out[n];
@@ -148,14 +151,20 @@ std::vector<float> fileToVector()
       {
         out[i] = line[i];
       }
-      float tmp = atof(out);
+      double tmp = atof(out);
       tmpVector.push_back(tmp);
-      Serial.println(out);
+      // hahahahahaha this is unsafe don't do this I know this is unsafe but it is ok if you hack my arduino with a prsm file
+      Serial.println(tmp,17);
       n=0;
-    } else {
+    } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' ){
       line[n] = c;
       n++;
 
+    }
+    else
+    {
+      Serial.println("got here");
+      fileSize = 0;
     }
   }
   Serial.println("FILE HAS BEEN READ");
@@ -238,15 +247,20 @@ void keyHandler()
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Joe");
   // waveTableVector = fileToVector();
   //initailize the current_playing var
   //   current_playing = (bool*) malloc(18*sizeof(bool));
-
+  while (!Serial) {
+;    
+  }
+  if (!SD.begin(53)) {
+      Serial.println("initialization failed!");
+      while (1);
+   }
+    waveTableVector = fileToVector();
   //   //definitely need to come back to this
   for( int i = 0; i < 18; i++){
         oscArray[i] = new Oscillator(i+40, waveTableVector);
-        Serial.println("OSC CREATED");
 
 
     }
@@ -291,7 +305,7 @@ void setup() {
 
 void loop() 
 {
-  Serial.println("inside loop");
+
     //first free up previous_playing
     free(previous_playing);
     //reallocate whatever was in current_playing into previous_playing
@@ -342,6 +356,6 @@ void loop()
     }
     output = output + "END]";
     //output the string to see which keys are being pressed
-    Serial.println(output);
+    //Serial.println(output);
 
 }
