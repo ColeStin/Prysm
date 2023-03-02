@@ -19,7 +19,7 @@
 using namespace std;
 
 
-
+float wavetableArray[1000];
 
 /*****************************************************************************************************************/
 //This is the class for the oscillators
@@ -122,56 +122,71 @@ char getKey(int pinVal)
 
 //In Filing 
 //THis function reads in a file, parses it, and adds the data to a vector. It is then called in setup() to create the vector we are using in the synth engine
-std::vector<float> fileToVector()
-{
-    std::vector<float> tmpVector;
- 
-  File root = SD.open("/");
+void fileToArray(){
+   Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(53)) {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    while (1);
+  }
+  Serial.println("card initialized.");
+
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+File root = SD.open("/");
   String filename = root.openNextFile().name();
  filename = root.openNextFile().name();
   root.close();
-  File file = SD.open(filename);
-  if (!file) Serial.println("FILE CANNOT BE OPENED");
-  char line[20];
-  int n = 0;
-  char * val;
-  // read lines from the file
-long fileSize = file.size();
-  while (fileSize > 0){
-    fileSize--;
-    //add characters to our buf
-    //UNTIL you hit a newline, then reset
-  // Serial.println(file.available());
-    char c = file.read();
-    
-    if (c == '\n') {
+  Serial.println(filename);
+  File dataFile = SD.open(filename);
+  bool booleanthing = true;
+int arrayInc = 0;
+            char * n = new char[20];
+          int tmp1 = 0;
+  // if the file is available, write to it:
+  if (dataFile) {
+    while (booleanthing &&  dataFile.available() ) {
+      // Serial.println('1');
+      char c = dataFile.read();
+      if (c == '\n') {
       //we have hit the end of one input to our vector.
-      char out[n];
-      for (int i = 0; i < n; i++)
+      char out[tmp1];
+      for (int i = 0; i < tmp1; i++)
       {
-        out[i] = line[i];
+        out[i] = n[i];
       }
-      double tmp = atof(out);
-      tmpVector.push_back(tmp);
-      // hahahahahaha this is unsafe don't do this I know this is unsafe but it is ok if you hack my arduino with a prsm file
-      Serial.println(tmp,17);
-      n=0;
+      float tmp = atof(out);
+      wavetableArray[arrayInc] = tmp;
+      arrayInc++;
+      tmp1=0;
+      delete[] n;
+      n = new char[20];
     } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' ){
-      line[n] = c;
-      n++;
-
+      n[tmp1] = c;
+      tmp1++;
+// Serial.println("got here 2");      
+    }
+    else if (c == 'w' || c == 'W')
+    {
+      Serial.println("got here");
+      dataFile.close();
+      Serial.println("got here again");
+      return;
     }
     else
     {
-      Serial.println("got here");
-      fileSize = 0;
+      Serial.println("something weird") ;
+      booleanthing = false;
+         }
     }
+    dataFile.close();
   }
-  Serial.println("FILE HAS BEEN READ");
-
-
-
-    return tmpVector;
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.txt");
+  }
 }
 
 
@@ -247,17 +262,18 @@ void keyHandler()
 
 void setup() {
   Serial.begin(9600);
+
+
+
   // waveTableVector = fileToVector();
   //initailize the current_playing var
   //   current_playing = (bool*) malloc(18*sizeof(bool));
   while (!Serial) {
-;    
+true;    
   }
-  if (!SD.begin(53)) {
-      Serial.println("initialization failed!");
-      while (1);
-   }
-    waveTableVector = fileToVector();
+
+   
+    fileToArray();
   //   //definitely need to come back to this
   for( int i = 0; i < 18; i++){
         oscArray[i] = new Oscillator(i+40, waveTableVector);
