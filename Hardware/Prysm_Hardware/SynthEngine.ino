@@ -14,10 +14,11 @@
 #include <cmath>
 #include <vector>
 #include <SD.h>
-
+#include <Adafruit_MCP4725.h>
 
 using namespace std;
 
+Adafruit_MCP4725 dac;
 
 float wavetableArray[1000];
 
@@ -26,11 +27,15 @@ float wavetableArray[1000];
 class Oscillator{
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(float keyNumber, std::vector<float> inwaveTable)
+      Oscillator(float keyNumber, float* inwaveTable)
       {
         Serial.println("NEW OSC");
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
-        waveTable = inwaveTable;
+        for (int i = 0; i < 1000; i++)
+        {
+        waveTable.push_back(inwaveTable[i]);
+        }
+       
         Serial.println("WAVE TABLE SAVED");
 
         //oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
@@ -143,7 +148,7 @@ File root = SD.open("/");
   File dataFile = SD.open(filename);
   bool booleanthing = true;
 int arrayInc = 0;
-            char * n = new char[20];
+            char * n = new char[20]; 
           int tmp1 = 0;
   // if the file is available, write to it:
   if (dataFile) {
@@ -246,7 +251,7 @@ void handleEvent(int i)
 //this updates currentPLaying buffer depending on if its reading high or low, high being key is pressed = 1, low being not pressed = 0
 void keyHandler()
 {
-  for(int i = 20; i <38; i++){
+  for(int i = 22; i <40; i++){
     if(digitalRead(i) == HIGH){   //Button is not being pressed
       current_playing[i-20] = 0;
     }else{                        //Button is being pressed
@@ -276,7 +281,7 @@ true;
     fileToArray();
   //   //definitely need to come back to this
   for( int i = 0; i < 18; i++){
-        oscArray[i] = new Oscillator(i+40, waveTableVector);
+        oscArray[i] = new Oscillator(i+40, wavetableArray);
 
 
     }
@@ -295,8 +300,6 @@ true;
 
   //USE FOR LOOP LONG TERM
 
-  pinMode(20, INPUT_PULLUP);
-  pinMode(21, INPUT_PULLUP);
   pinMode(22, INPUT_PULLUP);
   pinMode(23, INPUT_PULLUP);
   pinMode(24, INPUT_PULLUP);
@@ -313,7 +316,13 @@ true;
   pinMode(35, INPUT_PULLUP);
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
+  pinMode(38, INPUT_PULLUP);
+  pinMode(39, INPUT_PULLUP);
   
+
+  dac.begin(0x62);
+
+
     Serial.println("here");
   //Do we need to store the result of this somewhere???
   
@@ -332,16 +341,18 @@ void loop()
 
 
     int amount_of_vals = 18; //used for testing purposes
-    int start_pin = 20; //used for testing purposes
+    int start_pin = 22; //used for testing purposes
     bool values[amount_of_vals] = {false}; //delcare an array of bools and set them all to false
-    for(int i = start_pin; i<(start_pin + amount_of_vals); i++){//start a loop that will loop through all pin numbers
-
-      //look at the current pin (20-38) and see if it is reading
-      //set the bool value to the array instance for that pin (0-17)
-      current_playing[i-start_pin] = digitalRead(i) == LOW; 
+    keyHandler();
+    processor();
+    float freq = 0.f;
+    for (auto x : sampleVector)
+    {
+      freq += x;
     }
-    
 
+
+    dac.setVoltage(freq,false);
 
 
 
