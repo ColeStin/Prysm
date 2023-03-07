@@ -45,6 +45,7 @@ class Oscillator{
           const auto sample = interpolate();
           index += indexIncrement;
          }
+         return sample;
       }
 
       //stops sampling, resets indexes to 0
