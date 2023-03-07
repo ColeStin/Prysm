@@ -2,12 +2,10 @@
 ** File Name: SynthEngine.ino
 ** Description: File for Arduino with synth engine stuff
 ** Created By: Dom D'Attilio
-** Edited By: Dom D'Attilio, COle Stinson
-** Last Edit: 12-2 Dom D'Attilio - Added oscillator functionality
+** Edited By: Dom D'Attilio, Cole Stinson, Gage Burmaster
+** Last Edit: 2-23-23 Gage Burmaster - organized code, moved init to init function
+** Edited 2-26: Added 4 functions, render, processor, keyHandler, handleEvent -- Dom D'Attilio
 */
-
-
-
 
 
 #include <ArduinoSTL.h>
@@ -21,20 +19,22 @@
 using namespace std;
 
 
-
-
-
+float wavetableArray[1000];
 
 /*****************************************************************************************************************/
 //This is the class for the oscillators
 class Oscillator{
   public:
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
-      Oscillator(float keyNumber, std::vector<float> waveTable)
+      Oscillator(float keyNumber, std::vector<float> inwaveTable)
       {
+        Serial.println("NEW OSC");
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
-        waveTable = waveTable;
-        oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
+        waveTable = inwaveTable;
+        Serial.println("WAVE TABLE SAVED");
+
+        //oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
+        Serial.println("FREQUENCY SAVED");
       }
 
       //gets 1 sample of oscillator and advances index
@@ -55,6 +55,11 @@ class Oscillator{
         indexIncrement = 0.f;
       }
 
+      void start()
+      {
+        indexIncrement = oscFrequency * static_cast<float>(waveTable.size()) / static_cast<float>(sampleRate);
+      }
+
       //determines if oscillator is getting sample, if indexIncrement equals 0, its not running
       bool isPlaying() const
       {
@@ -71,66 +76,42 @@ class Oscillator{
         return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
       }
     //private member variables
-      int sampleRate = 64;
+      int sampleRate = 1000;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
       std::vector<float> waveTable;
 };
 
-/********************************************************************************************************************************/
 
-//In Filing 
-//THis function reads in a file, parses it, and adds the data to a vector. It is then called in setup() to create the vector we are using in the synth engine
-std::vector<float> fileToVector()
-{
-    std::vector<float> tmpVector;
- 
-  File root = SD.open("/");
-  String filename = root.openNextFile().name();
-  File file = SD.open(filename);
-  if (file) Serial.println("FILE CANNOT BE OPENED");
-  char line[25];
-  int n;
-  char * val;
-  // read lines from the file
-  while (true){
-    char c = file.read();
-    if (line[n - 1] == '\n') {
-      // remove '\n'
-      line[n-1] = 0;
-      Serial.println(line);
-      //split up the line and then add it to vector
-      //MAKE SURE TO TRIM IT
-      val = strtok (line, " ");
-      while(val != NULL)
-      {
-        n = atof(val);
-        tmpVector.push_back(n);
-        val = strtok(NULL, " ");
-      }
-    } else {
-      // no '\n' - line too long or missing '\n' at EOF
-      // handle error
-      Serial.println("something is amiss");
-      break;
-    }
-  }
-  Serial.println("FILE HAS BEEN READ");
+/**************************************************************************************************************************************/
 
-
-
-    return tmpVector;
-}
-/*****************************************************************************************/
-
-//Oscilator vector
+//global variable declaration
 //Will store all of the oscillator frequencies created
-std::vector<Oscillator> oscVector;
+
+Oscillator * oscArray[18];
+
+
+
+//global variable for waveTable, will be filled in setup() with result of infile
+std::vector<float> waveTableVector;
+
+//vector for storing samples
+std::vector<float> sampleVector;
 
 //sharp keys are designated by upper case letters where as lower case letters are normal values
 //this is done because we wanted to keep them as chars so they did not take up too much RAM
 char keyValues[18] = {'c','C','d','D','e','f','F','g','G','a','A','b','c','C','d','D','e','f'};
+//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
+bool* current_playing = NULL;
+bool* previous_playing = NULL;
+//use pointers so you can easily swap the previous and current without having to move all values over
+
+
+
+
+
+
 
 char getKey(int pinVal)
 {
@@ -138,35 +119,175 @@ char getKey(int pinVal)
   return keyValues[pinVal % 18];
 }
 
-  //why is this just out here???
-  //initalizes vectors and places them in oscillator vector
-  for(int i= 40; i<58; i++)
+/********************************************************************************************************************************/
+
+//In Filing 
+//THis function reads in a file, parses it, and adds the data to a vector. It is then called in setup() to create the vector we are using in the synth engine
+void fileToArray(){
+   Serial.print("Initializing SD card...");
+
+  // see if the card is present and can be initialized:
+  if (!SD.begin(53)) {
+    Serial.println("Card failed, or not present");
+    // don't do anything more:
+    while (1);
+  }
+  Serial.println("card initialized.");
+
+  // open the file. note that only one file can be open at a time,
+  // so you have to close this one before opening another.
+File root = SD.open("/");
+  String filename = root.openNextFile().name();
+ filename = root.openNextFile().name();
+  root.close();
+  Serial.println(filename);
+  File dataFile = SD.open(filename);
+  bool booleanthing = true;
+int arrayInc = 0;
+            char * n = new char[20];
+          int tmp1 = 0;
+  // if the file is available, write to it:
+  if (dataFile) {
+    while (booleanthing &&  dataFile.available() ) {
+      // Serial.println('1');
+      char c = dataFile.read();
+      if (c == '\n') {
+      //we have hit the end of one input to our vector.
+      char out[tmp1];
+      for (int i = 0; i < tmp1; i++)
+      {
+        out[i] = n[i];
+      }
+      float tmp = atof(out);
+      wavetableArray[arrayInc] = tmp;
+      arrayInc++;
+      tmp1=0;
+      delete[] n;
+      n = new char[20];
+    } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' ){
+      n[tmp1] = c;
+      tmp1++;
+// Serial.println("got here 2");      
+    }
+    else if (c == 'w' || c == 'W')
+    {
+      Serial.println("got here");
+      dataFile.close();
+      Serial.println("got here again");
+      return;
+    }
+    else
+    {
+      Serial.println("something weird") ;
+      booleanthing = false;
+         }
+    }
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening datalog.txt");
+  }
+}
+
+
+/************************************************************************************************/
+//Process BLock Function, will be called in loop. This is the main code for taking a key press and calling the necessary methods to follow
+void processor()
+{
+  auto currSample = 0;
+
+  for(int i = 0; i< 18; i++)
   {
-    //push back onto oscillator vector
-  
-    Oscillator newOscillator(i, wavetable);
-    oscVector.emplace_back(newOscillator);
+    render(currSample, currSample + 1);
+    currSample = currSample + 1;
+    handleEvent(i);
   }
 
 
-//the arrays of keys for the current and previous cycles to check whether to start, get sample, or stop
-bool* current_playing = NULL;
-bool* previous_playing = NULL;
-//use pointers so you can easily swap the previous and current without having to move all values over
+  render(currSample, sampleVector.size());
+}
+
+
+/************************************************************************************************/
+//gets samples from all active oscillators
+void render(int startSample, int endSample)
+{
+  for(auto& Oscillator : oscArray)
+  {
+    if (Oscillator->isPlaying())
+    {
+      for(int sample = startSample; sample < endSample; ++sample)
+      {
+        sampleVector.push_back(Oscillator->getSample());
+      }
+    }
+  }
+}
+
+
+/**************************************************************************************************/
+//This turns the oscillator on off depending on if it isPlaying returns true or not
+void handleEvent(int i)
+{
+  if(oscArray[i]->isPlaying())
+  {
+    oscArray[i]->start();
+  }
+  else
+  {
+    oscArray[i]->stop();
+  }
+}
+
+
+
+
+/**********************************************************************************************/
+//this updates currentPLaying buffer depending on if its reading high or low, high being key is pressed = 1, low being not pressed = 0
+void keyHandler()
+{
+  for(int i = 20; i <38; i++){
+    if(digitalRead(i) == HIGH){   //Button is not being pressed
+      current_playing[i-20] = 0;
+    }else{                        //Button is being pressed
+      current_playing[i-20] = 1;
+    }
+  }
+
+}
+
+
+
+/**********************************************************************************************/
 
 void setup() {
-
-  //initailize the current_playing var
-  current_playing = (bool*) malloc(18*sizeof(bool));
-
-  //definitely need to come back to this
-
-
-  
-
-  
-  
   Serial.begin(9600);
+
+
+
+  // waveTableVector = fileToVector();
+  //initailize the current_playing var
+  //   current_playing = (bool*) malloc(18*sizeof(bool));
+  while (!Serial) {
+true;    
+  }
+
+   
+    fileToArray();
+  //   //definitely need to come back to this
+  for( int i = 0; i < 18; i++){
+        oscArray[i] = new Oscillator(i+40, waveTableVector);
+
+
+    }
+    Serial.println("ALL OSCS CREATED");
+
+  
+
+  
+  
+  
 
   // for (int pinNumber = 20, pinNumber < 38, pinNumber++) //Sets up PIN Numbers 20 - 37
   // {
@@ -193,11 +314,15 @@ void setup() {
   pinMode(35, INPUT_PULLUP);
   pinMode(36, INPUT_PULLUP);
   pinMode(37, INPUT_PULLUP);
-
+  
+    Serial.println("here");
+  //Do we need to store the result of this somewhere???
+  
 }
 
 void loop() 
 {
+
     //first free up previous_playing
     free(previous_playing);
     //reallocate whatever was in current_playing into previous_playing
@@ -214,7 +339,7 @@ void loop()
 
       //look at the current pin (20-38) and see if it is reading
       //set the bool value to the array instance for that pin (0-17)
-      *current_playing[i-start_pin] = digitalRead(i) == LOW; 
+      current_playing[i-start_pin] = digitalRead(i) == LOW; 
     }
     
 
@@ -248,6 +373,6 @@ void loop()
     }
     output = output + "END]";
     //output the string to see which keys are being pressed
-    Serial.println(output);
+    //Serial.println(output);
 
 }
