@@ -33,9 +33,11 @@ class Oscillator{
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
        /* for (int i = 0; i < 50; i++)
         {
-        //Serial.println(i);
-        waveTable.push_back(i);
+
+        Serial.println(inwaveTable[i]);
+        waveTable.push_back(inwaveTable[i]);
         }*/
+
        
         ////Serial.println("WAVE TABLE SAVED");
 
