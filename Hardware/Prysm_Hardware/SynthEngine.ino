@@ -18,9 +18,9 @@
 
 using namespace std;
 
-Adafruit_MCP4725 dac;
+// Adafruit_MCP4725 dac;
 
-float wavetableArray[1000];
+float *  wavetableArray = new float[1000];
 
 /*****************************************************************************************************************/
 //This is the class for the oscillators
@@ -29,17 +29,18 @@ class Oscillator{
   //constructor for oscillator object. takes a keyNumber for example 40 for C4 to calculate frequency and set it to member variable
       Oscillator(float keyNumber, float* inwaveTable)
       {
-        Serial.println("NEW OSC");
+        Serial.println(F("NEW OSC"));
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
         for (int i = 0; i < 1000; i++)
         {
+        Serial.println(inwaveTable[i]);
         waveTable.push_back(inwaveTable[i]);
         }
        
-        Serial.println("WAVE TABLE SAVED");
+        ////Serial.println("WAVE TABLE SAVED");
 
         //oscFrequency = 440*pow(static_cast<float>(2),((keyNumber - static_cast<float>(49))/static_cast<float>(12)));
-        Serial.println("FREQUENCY SAVED");
+        ////Serial.println("FREQUENCY SAVED");
       }
 
       //gets 1 sample of oscillator and advances index
@@ -50,7 +51,6 @@ class Oscillator{
           const auto sample = interpolate();
           index += indexIncrement;
          }
-         return sample;
       }
 
       //stops sampling, resets indexes to 0
@@ -128,16 +128,17 @@ char getKey(int pinVal)
 
 //In Filing 
 //THis function reads in a file, parses it, and adds the data to a vector. It is then called in setup() to create the vector we are using in the synth engine
-void fileToArray(){
-   Serial.print("Initializing SD card...");
+void fileToArray() {
+
+// //Serial.print("Initializing SD card...");
 
   // see if the card is present and can be initialized:
   if (!SD.begin(53)) {
-    Serial.println("Card failed, or not present");
+    ////Serial.println("Card failed, or not present");
     // don't do anything more:
     while (1);
   }
-  Serial.println("card initialized.");
+  ////Serial.println("card initialized.");
 
   // open the file. note that only one file can be open at a time,
   // so you have to close this one before opening another.
@@ -145,16 +146,17 @@ File root = SD.open("/");
   String filename = root.openNextFile().name();
  filename = root.openNextFile().name();
   root.close();
-  Serial.println(filename);
+  ////Serial.println(filename);
   File dataFile = SD.open(filename);
-  bool booleanthing = true;
-int arrayInc = 0;
-            char * n = new char[20]; 
-          int tmp1 = 0;
+
+    bool booleanthing = true;
+    int arrayInc = 0;
+    char * n = new char[20]; 
+    int tmp1 = 0;
   // if the file is available, write to it:
   if (dataFile) {
     while (booleanthing &&  dataFile.available() ) {
-      // Serial.println('1');
+      // ////Serial.println('1');
       char c = dataFile.read();
       if (c == '\n') {
       //we have hit the end of one input to our vector.
@@ -172,18 +174,19 @@ int arrayInc = 0;
     } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' ){
       n[tmp1] = c;
       tmp1++;
-// Serial.println("got here 2");      
+// ////Serial.println("got here 2");      
     }
     else if (c == 'w' || c == 'W')
     {
-      Serial.println("got here");
+      booleanthing = false;
+      // ////Serial.println(F("got here"));
       dataFile.close();
-      Serial.println("got here again");
+      // Serial.println(F("got here again"));
       return;
     }
     else
     {
-      Serial.println("something weird") ;
+      ////Serial.println("something weird") ;
       booleanthing = false;
          }
     }
@@ -191,8 +194,10 @@ int arrayInc = 0;
   }
   // if the file isn't open, pop up an error:
   else {
-    Serial.println("error opening datalog.txt");
+    ////Serial.println("error opening datalog.txt");
   }
+
+
 }
 
 
@@ -280,6 +285,7 @@ true;
 
    
     fileToArray();
+    Serial.println("how this");
   //   //definitely need to come back to this
   for( int i = 0; i < 18; i++){
         oscArray[i] = new Oscillator(i+40, wavetableArray);
@@ -321,7 +327,7 @@ true;
   pinMode(39, INPUT_PULLUP);
   
 
-  dac.begin(0x62);
+  // dac.begin(0x62);
 
 
     Serial.println("here");
@@ -353,7 +359,7 @@ void loop()
     }
 
 
-    dac.setVoltage(freq,false);
+    // dac.setVoltage(freq,false);
 
 
 
@@ -384,6 +390,6 @@ void loop()
     }
     output = output + "END]";
     //output the string to see which keys are being pressed
-    //Serial.println(output);
+    //////Serial.println(output);
 
 }
