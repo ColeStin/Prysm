@@ -33,11 +33,9 @@ class Oscillator{
         //calculates frequency for 12 tone temperament use A4 as reference note with value 440Hz
        /* for (int i = 0; i < 50; i++)
         {
-
-        Serial.println(inwaveTable[i]);
-        waveTable.push_back(inwaveTable[i]);
+        //Serial.println(i);
+        waveTable.push_back(i);
         }*/
-
        
         ////Serial.println("WAVE TABLE SAVED");
 
@@ -77,17 +75,17 @@ class Oscillator{
      //interpolate between values in wave table
       float interpolate() const
       {
-        const auto truncatedIndex = static_cast<typename  decltype(waveTable)::size_type>(index);
-        const auto nextIndex = static_cast<typename  decltype(waveTable)::size_type>(std::ceil(index)) % waveTable.size();
-        //const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
-       // return waveTable[index] * nextIndexWeight + (1.f - nextIndexWeight) * waveTable[truncatedIndex];
+        const auto truncatedIndex = static_cast<float>(index);
+        const auto nextIndex = static_cast<int>(std::ceil(index)) % 1000;
+        const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
+        //return wavetableArray[index] * nextIndexWeight + (1.f - nextIndexWeight) * wavetableArray[truncatedIndex];
       }
     //private member variables
       int sampleRate = 1000;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
-      //std::vector<float> waveTable;
+      std::vector<float> waveTable;
       //float WaveTable[1000];
 };
 
@@ -292,7 +290,7 @@ true;
   //   //definitely need to come back to this
   for( int i = 0; i < 18; i++){
     Serial.println(F("inside initialization"));
-        oscArray[i] = new Oscillator(i+40, wavetableArray);
+        oscArray[i] = new Oscillator(i+40);
 
 
     }
