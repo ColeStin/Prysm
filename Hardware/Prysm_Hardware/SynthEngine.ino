@@ -78,14 +78,14 @@ class Oscillator{
         const auto truncatedIndex = static_cast<float>(index);
         const auto nextIndex = static_cast<int>(std::ceil(index)) % 1000;
         const auto nextIndexWeight = index - static_cast<float>(truncatedIndex);
-        //return wavetableArray[index] * nextIndexWeight + (1.f - nextIndexWeight) * wavetableArray[truncatedIndex];
+        return wavetableArray[std::ceil(index)] * nextIndexWeight + (1.f - nextIndexWeight) * wavetableArray[std::floor(truncatedIndex)];
       }
     //private member variables
       int sampleRate = 1000;
       float oscFrequency;
       float index = 0.f;
       float indexIncrement = 0.f;
-      std::vector<float> waveTable;
+      //std::vector<float> waveTable;
       //float WaveTable[1000];
 };
 
