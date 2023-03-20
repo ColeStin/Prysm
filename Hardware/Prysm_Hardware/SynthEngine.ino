@@ -394,4 +394,5 @@ void loop()
     //output the string to see which keys are being pressed
     //////Serial.println(output);
 
+  sampleVector.clear();
 }
