@@ -147,67 +147,66 @@ void loop(){
 
 int updateAduio(){
   int sum = 0;
-  if(playing[0] == true){
-    sum += aSin.next();
-  }
-  if(playing[1] == true){
-    sum += bSin.next();
-  }
-  if(playing[2] == true){
-    sum += cSin.next();
-  }
-  if(playing[3] == true){
-    sum += dSin.next();
-  }
-  if(playing[4] == true){
-    sum += eSin.next();
-  }
-  if(playing[5] == true){
-    sum += fSin.next();
-  }
-  if(playing[6] == true){
-    sum += gSin.next();
-  }
-  if(playing[7] == true){
-    sum += hSin.next();
-  }
-  if(playing[8] == true){
-    sum += iSin.next();
-  }
-  if(playing[9] == true){
-    sum += jSin.next();
-  }
-  if(playing[10] == true){
-    sum += kSin.next();
-  }
-  if(playing[11] == true){
-    sum += lSin.next();
-  }
-  if(playing[12] == true){
-    sum += mSin.next();
-  }
-  if(playing[13] == true){
-    sum += nSin.next();
-  }
-  if(playing[14] == true){
-    sum += oSin.next();
-  }
-  if(playing[15] == true){
-    sum += pSin.next();
-  }
-  if(playing[16] == true){
-    sum += qSin.next();
-  }
-  if(playing[17] == true){
-    sum += rSin.next();
-  }
+  // if(playing[0] == true){
+  //   sum += aSin.next();
+  // }
+  // if(playing[1] == true){
+  //   sum += bSin.next();
+  // }
+  // if(playing[2] == true){
+  //   sum += cSin.next();
+  // }
+  // if(playing[3] == true){
+  //   sum += dSin.next();
+  // }
+  // if(playing[4] == true){
+  //   sum += eSin.next();
+  // }
+  // if(playing[5] == true){
+  //   sum += fSin.next();
+  // }
+  // if(playing[6] == true){
+  //   sum += gSin.next();
+  // }
+  // if(playing[7] == true){
+  //   sum += hSin.next();
+  // }
+  // if(playing[8] == true){
+  //   sum += iSin.next();
+  // }
+  // if(playing[9] == true){
+  //   sum += jSin.next();
+  // }
+  // if(playing[10] == true){
+  //   sum += kSin.next();
+  // }
+  // if(playing[11] == true){
+  //   sum += lSin.next();
+  // }
+  // if(playing[12] == true){
+  //   sum += mSin.next();
+  // }
+  // if(playing[13] == true){
+  //   sum += nSin.next();
+  // }
+  // if(playing[14] == true){
+  //   sum += oSin.next();
+  // }
+  // if(playing[15] == true){
+  //   sum += pSin.next();
+  // }
+  // if(playing[16] == true){
+  //   sum += qSin.next();
+  // }
+  // if(playing[17] == true){
+  //   sum += rSin.next();
+  // }
 
-    // ORRRRRRR
-    // sum = aSin.next() + bSin.next() + cSin.next() + dSin.next() + 
-    //         eSin.next() + fSin.next() + gSin.next() + hSin.next() +
-    //         iSin.next() + jSin.next() + kSin.next() + lSin.next() + 
-    //         mSin.next() + nSin.next() + oSin.next() + pSin.next() +
-    //         qSin.next() + rSin.next();
+  sum = aSin.next() + bSin.next() + cSin.next() + dSin.next() + 
+          eSin.next() + fSin.next() + gSin.next() + hSin.next() +
+          iSin.next() + jSin.next() + kSin.next() + lSin.next() + 
+          mSin.next() + nSin.next() + oSin.next() + pSin.next() +
+          qSin.next() + rSin.next();
 
-  return sum;
+  return sum >> 4;
 }
