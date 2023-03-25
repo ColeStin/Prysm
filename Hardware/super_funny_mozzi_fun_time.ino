@@ -201,5 +201,13 @@ int updateAduio(){
   if(playing[17] == true){
     sum += rSin.next();
   }
+
+    // ORRRRRRR
+    // sum = aSin.next() + bSin.next() + cSin.next() + dSin.next() + 
+    //         eSin.next() + fSin.next() + gSin.next() + hSin.next() +
+    //         iSin.next() + jSin.next() + kSin.next() + lSin.next() + 
+    //         mSin.next() + nSin.next() + oSin.next() + pSin.next() +
+    //         qSin.next() + rSin.next();
+
   return sum;
 }
