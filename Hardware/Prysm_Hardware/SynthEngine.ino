@@ -19,7 +19,7 @@
 using namespace std;
 
 
-float wavetableArray[1000];
+int8_t wavetableArray[1024];
 
 /*****************************************************************************************************************/
 //This is the class for the oscillators
@@ -158,13 +158,13 @@ int arrayInc = 0;
       {
         out[i] = n[i];
       }
-      float tmp = atof(out);
+      int tmp = atoi(out);
       wavetableArray[arrayInc] = tmp;
       arrayInc++;
       tmp1=0;
       delete[] n;
       n = new char[20];
-    } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' ){
+    } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' || c =='-' ){
       n[tmp1] = c;
       tmp1++;
 // Serial.println("got here 2");      
