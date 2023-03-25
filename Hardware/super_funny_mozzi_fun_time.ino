@@ -128,9 +128,7 @@ void setup() {
   Serial.println("READY");
 }
 
-
-
-void loop(){
+void updateControl(){
   for(int i = 0; i < 18; i++){
     bool pin = digitalRead(22+i);
     if(previous[i] == false && pin == true){
@@ -139,11 +137,8 @@ void loop(){
     else if(previous[i] == true && pin == false){
       helper(i, 0);
     }
-  }  
-
-  audioHook();
+  } 
 }
-
 
 int updateAduio(){
   int sum = 0;
@@ -209,4 +204,9 @@ int updateAduio(){
           qSin.next() + rSin.next();
 
   return sum >> 4;
+}
+
+
+void loop(){
+  audioHook();
 }
