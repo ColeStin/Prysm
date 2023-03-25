@@ -165,9 +165,9 @@ export default {
       loaded: true,
       functionIn: '',
       inputMin: 1,
-      inputMax: 1000,
-      ceiling: 200,
-      floor: 0,
+      inputMax: 1024,
+      ceiling: 127,
+      floor: -128,
       data: { datasets: [], labels: [] },
       chartData: {
         labels: [0],
@@ -196,14 +196,16 @@ export default {
             },
             ticks: {
               display: true
-            }
+            },
+            suggestedMax:1024
           },
           y: {
             grid: {
               display: true
             },
-            beginAtZero: true,
-            suggestedMax: 200,
+            beginAtZero: false,
+            suggestedMin: -128,
+            suggestedMax: 127,
           },
         },
       }
@@ -264,7 +266,7 @@ export default {
     //resets the wavetable editor
     newFile() {
       this.chartData.labels = [];
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < this.inputMax; i++) {
         this.chartData.labels = this.chartData.labels.concat([i]);
         this.chartData.datasets[0].data[i] = this.ceiling / 2;
       }
@@ -281,7 +283,7 @@ export default {
         reader.onload = (res) => {
           let tmp = res.target.result.split('\n');
           this.chartData.labels = [];
-          for (let i = 0; i < 1000; i++) {
+          for (let i = 0; i < this.inputMax; i++) {
             this.chartData.labels = this.chartData.labels.concat([i]);
             this.chartData.datasets[0].data[i] = tmp[i] * 100;
           }
@@ -306,7 +308,7 @@ export default {
       this.exportData = "";
       let tmp = this.data.datasets[0].data;
       for (let i = 0; i < tmp.length; i++) {
-        this.exportData = this.exportData + "" + (tmp[i] / 100).toFixed(20)+ "\n";
+        this.exportData = this.exportData + "" + math.round(tmp[i])+ "\n";
       }
       //end character
       this.exportData = this.exportData + "W";
@@ -335,7 +337,7 @@ export default {
   },
   mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     // this.chartData.datasets[0].data = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < this.inputMax; i++) {
       this.chartData.labels = this.chartData.labels.concat([i]);
       this.chartData.datasets[0].data[i] = this.ceiling / 2;
     }
