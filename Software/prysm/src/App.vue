@@ -72,10 +72,12 @@ font-family: Avenir, Helvetica, Arial, sans-serif;
 text-align: center;
 color: #2c3e50;
 background-image: url("../Images/aboutBackground2.png");
+
 }
 
 *{
  padding: 0;
+ margin-left: -1px;
  /* margin: 0; */
  text-decoration: none;
  list-style: none;
@@ -90,7 +92,9 @@ body
 nav {
   background: #2c3e50;
   height: 80px;
-  width: 100.5%;
+  width: 100.6%;
+  padding-right: 40px;
+  /* margin-right: 50px; */
   border-radius: 5px;
 }
 
@@ -108,7 +112,7 @@ nav ul li {
 nav ul li a 
 {
   color: white;
-  font-size: 17px;
+  font-size: 100%;
   /* padding: 7px 13px; */
   border-radius: 3 px;
   text-transform: uppercase;

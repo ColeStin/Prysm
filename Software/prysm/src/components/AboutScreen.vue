@@ -28,11 +28,9 @@
         <p> card and allow our synthesizer
         to read these wavetables and generate sounds to the users liking. The user can upload a wave table to be used on the actual synthesizer. </p>
 
-      <div class="headerGitHub">    
-        <a href="https://github.com/ColeStin/Prysm">
+      <div class="headerGitHub">     
           <!-- <p> &nbsp; </p> -->
-          <h1> Visit Prysm GitHub</h1>
-        </a>
+          <h1> <a href="https://github.com/ColeStin/Prysm">Visit Prysm GitHub </a></h1>
       </div>
       <p> The GitHub link to our code as well as commit information can be found at the above GitHub Link. </p> 
               
@@ -74,7 +72,7 @@ height: 2.5%;
 
 .headerMain h1{
 color:white;
-font-size: 18px;
+font-size: 20px;
 }
 
 .headerMain2 {
@@ -93,22 +91,19 @@ font-size: 18px;
 }
 
 .headerGitHub {
-margin-left: 41.5%;
+  margin-left: 44.5%;
 border-radius: 50px;
-background-color: #333333;
+background-color:  #2c3e50;
 padding: 0px;
-margin-bottom: 0px;
-width: 13%;
-height: 4%;
+margin-bottom: 20px;
+width: 10%;
+height: 4.5%;
 }
 
-.headerGitHub:hover {
-  background-color: red;
-}
-
-.headerGitHub h1{
+.headerGitHub h1 a{
   color:white;
-  font-size: 20px;
+  font-size: 13px;
+  margin-left: 10%;
 }
 
 .h1 {
