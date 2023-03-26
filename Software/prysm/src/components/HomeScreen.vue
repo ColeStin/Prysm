@@ -64,11 +64,11 @@
             <input id="open-input" type="file" ref="fileIn" @change="openFile()" style="display: none;" />
           </label>
         </div>
+
         <!-- Saves .prsm file to computer-->
         <div class = "input-boxes">
             <!-- Name File <input type = 'text' v-model = "file" /> -->
-          <span> Name File </span>
-           
+        Name File:
           <input type = "text" required = "required"> 
         </div>
 
@@ -79,6 +79,18 @@
               d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
           </svg>
         </div>
+
+        <!-- Opens premade .prsm files from computer-->
+        <div class="select-container"> 
+          <select class = "select-box">
+            <option value = ""> Templated Options (4)</option>
+            <option value = ""> Linear Curve - 0.1x + 5 </option>
+            <option value = ""> Sin Curve - 50 sin (8x) </option>
+            <option value = ""> Cos Curve - 50 cos (3x) </option>
+            <option value = ""> Tan Curve - 50 tan (2x)</option>
+          </select>
+        </div>
+
        
         <!-- <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" /> -->
         <!-- Name File <input type = 'text' v-model = "file" /> -->
@@ -531,6 +543,28 @@ export default {
 
 .nameFile-button:hover {
   background-color: red;
+}
+
+.select-container
+{
+display: inline-block;
+/* display: flex; */
+justify-content: center;
+position: relative;
+}
+
+.select-box
+{
+display: inline-block;
+appearance: none;
+padding: 5px 5px 5px 5px;
+width: 100%;
+color: white;
+background-color: #333333;
+font-size: 18px;
+border-width: 0px;
+border-color: white;
+border-radius: 5px;
 }
 
 .input-boxes
