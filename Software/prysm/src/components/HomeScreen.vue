@@ -69,7 +69,7 @@
         <div class = "input-boxes">
             <!-- Name File <input type = 'text' v-model = "file" /> -->
         Name File:
-          <input type = "text" required = "required"> 
+          <input id = "fileNameInput" type = "text" required = "required"> 
         </div>
 
         <div class="saveFile-button" @click="saveFile()">Save File
@@ -170,8 +170,8 @@ export default {
   data: function () {
     return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
       exportData: "the cat in the hat knows a lot about that",
-      //file: document.getElementById('input-boxes input').value,
-      file: "newfile1",
+      //Below is removed because satisfied in saveFile() function
+      //file: "wavelength"
       type: ".prsm",
       chart: null,
       loaded: true,
@@ -230,6 +230,11 @@ export default {
     mutableOptions() { return this.chartOptions },
   },
   methods: {
+    // getFileName()
+    // {
+    //   return document.getElementById("fileNameInput").value
+    // },
+
     increase() {
       console.log(this.chartData.datasets[0].data);
     },
@@ -327,6 +332,16 @@ export default {
 
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.exportData));
+
+      //takes input from "Name File" textbox and saves it to be what file will be named. 
+      this.file = document.getElementById("fileNameInput").value;
+
+      //if filename input is left empty, it will just be called "wavelength.prsm"
+      if (this.file == "")
+      {
+        this.file = "wavelength"
+      }
+
       pom.setAttribute("download", "" + this.file + this.type);
       if (document.createEvent) {
         var event = document.createEvent("MouseEvents");
@@ -553,6 +568,12 @@ justify-content: center;
 position: relative;
 }
 
+.select-box:hover
+{
+  background-color: orange;
+ 
+}
+
 .select-box
 {
 display: inline-block;
@@ -565,6 +586,7 @@ font-size: 18px;
 border-width: 0px;
 border-color: white;
 border-radius: 5px;
+cursor: pointer;
 }
 
 .input-boxes
