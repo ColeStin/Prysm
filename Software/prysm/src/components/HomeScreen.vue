@@ -64,12 +64,12 @@
             <input id="open-input" type="file" ref="fileIn" @change="openFile()" style="display: none;" />
           </label>
         </div>
+
         <!-- Saves .prsm file to computer-->
         <div class = "input-boxes">
             <!-- Name File <input type = 'text' v-model = "file" /> -->
-          <span> Name File </span>
-           
-          <input type = "text" required = "required"> 
+        Name File:
+          <input id = "fileNameInput" type = "text" required = "required"> 
         </div>
 
         <div class="saveFile-button" @click="saveFile()">Save File
@@ -79,6 +79,18 @@
               d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z" />
           </svg>
         </div>
+
+        <!-- Opens premade .prsm files from computer-->
+        <div class="select-container"> 
+          <select class = "select-box">
+            <option value = ""> Templated Options (4)</option>
+            <option value = ""> Linear Curve - 0.1x + 5 </option>
+            <option value = ""> Sin Curve - 50 sin (8x) </option>
+            <option value = ""> Cos Curve - 50 cos (3x) </option>
+            <option value = ""> Tan Curve - 50 tan (2x)</option>
+          </select>
+        </div>
+
        
         <!-- <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" /> -->
         <!-- Name File <input type = 'text' v-model = "file" /> -->
@@ -158,16 +170,16 @@ export default {
   data: function () {
     return { //think of the return section as the private member vars of a class (this component). They can be accessed with this.whatever (unless you've changed what this is)
       exportData: "the cat in the hat knows a lot about that",
-      //file: document.getElementById('input-boxes input').value,
-      file: "newfile1",
+      //Below is removed because satisfied in saveFile() function
+      //file: "wavelength"
       type: ".prsm",
       chart: null,
       loaded: true,
       functionIn: '',
       inputMin: 1,
-      inputMax: 1000,
-      ceiling: 200,
-      floor: 0,
+      inputMax: 1024,
+      ceiling: 127,
+      floor: -128,
       data: { datasets: [], labels: [] },
       chartData: {
         labels: [0],
@@ -196,14 +208,16 @@ export default {
             },
             ticks: {
               display: true
-            }
+            },
+            suggestedMax:1024
           },
           y: {
             grid: {
               display: true
             },
-            beginAtZero: true,
-            suggestedMax: 200,
+            beginAtZero: false,
+            suggestedMin: -128,
+            suggestedMax: 127,
           },
         },
       }
@@ -216,6 +230,11 @@ export default {
     mutableOptions() { return this.chartOptions },
   },
   methods: {
+    // getFileName()
+    // {
+    //   return document.getElementById("fileNameInput").value
+    // },
+
     increase() {
       console.log(this.chartData.datasets[0].data);
     },
@@ -264,7 +283,7 @@ export default {
     //resets the wavetable editor
     newFile() {
       this.chartData.labels = [];
-      for (let i = 0; i < 1000; i++) {
+      for (let i = 0; i < this.inputMax; i++) {
         this.chartData.labels = this.chartData.labels.concat([i]);
         this.chartData.datasets[0].data[i] = this.ceiling / 2;
       }
@@ -281,7 +300,7 @@ export default {
         reader.onload = (res) => {
           let tmp = res.target.result.split('\n');
           this.chartData.labels = [];
-          for (let i = 0; i < 1000; i++) {
+          for (let i = 0; i < this.inputMax; i++) {
             this.chartData.labels = this.chartData.labels.concat([i]);
             this.chartData.datasets[0].data[i] = tmp[i] * 100;
           }
@@ -303,16 +322,26 @@ export default {
     //https://stackoverflow.com/questions/2897619/using-html5-javascript-to-generate-and-save-a-file
     //saves the .prsm file
     saveFile() {
-
+      this.exportData = "";
       let tmp = this.data.datasets[0].data;
       for (let i = 0; i < tmp.length; i++) {
-        this.exportData = this.exportData + "" + tmp[i] / 100 + "\n";
+        this.exportData = this.exportData + "" + math.round(tmp[i])+ "\n";
       }
-
-
+      //end character
+      this.exportData = this.exportData + "W";
 
       var pom = document.createElement("a");
       pom.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(this.exportData));
+
+      //takes input from "Name File" textbox and saves it to be what file will be named. 
+      this.file = document.getElementById("fileNameInput").value;
+
+      //if filename input is left empty, it will just be called "wavelength.prsm"
+      if (this.file == "")
+      {
+        this.file = "wavelength"
+      }
+
       pom.setAttribute("download", "" + this.file + this.type);
       if (document.createEvent) {
         var event = document.createEvent("MouseEvents");
@@ -335,7 +364,7 @@ export default {
   },
   mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     // this.chartData.datasets[0].data = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < this.inputMax; i++) {
       this.chartData.labels = this.chartData.labels.concat([i]);
       this.chartData.datasets[0].data[i] = this.ceiling / 2;
     }
@@ -529,6 +558,35 @@ export default {
 
 .nameFile-button:hover {
   background-color: red;
+}
+
+.select-container
+{
+display: inline-block;
+/* display: flex; */
+justify-content: center;
+position: relative;
+}
+
+.select-box:hover
+{
+  background-color: orange;
+ 
+}
+
+.select-box
+{
+display: inline-block;
+appearance: none;
+padding: 5px 5px 5px 5px;
+width: 100%;
+color: white;
+background-color: #333333;
+font-size: 18px;
+border-width: 0px;
+border-color: white;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .input-boxes
