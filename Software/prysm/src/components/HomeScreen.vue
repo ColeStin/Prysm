@@ -175,7 +175,7 @@ export default {
       loaded: true,
       functionIn: '',
       inputMin: 1,
-      inputMax: 1024,
+      inputMax: 2048,
       ceiling: 127,
       floor: -128,
       data: { datasets: [], labels: [] },
@@ -202,16 +202,16 @@ export default {
         scales: {
           x: {
             grid: {
-              display: true
+              display: false
             },
             ticks: {
-              display: true
+              display: false
             },
-            suggestedMax:1024
+            suggestedMax:2048
           },
           y: {
             grid: {
-              display: true
+              display: false
             },
             beginAtZero: false,
             suggestedMin: -128,
