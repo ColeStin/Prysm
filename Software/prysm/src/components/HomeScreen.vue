@@ -360,6 +360,7 @@ export default {
   },
   mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     // this.chartData.datasets[0].data = [];
+    console.log('env',process.env.VUE_APP_TEST_VAR)
     for (let i = 0; i < this.inputMax; i++) {
       this.chartData.labels = this.chartData.labels.concat([i]);
       this.chartData.datasets[0].data[i] = this.ceiling / 2;
