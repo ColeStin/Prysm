@@ -282,7 +282,7 @@ export default {
       this.chartData.labels = [];
       for (let i = 0; i < this.inputMax; i++) {
         this.chartData.labels = this.chartData.labels.concat([i]);
-        this.chartData.datasets[0].data[i] = this.ceiling / 2;
+        this.chartData.datasets[0].data[i] = 0;
       }
       this.data = JSON.parse(JSON.stringify(this.chartData));
 
@@ -363,7 +363,7 @@ export default {
     console.log('env',process.env.VUE_APP_TEST_VAR)
     for (let i = 0; i < this.inputMax; i++) {
       this.chartData.labels = this.chartData.labels.concat([i]);
-      this.chartData.datasets[0].data[i] = this.ceiling / 2;
+      this.chartData.datasets[0].data[i] = 0;
     }
     this.data = JSON.parse(JSON.stringify(this.chartData));
 
