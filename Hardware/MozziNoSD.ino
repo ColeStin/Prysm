@@ -77,7 +77,7 @@ void turnOn(int i){
       voices[j].note = i;
       //Serial.println(voices[i])
       calc[j] = i;
-      break;
+      return;
       //Serial.println(calc[j]);
     }
 
