@@ -40,8 +40,8 @@
       <Line v-if="loaded" ref="chartElement" id="my-chart-id" :options="chartOptions" :data="data" />
     </div>
 
-
     <div class="point-adjustment">
+
       <!-- Seperates New, Open, and Save File from Above Row-->
       <div class="new-open-save">
         <!-- Resets the wavetable to original state-->
@@ -65,13 +65,12 @@
           </label>
         </div>
 
-        <!-- Saves .prsm file to computer-->
         <div class = "input-boxes">
-            <!-- Name File <input type = 'text' v-model = "file" /> -->
         Name File:
           <input id = "fileNameInput" type = "text" required = "required"> 
         </div>
 
+           <!-- Saves .prsm file to computer-->
         <div class="saveFile-button" @click="saveFile()">Save File
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
             class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
@@ -80,21 +79,20 @@
           </svg>
         </div>
 
+        <!-- Templated Options-->
         <!-- Opens premade .prsm files from computer-->
+        <!-- document.getElementById("select-box").value -->
         <div class="select-container"> 
           <select class = "select-box">
             <option value = ""> Templated Options (4)</option>
-            <option value = ""> Linear Curve - 0.1x + 5 </option>
-            <option value = ""> Sin Curve - 50 sin (8x) </option>
-            <option value = ""> Cos Curve - 50 cos (3x) </option>
-            <option value = ""> Tan Curve - 50 tan (2x)</option>
+            <option value = "linearTemplate"> Linear Curve - 0.1x + 5 </option>
+            <option value = "sinTemplate"> Sin Curve - 50 sin (8x) </option>
+            <option value = "cosTemplate"> Cos Curve - 50 cos (3x) </option>
+            <option value = "tanTemplate"> Tan Curve - 50 tan (2x) </option>
           </select>
         </div>
-
-       
-        <!-- <div class="nameFile-button" @click="nameFile()">Name File  </div> <input type='text' v-model="inputName" /> -->
-        <!-- Name File <input type = 'text' v-model = "file" /> -->
       </div>  
+
       <div class="function-input">
         <div class="input-boxes">
           Function: <input type='text' v-model="functionIn" />
@@ -177,7 +175,7 @@ export default {
       loaded: true,
       functionIn: '',
       inputMin: 1,
-      inputMax: 1024,
+      inputMax: 2048,
       ceiling: 127,
       floor: -128,
       data: { datasets: [], labels: [] },
@@ -204,16 +202,16 @@ export default {
         scales: {
           x: {
             grid: {
-              display: true
+              display: false
             },
             ticks: {
-              display: true
+              display: false
             },
-            suggestedMax:1024
+            suggestedMax:2048
           },
           y: {
             grid: {
-              display: true
+              display: false
             },
             beginAtZero: false,
             suggestedMin: -128,
@@ -230,19 +228,18 @@ export default {
     mutableOptions() { return this.chartOptions },
   },
   methods: {
-    // getFileName()
-    // {
-    //   return document.getElementById("fileNameInput").value
-    // },
-
     increase() {
       console.log(this.chartData.datasets[0].data);
     },
     addFunction() { // this inputs your data into the chart and then displays it
       // console.log('functionIN,min,max',this.functionIn,this.inputMin,this.inputMax);
 
+     
       let tmp = this.functionIn;
-
+      // if (document.getElementById("select-box").value == "sinTemplate")
+      // {
+      //   let tmp = "50 sin (8x)";
+      // }
       //gotta wrap in parentheses so if there are two numbers next to each other the one being put in still gets multiplied correctly
       //a la 2(x)2 = 2*x*2 not 222 if x=2
       tmp = tmp.replaceAll('x', '(x)');
@@ -285,7 +282,7 @@ export default {
       this.chartData.labels = [];
       for (let i = 0; i < this.inputMax; i++) {
         this.chartData.labels = this.chartData.labels.concat([i]);
-        this.chartData.datasets[0].data[i] = this.ceiling / 2;
+        this.chartData.datasets[0].data[i] = 0;
       }
       this.data = JSON.parse(JSON.stringify(this.chartData));
 
@@ -341,7 +338,6 @@ export default {
       {
         this.file = "wavelength"
       }
-
       pom.setAttribute("download", "" + this.file + this.type);
       if (document.createEvent) {
         var event = document.createEvent("MouseEvents");
@@ -364,9 +360,10 @@ export default {
   },
   mounted() { //mounted is the code that runs when this component gets "called" to the DOM (mounted). idk the details just think of it as your stuff that runs on startup
     // this.chartData.datasets[0].data = [];
+    console.log('env',process.env.VUE_APP_TEST_VAR)
     for (let i = 0; i < this.inputMax; i++) {
       this.chartData.labels = this.chartData.labels.concat([i]);
-      this.chartData.datasets[0].data[i] = this.ceiling / 2;
+      this.chartData.datasets[0].data[i] = 0;
     }
     this.data = JSON.parse(JSON.stringify(this.chartData));
 
