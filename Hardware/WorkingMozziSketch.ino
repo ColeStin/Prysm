@@ -17,7 +17,7 @@
 #define ATTACK_LEVEL 64
 #define DECAY_LEVEL 0
 
-
+//polyphony idea taken from https://groups.google.com/g/mozzi-users/c/Z6uj0M_d1VQ (specifically Gunnar Frei's response I believe)
 struct Voice{
   Oscil<2048, AUDIO_RATE> osc;  // audio oscillator
   ADSR<CONTROL_RATE, AUDIO_RATE> env;  // envelope generator
