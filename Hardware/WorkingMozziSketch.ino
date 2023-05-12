@@ -2,8 +2,8 @@
 #include <mozzi_fixmath.h>
 #include <Oscil.h>
 #include <ADSR.h>
-#include <tables/sin2048_int8.h> // sine table for oscillator
-#include <tables/saw2048_int8.h>
+// #include <tables/sin2048_int8.h> // sine table for oscillator
+// #include <tables/saw2048_int8.h>
 #include <SD.h>
 #include <SPI.h>
 
@@ -34,9 +34,68 @@ float freq[18] = {261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392, 4
 
 //Voice *calc[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
 int calc[MAXOSC] = {18,18,18,18};
-int8_t wavetable[2048];
+int8_t * wavetable;
+String global_currentFile = "/";
 
 
+void switchFile(int upordown){
+
+  File currentFile = SD.open(global_currentFile);
+
+  String newFile = currentFile.openNextFile().name();
+
+  currentFile.close();   
+  global_currentFile = newFile;
+  File dataFile = SD.open(newFile);
+  int8_t shortforarray;
+  bool booleanthing = true;
+int arrayInc = 0;
+            char * n = new char[8];
+          int tmp1 = 0;
+  // if the file is available, write to it:
+  if (dataFile) {
+    while (booleanthing &&  dataFile.available() ) {
+      // Serial.println('1');
+      char c = dataFile.read();
+      if (c == '\n') {
+      //we have hit the end of one input to our vector.
+      char out[tmp1];
+      for (int i = 0; i < tmp1; i++)
+      {
+        out[i] = n[i];
+      }
+      int tmp = atoi(out);
+      shortforarray = tmp;
+      wavetable[arrayInc] = shortforarray;
+      shortforarray = 0;
+      arrayInc++;
+      tmp1=0;
+      delete[] n;
+      n = new char[8];
+    } else if (c=='0' ||c=='.'||c=='1'||c=='2'||c=='3'||c=='4'||c=='5'||c=='6'||c=='7'||c=='8'||c=='9' || c=='-' ){
+      n[tmp1] = c;
+      tmp1++;
+// Serial.println("got here 2");      
+    }
+    else if (c == 'w' || c == 'W')
+    {
+      Serial.println("got here");
+      dataFile.close();
+      return;
+    }
+    else
+    {
+      Serial.println("something weird") ;
+      booleanthing = false;
+         }
+    }
+    dataFile.close();
+  }
+  // if the file isn't open, pop up an error:
+  else {
+    Serial.println("error opening something");
+  }
+}
 
 
 
@@ -56,6 +115,7 @@ void fileToArray(){
 File root = SD.open("/");
   String filename = root.openNextFile().name();
  filename = root.openNextFile().name();
+ global_currentFile = filename;
   root.close();
   Serial.println(filename);
   File dataFile = SD.open(filename);
@@ -104,7 +164,7 @@ int arrayInc = 0;
   }
   // if the file isn't open, pop up an error:
   else {
-    Serial.println("error opening datalog.txt");
+    Serial.println("error opening something");
   }
 }
 
@@ -115,12 +175,16 @@ int arrayInc = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  wavetable = (int8_t*) calloc(2048,sizeof(int8_t));
   for (int i = 0; i < 2048; i++)
   {
     wavetable[i] = 0;
   }
   fileToArray();
-
+  for (int i = 0; i < 2048; i++)
+  {
+    // Serial.println((long)&wavetable[i],HEX);
+  }
   startMozzi(64);
   
   for(int i = 0; i < 18; i++)
@@ -131,7 +195,8 @@ void setup() {
    // pinMode(22+i, INPUT_PULLUP);
     voices[i].env.setADLevels(ATTACK_LEVEL,DECAY_LEVEL);
     voices[i].env.setTimes(ATTACK,DECAY,SUSTAIN,RELEASE);
-    voices[i].osc.setTable(SIN2048_DATA);
+    // voices[i].osc.setTable(SIN2048_DATA);s
+    voices[i].osc.setTable(wavetable);
     //voices[i].osc.setFreq(freq[i]);
   }
   
